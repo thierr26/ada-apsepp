@@ -1,0 +1,69 @@
+abstract project Apsepp_Build_Setup is
+
+   -- Define compilation mode (or compilation scenario), defaulting to
+   -- "debug_info" if BUILD_MODE is not set. ADA_MODE can be set
+   -- via an environment variable or via the -X switch in the gprbuild command.
+   type Build_Mode_Type is ("debug_info_and_assertions",
+                            "debug_info",
+                            "optimizations");
+   Build_Mode : Build_Mode_Type
+      := external ("BUILD_MODE", "debug_info_and_assertions");
+
+   for Source_Files use ();
+
+   for Object_Dir use "obj";
+
+   -- -O3       Enable highest optimization.
+   -- -g        Generate debugging information.
+   -- -gnat2012 Allow Ada 2012 features.
+   -- -gnata    Enable assertions.
+   -- -gnateE   Generate extra information in exception messages.
+   -- -gnatwa   Turn on all normal warnings.
+   package Compiler is
+
+      case Build_Mode is
+
+         when "debug_info_and_assertions" =>
+            for Switches ("Ada") use ("-gnat2012",
+                                      "-g",
+                                      "-gnata",
+                                      "-gnatwa",
+                                      "-gnateE");
+
+         when "debug_info" =>
+            for Switches ("Ada") use ("-gnat2012",
+                                      "-g",
+                                      "-gnatwa",
+                                      "-gnateE");
+
+         when "optimizations" =>
+            for Switches ("Ada") use ("-gnat2012",
+                                      "-O3");
+
+      end case;
+
+   end Compiler;
+
+   -- -j0       Use all the core processors on the platform.
+   package Builder is
+      for Switches (others) use ("-j0");
+   end Builder;
+
+   -- -E        Store tracebacks in exception occurrences.
+   -- -g        Generate debugging information.
+   package Binder is
+
+      case Build_Mode is
+
+         when "debug_info_and_assertions" | "debug_info" =>
+            for Switches ("Ada") use ("-E",
+                                      "-g");
+
+         when "optimizations" =>
+            null;
+
+      end case;
+
+   end Binder;
+
+end Apsepp_Build_Setup;
