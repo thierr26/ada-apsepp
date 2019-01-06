@@ -7,6 +7,6 @@ procedure Apsepp_Test is
 
 begin
 
-   Apsepp_Test_Harness.Apsepp_Test;
+   Apsepp_Test_Harness.Apsepp_Test_Procedure;
 
 end Apsepp_Test;

@@ -5,7 +5,7 @@ private with Apsepp.Output_Class.Standard;
 
 package Apsepp_Test_Harness is
 
-   procedure Apsepp_Test;
+   procedure Apsepp_Test_Procedure;
 
 private
 
