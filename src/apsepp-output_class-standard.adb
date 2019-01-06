@@ -1,13 +1,23 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-package body Apsepp.Output is
+with Ada.Text_IO;
+
+package body Apsepp.Output_Class.Standard is
 
    ----------------------------------------------------------------------------
 
-   function Instance return Output_Access
-     is (Instance_Access);
+   overriding
+   procedure Put_Line (Obj : Output_Standard; S : String) is
+
+      pragma Unreferenced (Obj);
+
+   begin
+
+      Ada.Text_IO.Put_Line (S);
+
+   end Put_Line;
 
    ----------------------------------------------------------------------------
 
-end Apsepp.Output;
+end Apsepp.Output_Class.Standard;

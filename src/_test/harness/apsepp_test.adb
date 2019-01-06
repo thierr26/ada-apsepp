@@ -1,12 +1,12 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Output;
+with Apsepp_Test_Harness;
 
 procedure Apsepp_Test is
 
 begin
 
-   Apsepp.Output.Put_Line ("Hello world!");
+   Apsepp_Test_Harness.Apsepp_Test;
 
 end Apsepp_Test;
