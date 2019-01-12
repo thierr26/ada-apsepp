@@ -29,7 +29,9 @@ package body Apsepp.Scope_Bound_Locks is
 
    begin
 
-      Protected_Handler.Do_Unlock (Lock => Obj.Lock);
+      if SB_L_Locker'Class (Obj).Has_Actually_Locked then
+         Protected_Handler.Do_Unlock (Lock => Obj.Lock);
+      end if;
 
    end Finalize;
 
