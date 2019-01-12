@@ -43,12 +43,6 @@ package body Apsepp.Scope_Bound_Locks is
    ----------------------------------------------------------------------------
 
    not overriding
-   function Instantiated (Obj : SB_L_Locker) return Boolean
-     is (Obj.Is_Instantiated);
-
-   ----------------------------------------------------------------------------
-
-   not overriding
    function Has_Actually_Locked (Obj : SB_L_Locker) return Boolean
      is (Obj.Has_Locked);
 

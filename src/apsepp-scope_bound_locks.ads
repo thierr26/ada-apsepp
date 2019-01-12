@@ -15,16 +15,10 @@ package Apsepp.Scope_Bound_Locks is
 
    type SB_L_Locker (Lock : SB_Lock_Access) is tagged limited private
 
-     with Type_Invariant'Class => SB_L_Locker.Lock_Locked;
-
-   not overriding
-   function Instantiated (Obj : SB_L_Locker) return Boolean;
+     with Type_Invariant'Class => Locked (Lock.all);
 
    not overriding
    function Has_Actually_Locked (Obj : SB_L_Locker) return Boolean;
-
-   function Lock_Locked (Obj : SB_L_Locker'Class) return Boolean
-     is (Locked (Obj.Lock.all) or else not Obj.Instantiated);
 
 private
 
