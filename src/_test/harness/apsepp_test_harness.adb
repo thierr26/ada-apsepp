@@ -11,13 +11,25 @@ package body Apsepp_Test_Harness is
 
    ----------------------------------------------------------------------------
 
+   function Allocate_Output_Standard return Apsepp.Output.Output_Access is
+
+      use Apsepp.Output;
+      use Apsepp.Output_Class.Standard;
+
+      Instance_Access : constant Output_Access := new Output_Standard'(Create);
+
+   begin
+
+     return Instance_Access;
+
+   end Allocate_Output_Standard;
+
+   ----------------------------------------------------------------------------
+
    procedure Apsepp_Test_Procedure is
 
       use Ada.Assertions;
       use Apsepp.Output;
-
-      function Create return Apsepp.Output_Class.Standard.Output_Standard
-        renames Apsepp.Output_Class.Standard.Create;
 
    begin
 
@@ -27,10 +39,9 @@ package body Apsepp_Test_Harness is
       declare
 
          use Ada.Tags;
-         use Apsepp.Output_Class.Standard;
 
          package Output_Creator
-           is new Shared_Instance.Creator (Output_Standard, Create);
+           is new Shared_Instance.Creator (Allocate_Output_Standard);
 
          Output_Tag_Str : constant String := Expanded_Name (Output'Tag);
 
@@ -45,7 +56,7 @@ package body Apsepp_Test_Harness is
          declare
 
             package Output_Creator
-              is new Shared_Instance.Creator (Output_Standard, Create);
+              is new Shared_Instance.Creator (Allocate_Output_Standard);
 
          begin
 
@@ -60,10 +71,9 @@ package body Apsepp_Test_Harness is
 
          declare
 
-            package Output_Creator
-              is new Shared_Instance.Creator (Instance_Type => Output_Standard,
-                                              Create        => Create,
-                                              Just_Pretend  => True);
+            package Output_Creator is new Shared_Instance.Creator
+              (Allocate     => Allocate_Output_Standard,
+               Just_Pretend => True);
 
          begin
 
@@ -80,12 +90,9 @@ package body Apsepp_Test_Harness is
 
       declare
 
-         use Apsepp.Output_Class.Standard;
-
-         package Output_Creator
-           is new Shared_Instance.Creator (Instance_Type => Output_Standard,
-                                           Create        => Create,
-                                           Just_Pretend  => True);
+         package Output_Creator is new Shared_Instance.Creator
+           (Allocate     => Allocate_Output_Standard,
+            Just_Pretend => True);
 
       begin
 

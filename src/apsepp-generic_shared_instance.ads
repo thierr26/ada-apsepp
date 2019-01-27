@@ -30,4 +30,6 @@ private
 
    Instance_Access : Instance_Type_Access;
 
+   Deallocation_Needed : Boolean := False;
+
 end Apsepp.Generic_Shared_Instance;

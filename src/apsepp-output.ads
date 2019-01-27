@@ -9,8 +9,8 @@ package Apsepp.Output is
    package Shared_Instance
      is new Apsepp.Generic_Shared_Instance (Output_Interfa);
 
-   use Shared_Instance;
+   subtype Output_Access is Shared_Instance.Instance_Type_Access;
 
-   function Output return Instance_Type_Access renames Instance;
+   function Output return Output_Access renames Shared_Instance.Instance;
 
 end Apsepp.Output;

@@ -2,8 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 generic
-   type Instance_Type is limited new Instance_Ancestor_Type with private;
-   with function Create return Instance_Type;
+   with function Allocate return Instance_Type_Access;
    with procedure CB is null;
    Just_Pretend : Boolean := False;
 package Apsepp.Generic_Shared_Instance.Creator is

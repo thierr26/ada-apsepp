@@ -18,16 +18,9 @@ begin
 
    if not Just_Pretend and then Locker.Has_Actually_Locked then
 
-      declare
-
-         Inst : aliased Instance_Type := Create;
-
-      begin
-
-         Instance_Access := Inst'Unchecked_Access;
-         CB;
-
-      end;
+      Deallocation_Needed := True;
+      Instance_Access := Allocate;
+      CB;
 
    end if;
 
