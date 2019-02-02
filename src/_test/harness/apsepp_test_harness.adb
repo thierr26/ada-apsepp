@@ -6,6 +6,8 @@ with Ada.Tags;
 with Apsepp.Generic_Shared_Instance.Creator;
 with Apsepp.Output;
 with Apsepp.Output_Class.Standard.Create;
+with Apsepp.Trace_Debugging;
+with Apsepp.Trace_Debugging_Class.Output.Create;
 
 package body Apsepp_Test_Harness is
 
@@ -23,6 +25,23 @@ package body Apsepp_Test_Harness is
      return Instance_Access;
 
    end Allocate_Output_Standard;
+
+   ----------------------------------------------------------------------------
+
+   function Allocate_Trace_Debugging_Output
+     return Apsepp.Trace_Debugging.Trace_Debugging_Access is
+
+      use Apsepp.Trace_Debugging;
+      use Apsepp.Trace_Debugging_Class.Output;
+
+      Instance_Access : constant Trace_Debugging_Access
+        := new Trace_Debugging_Output'(Create);
+
+   begin
+
+     return Instance_Access;
+
+   end Allocate_Trace_Debugging_Output;
 
    ----------------------------------------------------------------------------
 
@@ -44,6 +63,13 @@ package body Apsepp_Test_Harness is
            is new Shared_Instance.Creator (Allocate_Output_Standard);
 
          Output_Tag_Str : constant String := Expanded_Name (Output'Tag);
+
+         package Trace_Debugging_Creator
+           is new Apsepp.Trace_Debugging.Shared_Instance.Creator
+           (Allocate_Trace_Debugging_Output);
+
+         Trace_Debugging_Tag_Str : constant String
+           := Expanded_Name (Apsepp.Trace_Debugging.Trace_Debugging'Tag);
 
       begin
 
@@ -82,6 +108,15 @@ package body Apsepp_Test_Harness is
             Assert (Shared_Instance.Instantiated);
 
          end;
+
+         Assert (Trace_Debugging_Creator.Has_Actually_Created);
+         Assert (Apsepp.Trace_Debugging.Shared_Instance.Locked);
+         Assert (Apsepp.Trace_Debugging.Shared_Instance.Instantiated);
+
+         Apsepp.Trace_Debugging.Trace_Debugging.Trace
+           ("Trace debugging facility instance tag:");
+         Apsepp.Trace_Debugging.Trace_Debugging.Trace
+           (Trace_Debugging_Tag_Str);
 
       end;
 
