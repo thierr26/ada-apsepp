@@ -11,41 +11,42 @@ with Apsepp.Trace_Debugging_Class.Output.Create;
 
 package body Apsepp_Test_Harness is
 
-   ----------------------------------------------------------------------------
-
-   function Allocate_Output_Standard return Apsepp.Output.Output_Access is
-
-      use Apsepp.Output;
-      use Apsepp.Output_Class.Standard;
-
-      Instance_Access : constant Output_Access := new Output_Standard'(Create);
-
-   begin
-
-     return Instance_Access;
-
-   end Allocate_Output_Standard;
-
-   ----------------------------------------------------------------------------
-
-   function Allocate_Trace_Debugging_Output
-     return Apsepp.Trace_Debugging.Trace_Debugging_Access is
-
-      use Apsepp.Trace_Debugging;
-      use Apsepp.Trace_Debugging_Class.Output;
-
-      Instance_Access : constant Trace_Debugging_Access
-        := new Trace_Debugging_Output'(Create);
-
-   begin
-
-     return Instance_Access;
-
-   end Allocate_Trace_Debugging_Output;
-
-   ----------------------------------------------------------------------------
-
    procedure Apsepp_Test_Procedure is
+
+      -----------------------------------------------------
+
+      function Allocate_Output_Standard return Apsepp.Output.Output_Access is
+
+         use Apsepp.Output;
+         use Apsepp.Output_Class.Standard;
+
+         Instance_Access : constant Output_Access
+           := new Output_Standard'(Create);
+
+      begin
+
+        return Instance_Access;
+
+      end Allocate_Output_Standard;
+
+         -----------------------------------------------------
+
+      function Allocate_Trace_Debugging_Output
+        return Apsepp.Trace_Debugging.Trace_Debugging_Access is
+
+         use Apsepp.Trace_Debugging;
+         use Apsepp.Trace_Debugging_Class.Output;
+
+         Instance_Access : constant Trace_Debugging_Access
+           := new Trace_Debugging_Output'(Create);
+
+      begin
+
+        return Instance_Access;
+
+      end Allocate_Trace_Debugging_Output;
+
+      -----------------------------------------------------
 
       use Ada.Assertions;
       use Apsepp.Output;
