@@ -15,7 +15,7 @@ default_prg = $(bin_dir)/apsepp_test
 # Project building and cleaning commands (variables appearing in the right hand
 # sides are initialized farther down).
 build_command = gprbuild $(xswi) -p -P $(PROJ)
-clean_command = gprclean -q -c -r $(PROJ)
+clean_command = gprclean -q -c -r -P$(PROJ)
 
 # Object files location.
 obj_dir = obj
