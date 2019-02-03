@@ -8,6 +8,7 @@ with Apsepp.Output;
 with Apsepp.Output_Class.Standard.Create;
 with Apsepp.Trace_Debugging;
 with Apsepp.Trace_Debugging_Class.Output.Create;
+with Apsepp.Controlled_Trace_Debugging;
 
 package body Apsepp_Test_Harness is
 
@@ -98,9 +99,13 @@ package body Apsepp_Test_Harness is
 
          declare
 
+            use Apsepp.Controlled_Trace_Debugging;
+
             package Output_Creator is new Shared_Instance.Creator
               (Allocate     => Allocate_Output_Standard,
                Just_Pretend => True);
+
+            C_D_T : constant Controlled_Debug_Tracer := Create ("Block");
 
          begin
 
@@ -108,6 +113,7 @@ package body Apsepp_Test_Harness is
             Assert (Shared_Instance.Locked);
             Assert (Shared_Instance.Instantiated);
 
+            C_D_T.Trace ("No exception raised in " & C_D_T.Entity_Name);
          end;
 
          Assert (Trace_Debugging_Creator.Has_Actually_Created);

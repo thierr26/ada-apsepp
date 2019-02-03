@@ -6,6 +6,13 @@ package Apsepp.Trace_Debugging_Class.Interfa is
    type Trace_Debugging_Interfa is limited interface;
 
    not overriding
-   procedure Trace (Obj : Trace_Debugging_Interfa; S : String) is abstract;
+   function Message_W_Entity (Obj         : Trace_Debugging_Interfa;
+                              Message     : String;
+                              Entity_Name : String) return String is abstract;
+
+   not overriding
+   procedure Trace (Obj         : Trace_Debugging_Interfa;
+                    Message     : String;
+                    Entity_Name : String                  := "") is null;
 
 end Apsepp.Trace_Debugging_Class.Interfa;
