@@ -27,10 +27,11 @@ apt-get install gnat gprbuild
 After cloning the repository, change directory to the repository root and issue
 this command:
 ```
-gprbuild -p apsepp_test.gpr
+gprbuild -p -P apsepp_test.gpr
 ```
 
-It creates an executable in the bin subdirectory. Use this command to run it:
+It creates an executable (test program) in the bin subdirectory. Use this
+command to run it:
 ```
 bin/apsepp_test
 ```
@@ -55,9 +56,11 @@ gprbuild -p -XBUILD_MODE=optimizations apsepp_test.gpr
 You can remove the files created by the compilation process in the bin and obj
 subdirectories with this command:
 ```
-gprclean -r apsepp_test.gpr
+gprclean -r -Papsepp_test.gpr
 ```
 
+If you want to build the demo programs instead of the test program, please
+substitute apsepp_test.gpr with apsepp_demo.gpr in the `gprbuild` command.
 
 #### Compilation with make
 
@@ -81,6 +84,10 @@ make clean # Removes most of the files created by the compilation process in
 
 make cov   # Rebuilds, runs bin/apsepp_test and generates an HTML coverage
            # report. lcov must be installed (on Debian: apt-get install lcov).
+
+make test PROJ=apsepp_demo PRG=apsepp_demo_output_sink_as_shared_instance
+           # Builds project apsepp_demo.gpr and runs
+           # bin/apsepp_demo_output_sink_as_shared_instance
 ```
 
 

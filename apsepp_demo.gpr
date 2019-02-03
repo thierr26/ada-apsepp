@@ -1,11 +1,15 @@
 with "apsepp_build_setup";
+with "apsepp";
 
-project Apsepp is
+project Apsepp_Demo is
 
-   for Source_Dirs use ("src/**");
-   for Ignore_Source_Sub_Dirs use ("_test", "_demo");
+   for Source_Dirs use ("src/_demo/**");
 
    for Object_Dir use Apsepp_Build_Setup'Object_Dir;
+
+   for Exec_Dir use "bin";
+
+   for Main use ("apsepp_demo_output_sink_as_shared_instance.adb");
 
    package Compiler renames Apsepp_Build_Setup.Compiler;
 
@@ -13,4 +17,4 @@ project Apsepp is
 
    package Binder renames Apsepp_Build_Setup.Binder;
 
-end Apsepp;
+end Apsepp_Demo;
