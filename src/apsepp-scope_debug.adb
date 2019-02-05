@@ -1,28 +1,27 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Trace_Debugging;
+with Apsepp.Debug_Trace;
 
-package body Apsepp.Controlled_Trace_Debugging is
+package body Apsepp.Scope_Debug is
 
    ----------------------------------------------------------------------------
 
-   function C (Entity_Name : String; I_T_R, F_T_R : Boolean)
-     return Controlled_Debug_Tracer is
+   function C (Entity_Name : String;
+               En, Ex      : Boolean) return Controlled_Debug_Tracer is
 
    begin
 
-      if I_T_R then
+      if En then
 
-         Apsepp.Trace_Debugging.Trace_Debugging.Trace
-           ("Initialize", Entity_Name);
+         Apsepp.Debug_Trace.Debug_Trace.Trace ("Entry", Entity_Name);
 
       end if;
 
-     return (Limited_Controlled
-               with Entity_Name_Length          => Entity_Name'Length,
-                    Entity_Name                 => Entity_Name,
-                    Finalization_Trace_Required => F_T_R);
+      return (Limited_Controlled
+                with Entity_Name_Length  => Entity_Name'Length,
+                     Entity_Name         => Entity_Name,
+                     Exit_Trace_Required => Ex);
 
    end C;
 
@@ -63,7 +62,7 @@ package body Apsepp.Controlled_Trace_Debugging is
 
    begin
 
-      Apsepp.Trace_Debugging.Trace_Debugging.Trace (Message, Obj.Entity_Name);
+      Apsepp.Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity_Name);
 
    end Trace;
 
@@ -74,10 +73,10 @@ package body Apsepp.Controlled_Trace_Debugging is
 
    begin
 
-      if Obj.Finalization_Trace_Required then
+      if Obj.Exit_Trace_Required then
 
-         Apsepp.Trace_Debugging.Trace_Debugging.Trace
-           ("Finalize", Obj.Entity_Name);
+         Apsepp.Debug_Trace.Debug_Trace.Trace
+           ("Exit", Obj.Entity_Name);
 
       end if;
 
@@ -85,4 +84,4 @@ package body Apsepp.Controlled_Trace_Debugging is
 
    ----------------------------------------------------------------------------
 
-end Apsepp.Controlled_Trace_Debugging;
+end Apsepp.Scope_Debug;
