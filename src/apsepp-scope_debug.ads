@@ -5,6 +5,10 @@ with Ada.Finalization; use Ada.Finalization;
 
 package Apsepp.Scope_Debug is
 
+   -- Don't evaluate the class-wide pre-conditions in this package. Just let
+   -- Constraint_Error be raised in case of violation.
+   pragma Assertion_Policy (Pre'Class => Ignore);
+
    Debug_Entity_Name_Max_Length : constant := 220;
 
    subtype Debug_Entity_Name_Length
