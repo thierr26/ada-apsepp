@@ -1,8 +1,6 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Debug_Trace_Class.Interfa; use Apsepp.Debug_Trace_Class.Interfa;
-
 package Apsepp.Debug_Trace_Class.Stub is
 
    type Debug_Trace_Stub is limited new Debug_Trace_Interfa with private;

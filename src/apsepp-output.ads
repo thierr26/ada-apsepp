@@ -2,7 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Apsepp.Generic_Shared_Instance;
-with Apsepp.Output_Class.Interfa; use Apsepp.Output_Class.Interfa;
+with Apsepp.Output_Class; use Apsepp.Output_Class;
 
 package Apsepp.Output is
 

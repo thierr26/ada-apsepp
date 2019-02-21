@@ -5,4 +5,16 @@ package Apsepp.Debug_Trace_Class is
 
    pragma Pure (Apsepp.Debug_Trace_Class);
 
+   type Debug_Trace_Interfa is limited interface;
+
+   not overriding
+   function Message_W_Entity (Obj         : Debug_Trace_Interfa;
+                              Message     : String;
+                              Entity_Name : String) return String is abstract;
+
+   not overriding
+   procedure Trace (Obj         : Debug_Trace_Interfa;
+                    Message     : String;
+                    Entity_Name : String := "") is null;
+
 end Apsepp.Debug_Trace_Class;

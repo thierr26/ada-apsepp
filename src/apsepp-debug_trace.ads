@@ -2,7 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Apsepp.Generic_Shared_Instance;
-with Apsepp.Debug_Trace_Class.Interfa; use Apsepp.Debug_Trace_Class.Interfa;
+with Apsepp.Debug_Trace_Class; use Apsepp.Debug_Trace_Class;
 
 package Apsepp.Debug_Trace is
 
