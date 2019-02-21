@@ -7,6 +7,10 @@ package Apsepp.Scope_Bound_Locks is
 
    type SB_Lock_CB is access procedure;
 
+   generic
+      SBLCB_Access : SB_Lock_CB;
+   procedure SB_Lock_CB_procedure;
+
    type SB_Lock (Lock_CB, Unlock_CB : SB_Lock_CB := null) is limited private;
 
    type SB_Lock_Access is not null access all SB_Lock;

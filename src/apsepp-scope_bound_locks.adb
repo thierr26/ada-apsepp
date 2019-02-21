@@ -7,6 +7,18 @@ package body Apsepp.Scope_Bound_Locks is
 
    ----------------------------------------------------------------------------
 
+   procedure SB_Lock_CB_procedure is
+
+   begin
+
+      if SBLCB_Access /= null then
+         SBLCB_Access.all;
+      end if;
+
+   end SB_Lock_CB_procedure;
+
+   ----------------------------------------------------------------------------
+
    overriding
    procedure Initialize (Obj : in out SB_L_Locker) is
 
