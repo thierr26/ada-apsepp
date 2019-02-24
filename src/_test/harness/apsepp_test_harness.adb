@@ -15,7 +15,7 @@ package body Apsepp_Test_Harness is
       use Apsepp.Test_Node_Class.Runner_Sequential;
 
       Test_Runner : constant Test_Runner_Sequential
-        := Create (Scope_Bound_Locks_T_C'Access, Reporter'Access);
+        := Create (Test_Suite'Access, Reporter'Access);
 
       Outcome : Test_Outcome;
 
