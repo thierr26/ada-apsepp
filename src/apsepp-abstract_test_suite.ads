@@ -26,8 +26,7 @@ package Apsepp.Abstract_Test_Suite is
 
    overriding
    function Routine (Obj : Test_Suite;
-                     K   : Test_Routine_Index) return Test_Routine
-     is (Null_Test_Routine'Access);
+                     K   : Test_Routine_Index) return Test_Routine;
 
    procedure Run_Body (Obj     :     Test_Node_Interfa'Class;
                        Outcome : out Test_Outcome;

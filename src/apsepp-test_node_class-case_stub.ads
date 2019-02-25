@@ -12,8 +12,8 @@ package Apsepp.Test_Node_Class.Case_Stub is
      is (0);
 
    overriding
-   function Routine (Obj : Test_Case_Stub; K : Test_Routine_Index)
-     return Test_Routine;
+   function Routine (Obj : Test_Case_Stub;
+                     K   : Test_Routine_Index) return Test_Routine;
 
    overriding
    procedure Run (Obj     :     Test_Case_Stub;

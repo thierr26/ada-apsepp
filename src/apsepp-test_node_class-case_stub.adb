@@ -6,8 +6,8 @@ package body Apsepp.Test_Node_Class.Case_Stub is
    ----------------------------------------------------------------------------
 
    overriding
-   function Routine (Obj : Test_Case_Stub; K : Test_Routine_Index)
-     return Test_Routine
+   function Routine (Obj : Test_Case_Stub;
+                     K   : Test_Routine_Index) return Test_Routine
      is (Null_Test_Routine'Access);
 
    ----------------------------------------------------------------------------
