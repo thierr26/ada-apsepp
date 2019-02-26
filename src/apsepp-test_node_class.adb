@@ -109,11 +109,11 @@ package body Apsepp.Test_Node_Class is
 
       if Cond then
 
-         Test_Reporter.Report_Passed_Test_Assert  (Node_Tag);
+         Test_Reporter.Report_Passed_Test_Assert (Node_Tag);
 
       else
 
-         Test_Reporter.Report_Failed_Test_Assert  (Node_Tag, Message);
+         Test_Reporter.Report_Failed_Test_Assert (Node_Tag, Message);
 
          if Message'Length = 0 then
             raise Assertion_Error;

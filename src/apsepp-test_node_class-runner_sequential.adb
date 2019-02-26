@@ -16,8 +16,8 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
    ----------------------------------------------------------------------------
 
    overriding
-   function Routine (Obj : Test_Runner_Sequential; K : Test_Routine_Index)
-     return Test_Routine
+   function Routine (Obj : Test_Runner_Sequential;
+                     K   : Test_Routine_Index) return Test_Routine
      is (Null_Test_Routine'Access);
 
    ----------------------------------------------------------------------------
