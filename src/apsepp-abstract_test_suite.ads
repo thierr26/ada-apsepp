@@ -32,7 +32,7 @@ package Apsepp.Abstract_Test_Suite is
                        Outcome : out Test_Outcome;
                        Kind    :     Run_Kind;
                        Cond    :     not null access function return Boolean)
-     renames Apsepp.Test_Node_Class.Suite_Stub.Run_Body;
+     renames Test_Node_Class.Suite_Stub.Run_Body;
 
 private
 

@@ -11,7 +11,7 @@ procedure Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
    Kind    :     Run_Kind;
    Cond    :     not null access function return Boolean) is
 
-   use Apsepp.Test_Node_Class.Private_Test_Reporter;
+   use Private_Test_Reporter;
    use Ada.Assertions;
 
       -----------------------------------------------------

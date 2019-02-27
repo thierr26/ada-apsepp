@@ -22,7 +22,7 @@ package body Apsepp.Scope_Bound_Locks is
    overriding
    procedure Initialize (Obj : in out SB_L_Locker) is
 
-      use Apsepp.Scope_Bound_Locks.Private_Handler;
+      use Private_Handler;
 
    begin
 
@@ -37,7 +37,7 @@ package body Apsepp.Scope_Bound_Locks is
    overriding
    procedure Finalize (Obj : in out SB_L_Locker) is
 
-      use Apsepp.Scope_Bound_Locks.Private_Handler;
+      use Private_Handler;
 
    begin
 

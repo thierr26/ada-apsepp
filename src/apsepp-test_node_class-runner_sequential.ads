@@ -33,7 +33,7 @@ package Apsepp.Test_Node_Class.Runner_Sequential is
 
 private
 
-   use Apsepp.Test_Reporter_Class;
+   use Test_Reporter_Class;
 
    type Test_Runner_Sequential is limited new Test_Suite_Stub with record
       Child_Access    : Test_Node_Access;

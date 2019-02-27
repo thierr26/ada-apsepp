@@ -3,7 +3,7 @@
 
 package Apsepp.Debug_Trace_Class is
 
-   pragma Pure (Apsepp.Debug_Trace_Class);
+   pragma Pure (Debug_Trace_Class);
 
    type Debug_Trace_Interfa is limited interface;
 

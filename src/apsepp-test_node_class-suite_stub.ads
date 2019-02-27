@@ -42,8 +42,7 @@ package Apsepp.Test_Node_Class.Suite_Stub is
                            Kind    :     Run_Kind);
 
    procedure Run_Body
-     is new Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
-              (Work => Run_Children);
+     is new Generic_Case_And_Suite_Run_Body (Work => Run_Children);
 
 private
 

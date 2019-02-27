@@ -13,7 +13,7 @@ package body Apsepp.Test_Node_Class is
                                 Outcome : out Test_Outcome;
                                 Kind    :     Run_Kind) is
 
-      use Apsepp.Test_Node_Class.Private_Test_Reporter;
+      use Private_Test_Reporter;
 
       pragma Unreferenced (Kind);
 
@@ -36,8 +36,8 @@ package body Apsepp.Test_Node_Class is
             Outcome := Failed;
             Test_Reporter.Report_Test_Routines_Cancellation
               (Obj'Tag,
-               Apsepp.Test_Reporter_Class.Test_Routine_Index (K),
-               Apsepp.Test_Reporter_Class.Test_Routine_Index (N));
+               Test_Reporter_Class.Test_Routine_Index (K),
+               Test_Reporter_Class.Test_Routine_Index (N));
          end if;
 
          return Ret;
@@ -57,7 +57,7 @@ package body Apsepp.Test_Node_Class is
          Unexpected_Err := False;
 
          Test_Reporter.Report_Test_Routine_Start
-           (Obj'Tag, Apsepp.Test_Reporter_Class.Test_Routine_Index (K));
+           (Obj'Tag, Test_Reporter_Class.Test_Routine_Index (K));
 
          begin
 
@@ -111,7 +111,7 @@ package body Apsepp.Test_Node_Class is
    procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "") is
 
       use Ada.Assertions;
-      use Apsepp.Test_Node_Class.Private_Test_Reporter;
+      use Private_Test_Reporter;
 
    begin
 

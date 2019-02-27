@@ -13,7 +13,7 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
                            Outcome : out Test_Outcome;
                            Kind    :     Run_Kind) is
 
-      use Apsepp.Test_Node_Class.Private_Test_Reporter;
+      use Private_Test_Reporter;
 
       Current_Child     : Test_Node_Access := T_S_S'Access;
       Child_Run_Outcome : Test_Outcome;

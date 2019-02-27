@@ -6,8 +6,7 @@ with Apsepp.Output_Class; use Apsepp.Output_Class;
 
 package Apsepp.Output is
 
-   package Shared_Instance
-     is new Apsepp.Generic_Shared_Instance (Output_Interfa);
+   package Shared_Instance is new Generic_Shared_Instance (Output_Interfa);
 
    subtype Output_Access is Shared_Instance.Instance_Type_Access;
 

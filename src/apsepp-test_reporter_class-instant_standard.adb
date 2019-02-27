@@ -6,7 +6,7 @@ with Apsepp.Test_Node_Class;
 
 package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
-   use Apsepp.Test_Node_Class;
+   use Test_Node_Class;
 
    Child_Acc     : constant String := "accessing child";
    Child_Acc_1   : constant String := "accessing first child";

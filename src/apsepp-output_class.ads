@@ -3,7 +3,7 @@
 
 package Apsepp.Output_Class is
 
-   pragma Pure (Apsepp.Output_Class);
+   pragma Pure (Output_Class);
 
    type Output_Interfa is limited interface;
 

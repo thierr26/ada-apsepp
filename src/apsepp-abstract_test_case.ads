@@ -28,7 +28,7 @@ package Apsepp.Abstract_Test_Case is
                        Outcome : out Test_Outcome;
                        Kind    :     Run_Kind;
                        Cond    :     not null access function return Boolean)
-     renames Apsepp.Test_Node_Class.Case_Stub.Run_Body;
+     renames Test_Node_Class.Case_Stub.Run_Body;
 
 private
 

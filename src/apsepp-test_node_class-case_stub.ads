@@ -37,8 +37,7 @@ package Apsepp.Test_Node_Class.Case_Stub is
      with Post'Class => No_Subtasking'Result;
 
    procedure Run_Body
-     is new Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
-              (Work => Run_Test_Routines);
+     is new Generic_Case_And_Suite_Run_Body (Work => Run_Test_Routines);
 
 private
 

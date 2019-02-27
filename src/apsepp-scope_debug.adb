@@ -14,7 +14,7 @@ package body Apsepp.Scope_Debug is
 
       if En then
 
-         Apsepp.Debug_Trace.Debug_Trace.Trace ("Entry", Entity_Name);
+         Debug_Trace.Debug_Trace.Trace ("Entry", Entity_Name);
 
       end if;
 
@@ -62,7 +62,7 @@ package body Apsepp.Scope_Debug is
 
    begin
 
-      Apsepp.Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity_Name);
+      Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity_Name);
 
    end Trace;
 
@@ -75,8 +75,7 @@ package body Apsepp.Scope_Debug is
 
       if Obj.Exit_Trace_Required then
 
-         Apsepp.Debug_Trace.Debug_Trace.Trace
-           ("Exit", Obj.Entity_Name);
+         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity_Name);
 
       end if;
 

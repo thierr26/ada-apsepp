@@ -15,7 +15,7 @@ package Apsepp.Generic_Fixture is
 
 private
 
-   package Shared_Instance is new Apsepp.Generic_Shared_Instance
+   package Shared_Instance is new Generic_Shared_Instance
      (Instance_Ancestor_Type => Fixture_Type,
       Lock_CB                => Lock_CB,
       Unlock_CB              => Unlock_CB);

@@ -28,7 +28,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
       Outcome : out Test_Outcome;
       Kind    :     Run_Kind               := Assert_Cond_And_Run_Test) is
 
-      use Apsepp.Test_Node_Class.Private_Test_Reporter;
+      use Private_Test_Reporter;
 
       R_A : constant Shared_Instance.Instance_Type_Access
         := Shared_Instance.Instance_Type_Access (Obj.Reporter_Access);
