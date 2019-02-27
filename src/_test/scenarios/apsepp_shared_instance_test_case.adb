@@ -88,6 +88,61 @@ package body Apsepp_Shared_Instance_Test_Case is
 
    ----------------------------------------------------------------------------
 
+   procedure Shared_Instance_Access_Setter_L_Null_CB_E_Test is
+
+      use Ada.Tags;
+      use SIFLI_Shared_Instance_L;
+
+   begin
+
+      Assert (not SIFLI_Shared_Instance_L.Locked);
+      Assert (not SIFLI_Shared_Instance_L.Instantiated);
+      Assert (SIFLI_Shared_Instance_L.Instance = null);
+      Assert (SIF.Lock_Count = 0);
+      Assert (SIF.Unlock_Count = 0);
+
+      begin
+
+         declare
+            package Outer_A_S is new SIFLI_Shared_Instance_L.Access_Setter
+              (Inst_Access => SIFLI_Concrete_1_Instance'Access);
+         begin
+            Assert (SIFLI_Shared_Instance_L.Locked);
+            Assert (SIFLI_Shared_Instance_L.Instantiated);
+            Assert (SIFLI_Shared_Instance_L.Instance
+                      =
+                    SIFLI_Concrete_1_Instance'Access);
+            Assert (SIFLI_Shared_Instance_L.Instance'Tag
+                      =
+                    SIFLI_Concrete_1'Tag);
+            Assert (SIFLI_Shared_Instance_L.Instance.Primitive = '1');
+            Assert (SIF.Lock_Count = 1);
+            Assert (SIF.Unlock_Count = 0);
+            Assert (Outer_A_S.Has_Actually_Set);
+            raise Program_Error;
+         end;
+
+      exception
+
+         when others =>
+            Assert (SIFLI_Shared_Instance_L.Instance = null);
+            Assert (not SIFLI_Shared_Instance_L.Locked);
+            Assert (not SIFLI_Shared_Instance_L.Instantiated);
+            Assert (SIF.Lock_Count = 1);
+            Assert (SIF.Unlock_Count = 0);
+
+      end;
+
+      Assert (SIFLI_Shared_Instance_L.Instance = null);
+      Assert (not SIFLI_Shared_Instance_L.Locked);
+      Assert (not SIFLI_Shared_Instance_L.Instantiated);
+      Assert (SIF.Lock_Count = 1);
+      Assert (SIF.Unlock_Count = 0);
+
+   end Shared_Instance_Access_Setter_L_Null_CB_E_Test;
+
+   ----------------------------------------------------------------------------
+
    procedure Shared_Instance_Access_Setter_U_Null_CB_Test is
 
       use Ada.Tags;
@@ -432,6 +487,7 @@ package body Apsepp_Shared_Instance_Test_Case is
    function Routine_Array (Obj : Apsepp_Shared_Instance_T_C)
      return Test_Routine_Array
      is (Shared_Instance_Access_Setter_L_Null_CB_Test'Access,
+         Shared_Instance_Access_Setter_L_Null_CB_E_Test'Access,
          Shared_Instance_Access_Setter_U_Null_CB_Test'Access,
          Shared_Instance_Access_Setter_CB_Test'Access,
          Shared_Instance_Creator_L_Null_CB_Test'Access,

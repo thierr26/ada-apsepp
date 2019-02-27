@@ -62,6 +62,40 @@ package body Apsepp_Scope_Debug_Test_Case is
 
    ----------------------------------------------------------------------------
 
+   procedure Scope_Debug_Create_A_E_Test is
+
+   begin
+
+      Assert (SDF.Scope_Entry_Count = 0);
+      Assert (SDF.Scope_Exit_Count = 0);
+
+      begin
+
+         declare
+            C_D_T : Controlled_Debug_Tracer
+              := Create_A ("Scope_Debug_Create_A_Test");
+            pragma Unreferenced (C_D_T);
+         begin
+            Assert (SDF.Scope_Entry_Count = 1);
+            Assert (SDF.Scope_Exit_Count = 0);
+            raise Program_Error;
+         end;
+
+      exception
+
+         when others =>
+            Assert (SDF.Scope_Entry_Count = 1);
+            Assert (SDF.Scope_Exit_Count = 1);
+
+      end;
+
+      Assert (SDF.Scope_Entry_Count = 1);
+      Assert (SDF.Scope_Exit_Count = 1);
+
+   end Scope_Debug_Create_A_E_Test;
+
+   ----------------------------------------------------------------------------
+
    procedure Scope_Debug_Create_I_Test is
 
    begin
@@ -149,6 +183,7 @@ package body Apsepp_Scope_Debug_Test_Case is
      return Test_Routine_Array
      is (Scope_Debug_Create_Test'Access,
          Scope_Debug_Create_A_Test'Access,
+         Scope_Debug_Create_A_E_Test'Access,
          Scope_Debug_Create_I_Test'Access,
          Scope_Debug_Create_F_Test'Access,
          Scope_Debug_Create_N_Test'Access);

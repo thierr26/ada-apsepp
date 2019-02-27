@@ -82,6 +82,28 @@ package body Apsepp_Scope_Bound_Locks_Test_Case is
       Assert (not Locked (SBLF.Lock_W_CB));
       Assert (SBLF.N = 0);
 
+      begin
+
+         declare
+            Locker : SB_L_Locker (SBLF.Lock_W_CB'Access);
+            pragma Unreferenced (Locker);
+         begin
+            Assert (Locked (SBLF.Lock_W_CB));
+            Assert (SBLF.N = 1);
+            raise Program_Error;
+         end;
+
+      exception
+
+         when others =>
+            Assert (not Locked (SBLF.Lock_W_CB));
+            Assert (SBLF.N = 0);
+
+      end;
+
+      Assert (not Locked (SBLF.Lock_W_CB));
+      Assert (SBLF.N = 0);
+
       declare
          Locker : SB_L_Locker (SBLF.Lock_W_CB'Access);
          pragma Unreferenced (Locker);
