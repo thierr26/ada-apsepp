@@ -5,6 +5,11 @@ package Apsepp.Test_Reporter_Class.Stub is
 
    type Test_Reporter_Stub is new Test_Reporter_Interfa with private;
 
+   overriding
+   function Unreported_Routine_Exception_Details
+     (Obj : Test_Reporter_Stub) return Boolean
+     is (False);
+
 private
 
    type Test_Reporter_Stub is new Test_Reporter_Interfa with null record;

@@ -92,6 +92,31 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    ----------------------------------------------------------------------------
 
+   procedure Put_Exception_Message
+     (Name, Message                : String;
+      Quiet_If_Zero_Length_Message : Boolean := False) is
+
+      Zero_Length_Message : constant Boolean := Message'Length = 0;
+      Quiet               : constant Boolean := Zero_Length_Message
+                                                  and then
+                                                Quiet_If_Zero_Length_Message;
+
+   begin
+
+      if not Quiet then
+         Ada.Text_IO.New_Line;
+         if Zero_Length_Message then
+            Ada.Text_IO.Put_Line(Name);
+         else
+            Ada.Text_IO.Put_Line(Name & ": " & Message);
+         end if;
+         Ada.Text_IO.New_Line;
+      end if;
+
+   end Put_Exception_Message;
+
+   ----------------------------------------------------------------------------
+
    procedure Put_Report_Line (Head         : String;
                               Node_Tag     : Tag;
                               Prev_Brother : Tag    := No_Tag) is
@@ -134,6 +159,43 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       end if;
 
    end Report_Test_Assert_Outcome;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Set_Unreported_Routine_Exception_Details_Flag
+     (Obj                : in out Test_Reporter_Instant_Standard;
+      Node_Tag           :        Tag) is
+
+      pragma Unreferenced (Node_Tag);
+
+   begin
+
+      Obj.Unreported_Routine_Exception_Details_Flag := True;
+
+   end Set_Unreported_Routine_Exception_Details_Flag;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Reset_Unreported_Routine_Exception_Details_Flag
+     (Obj                : in out Test_Reporter_Instant_Standard;
+      Node_Tag           :        Tag) is
+
+      pragma Unreferenced (Node_Tag);
+
+   begin
+
+      Obj.Unreported_Routine_Exception_Details_Flag := False;
+
+   end Reset_Unreported_Routine_Exception_Details_Flag;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Unreported_Routine_Exception_Details
+     (Obj : Test_Reporter_Instant_Standard) return Boolean
+     is (Obj.Unreported_Routine_Exception_Details_Flag);
 
    ----------------------------------------------------------------------------
 
@@ -370,13 +432,25 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Report_Test_Assert_Outcome (Obj, Node_Tag, Failed);
-      if Message'Length > 0 then
-         Ada.Text_IO.New_Line;
-         Ada.Text_IO.Put_Line("Message: " & Message);
-         Ada.Text_IO.New_Line;
-      end if;
+      Put_Exception_Message ("Message", Message, True);
 
    end Report_Failed_Test_Assert;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Report_Unexpected_Routine_Exception
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag;
+      E        :        Exception_Occurrence) is
+
+   begin
+
+      Put_Report_Line
+        (Unexp_Error & "running " & Kth_Routine (Obj.Routine_Index), Node_Tag);
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+
+   end Report_Unexpected_Routine_Exception;
 
    ----------------------------------------------------------------------------
 

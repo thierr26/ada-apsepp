@@ -68,13 +68,21 @@ package body Apsepp.Test_Node_Class is
                Obj.Setup_Routine;
 
                begin
+                  Test_Reporter.Set_Unreported_Routine_Exception_Details_Flag
+                    (Obj'Tag);
                   R.all;
                   R_Outcome := Passed;
                   Test_Reporter.Report_Passed_Test_Routine (Obj'Tag);
                exception
-                  when others =>
+                  when E : others =>
+                     if Test_Reporter.Unreported_Routine_Exception_Details then
+                        Test_Reporter.Report_Unexpected_Routine_Exception
+                          (Obj'Tag, E);
+                     end if;
                      Test_Reporter.Report_Failed_Test_Routine (Obj'Tag);
                end;
+               Test_Reporter.Reset_Unreported_Routine_Exception_Details_Flag
+                 (Obj'Tag);
 
             exception
                when others =>
@@ -114,6 +122,8 @@ package body Apsepp.Test_Node_Class is
       else
 
          Test_Reporter.Report_Failed_Test_Assert (Node_Tag, Message);
+         Test_Reporter.Reset_Unreported_Routine_Exception_Details_Flag
+           (Node_Tag);
 
          if Message'Length = 0 then
             raise Assertion_Error;

@@ -7,6 +7,20 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
      is limited new Test_Reporter_Interfa with private;
 
    overriding
+   procedure Set_Unreported_Routine_Exception_Details_Flag
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag);
+
+   overriding
+   procedure Reset_Unreported_Routine_Exception_Details_Flag
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag);
+
+   overriding
+   function Unreported_Routine_Exception_Details
+     (Obj : Test_Reporter_Instant_Standard) return Boolean;
+
+   overriding
    procedure Report_Failed_Child_Test_Node_Access
      (Obj                : in out Test_Reporter_Instant_Standard;
       Node_Tag           :        Tag;
@@ -87,6 +101,12 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
       Message  :        String                         := "");
 
    overriding
+   procedure Report_Unexpected_Routine_Exception
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag;
+      E        :        Exception_Occurrence);
+
+   overriding
    procedure Report_Passed_Test_Routine
      (Obj      : in out Test_Reporter_Instant_Standard;
       Node_Tag :        Tag);
@@ -110,10 +130,11 @@ private
 
    type Test_Reporter_Instant_Standard
      is limited new Test_Reporter_Interfa with record
-      Tag_On_Assert_Reset : Tag                := No_Tag;
-      Tag_Mismatch        : Boolean            := False;
-      Assert_Count        : Test_Assert_Count  := 0;
-      Routine_Index       : Test_Routine_Count := 0;
+      Unreported_Routine_Exception_Details_Flag : Boolean            := False;
+      Tag_On_Assert_Reset                       : Tag                := No_Tag;
+      Tag_Mismatch                              : Boolean            := False;
+      Assert_Count                              : Test_Assert_Count  := 0;
+      Routine_Index                             : Test_Routine_Count := 0;
    end record;
 
 end Apsepp.Test_Reporter_Class.Instant_Standard;
