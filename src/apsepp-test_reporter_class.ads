@@ -3,13 +3,11 @@
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Tags; use Ada.Tags;
+limited with Apsepp.Test_Node_Class;
 
 package Apsepp.Test_Reporter_Class is
 
-   type Test_Routine_Count is new Natural;
-
-   subtype Test_Routine_Index
-     is Test_Routine_Count range 1 .. Test_Routine_Count'Last;
+   type Test_Routine_Count_Access is access Test_Node_Class.Test_Routine_Count;
 
    type Test_Assert_Count is new Natural;
 
@@ -86,13 +84,13 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Test_Routine_Start
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Routine_Index) is null;
+      K        :        Test_Node_Class.Test_Routine_Count) is null;
 
    not overriding
    procedure Report_Test_Routines_Cancellation
      (Obj              : in out Test_Reporter_Interfa;
       Node_Tag         :        Tag;
-      First_K, Last_K  :        Test_Routine_Index) is null;
+      First_K, Last_K  :        Test_Node_Class.Test_Routine_Count) is null;
 
    not overriding
    procedure Report_Failed_Test_Routine_Access

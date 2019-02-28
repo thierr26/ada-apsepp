@@ -3,6 +3,7 @@
 
 with Ada.Text_IO;
 with Apsepp.Test_Node_Class;
+with Ada.Unchecked_Deallocation;
 
 package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
@@ -16,6 +17,12 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    Test_Assert   : constant String := "test assertion";
    Ru            : constant String := "run";
    Unexp_Error   : constant String := "UNEXPECTED ERROR while ";
+
+   ----------------------------------------------------------------------------
+
+   procedure Free_Test_Routine_Count
+     is new Ada.Unchecked_Deallocation (Object => Test_Routine_Count,
+                                        Name   => Test_Routine_Count_Access);
 
    ----------------------------------------------------------------------------
 
@@ -34,28 +41,28 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    function Kth_Routine_Access is new Kth
-     (Integer_Type => Test_Routine_Index,
+     (Integer_Type => Test_Routine_Count,
       Designation  => "access to test routine");
 
    ----------------------------------------------------------------------------
 
    function Kth_Routine_Setup is new Kth
-     (Integer_Type => Test_Routine_Index,
+     (Integer_Type => Test_Routine_Count,
       Designation  => "setup of test routine");
 
    ----------------------------------------------------------------------------
 
-   function Kth_Routine is new Kth (Integer_Type => Test_Routine_Index,
+   function Kth_Routine is new Kth (Integer_Type => Test_Routine_Count,
                                     Designation  => "test routine");
 
    ----------------------------------------------------------------------------
 
-   function From_Kth_Routine is new Kth (Integer_Type => Test_Routine_Index,
+   function From_Kth_Routine is new Kth (Integer_Type => Test_Routine_Count,
                                          Designation  => "test routines");
 
    ----------------------------------------------------------------------------
 
-   function To_Kth_Routine is new Kth (Integer_Type => Test_Routine_Index,
+   function To_Kth_Routine is new Kth (Integer_Type => Test_Routine_Count,
                                        Designation  => " to");
 
    ----------------------------------------------------------------------------
@@ -66,12 +73,12 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    function Kth_Kth (K_A : Test_Assert_Count;
-                     K_R : Test_Routine_Index) return String
+                     K_R : Test_Routine_Count) return String
      is (Kth_Test_Assert (K_A) & " for " & Kth_Routine (K_R));
 
    ----------------------------------------------------------------------------
 
-   function Routine_Range (First_K, Last_K : Test_Routine_Index) return String
+   function Routine_Range (First_K, Last_K : Test_Routine_Count) return String
      is (if Last_K = First_K then
             Kth_Routine (First_K)
          else
@@ -154,7 +161,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       else
          Put_Report_Line
            (Outcome_Prepended (Outcome,
-                               Kth_Kth (Obj.Assert_Count, Obj.Routine_Index)),
+                               Kth_Kth (Obj.Assert_Count,
+                                        Obj.Routine_Index.all)),
             Node_Tag);
       end if;
 
@@ -348,14 +356,15 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    procedure Report_Test_Routine_Start
      (Obj      : in out Test_Reporter_Instant_Standard;
       Node_Tag :        Tag;
-      K        :        Test_Routine_Index) is
+      K        :        Test_Routine_Count) is
 
    begin
 
       Obj.Tag_On_Assert_Reset := Node_Tag;
       Obj.Tag_Mismatch := False;
       Obj.Assert_Count := 0;
-      Obj.Routine_Index := K;
+      Obj.Routine_Index := new Test_Routine_Count;
+      Obj.Routine_Index.all := K;
       Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
 
    end Report_Test_Routine_Start;
@@ -366,15 +375,14 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    procedure Report_Test_Routines_Cancellation
      (Obj              : in out Test_Reporter_Instant_Standard;
       Node_Tag         :        Tag;
-      First_K, Last_K  :        Test_Routine_Index) is
-
-      pragma Unreferenced (Obj);
+      First_K, Last_K  :        Test_Routine_Count) is
 
    begin
 
       Put_Report_Line
         ("CANCELLED " & Routine_Range (First_K, Last_K),
          Node_Tag);
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Test_Routines_Cancellation;
 
@@ -388,8 +396,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine_Access (Obj.Routine_Index)),
+        (Outcome_Prepended (Failed,
+                            Kth_Routine_Access (Obj.Routine_Index.all)),
          Node_Tag);
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Failed_Test_Routine_Access;
 
@@ -403,8 +413,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine_Setup (Obj.Routine_Index)),
+        (Outcome_Prepended (Failed,
+                            Kth_Routine_Setup (Obj.Routine_Index.all)),
          Node_Tag);
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Failed_Test_Routine_Setup;
 
@@ -447,8 +459,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Report_Line
-        (Unexp_Error & "running " & Kth_Routine (Obj.Routine_Index), Node_Tag);
+        (Unexp_Error & "running " & Kth_Routine (Obj.Routine_Index.all),
+         Node_Tag);
       Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Unexpected_Routine_Exception;
 
@@ -462,8 +476,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Passed, Kth_Routine (Obj.Routine_Index)),
+        (Outcome_Prepended (Passed, Kth_Routine (Obj.Routine_Index.all)),
          Node_Tag);
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Passed_Test_Routine;
 
@@ -477,8 +492,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine (Obj.Routine_Index)),
+        (Outcome_Prepended (Failed, Kth_Routine (Obj.Routine_Index.all)),
          Node_Tag);
+      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Failed_Test_Routine;
 

@@ -71,13 +71,13 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
    procedure Report_Test_Routine_Start
      (Obj      : in out Test_Reporter_Instant_Standard;
       Node_Tag :        Tag;
-      K        :        Test_Routine_Index);
+      K        :        Test_Node_Class.Test_Routine_Count);
 
    overriding
    procedure Report_Test_Routines_Cancellation
      (Obj              : in out Test_Reporter_Instant_Standard;
       Node_Tag         :        Tag;
-      First_K, Last_K  :        Test_Routine_Index);
+      First_K, Last_K  :        Test_Node_Class.Test_Routine_Count);
 
    overriding
    procedure Report_Failed_Test_Routine_Access
@@ -134,7 +134,7 @@ private
       Tag_On_Assert_Reset                       : Tag                := No_Tag;
       Tag_Mismatch                              : Boolean            := False;
       Assert_Count                              : Test_Assert_Count  := 0;
-      Routine_Index                             : Test_Routine_Count := 0;
+      Routine_Index                             : Test_Routine_Count_Access;
    end record;
 
 end Apsepp.Test_Reporter_Class.Instant_Standard;

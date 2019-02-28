@@ -34,10 +34,7 @@ package body Apsepp.Test_Node_Class is
          if Unexpected_Err then
             Ret     := True;
             Outcome := Failed;
-            Test_Reporter.Report_Test_Routines_Cancellation
-              (Obj'Tag,
-               Test_Reporter_Class.Test_Routine_Index (K),
-               Test_Reporter_Class.Test_Routine_Index (N));
+            Test_Reporter.Report_Test_Routines_Cancellation (Obj'Tag, K, N);
          end if;
 
          return Ret;
@@ -56,8 +53,7 @@ package body Apsepp.Test_Node_Class is
          R_Outcome := Failed;
          Unexpected_Err := False;
 
-         Test_Reporter.Report_Test_Routine_Start
-           (Obj'Tag, Test_Reporter_Class.Test_Routine_Index (K));
+         Test_Reporter.Report_Test_Routine_Start (Obj'Tag, K);
 
          begin
 
