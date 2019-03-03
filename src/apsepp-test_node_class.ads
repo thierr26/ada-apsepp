@@ -2,6 +2,9 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Ada.Tags; use Ada.Tags;
+private with Ada.Containers.Hashed_Maps;
+private with Ada.Strings.Hash;
+private with Apsepp.Generic_Prot_Integer;
 
 package Apsepp.Test_Node_Class is
 
@@ -27,11 +30,30 @@ package Apsepp.Test_Node_Class is
    subtype Test_Routine_Index
      is Test_Routine_Count range 1 .. Test_Routine_Count'Last;
 
+   type Test_Assert_Count is new Natural;
+
+   subtype Test_Assert_Index
+     is Test_Assert_Count range 1 .. Test_Assert_Count'Last;
+
    type Test_Routine is not null access procedure;
 
    procedure Null_Test_Routine is null;
 
-   type Test_Node_Interfa is limited interface;
+   -- TODOC: A test node must not have two children with the same tag.
+   -- <2019-03-02>
+   -- TODOC: A runner must make sure that only one test node with a given tag
+   -- is running at a given time. <2019-03-02>
+   type Test_Node_Interfa is limited interface
+
+     with Type_Invariant'Class
+            => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
+                 => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
+                      => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)
+                                             /=
+                                           Test_Node_Interfa.Child (K_2)));
+
+   -- TODO: Remove next codetag if support for Type_Invariant'Class is
+   -- confirmed. <2019-03-03>
 
    -- PORT: Type_Invariant'Class aspect causes compilation failure.
    -- <2019-02-19 GNAT Community 2018 (20180523-73)>
@@ -85,6 +107,74 @@ package Apsepp.Test_Node_Class is
 
      with Pre => Kind = Assert_Cond_And_Run_Test;
 
-   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "");
+   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String  := "");
+
+private
+
+   use Ada.Containers;
+
+   package Prot_Test_Assert_Count
+     is new Generic_Prot_Integer (Test_Assert_Count);
+
+   use Prot_Test_Assert_Count;
+
+   subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
+
+   function Tag_Hash (T : Tag) return Hash_Type
+     is (Ada.Strings.Hash (Expanded_Name (T)));
+
+   type Routine_State is record
+      Routine_Index  : Test_Routine_Index;
+      Assert_Count   : O_P_I_Test_Assert_Count;
+      Assert_Outcome : Test_Outcome;
+   end record;
+
+   package Routine_State_Hashed_Maps
+     is new Ada.Containers.Hashed_Maps (Key_Type        => Tag,
+                                        Element_Type    => Routine_State,
+                                        Hash            => Tag_Hash,
+                                        Equivalent_Keys => "=");
+
+   ----------------------------------------------------------------------------
+
+   protected Routine_State_Map_Handler is
+
+      procedure Reset_Routine_State (Node_Tag      : Tag;
+                                     Routine_Index : Test_Routine_Index)
+
+        with Pre => Node_Tag /= No_Tag;
+
+      procedure Increment_Assert_Count (Node_Tag : Tag)
+
+        with Pre => Node_Tag /= No_Tag;
+
+      procedure Set_Failed_Outcome (Node_Tag : Tag)
+
+        with Pre => Node_Tag /= No_Tag;
+
+      procedure Get_Assert_Count (Node_Tag      :     Tag;
+                                  Routine_Index : out Test_Routine_Index;
+                                  Count         : out O_P_I_Test_Assert_Count)
+
+        with Pre => Node_Tag /= No_Tag;
+
+      procedure Get_Assert_Outcome (Node_Tag :     Tag;
+                                    Outcome  : out Test_Outcome)
+
+        with Pre => Node_Tag /= No_Tag;
+
+      procedure Delete (Node_Tag : Tag)
+
+        with Pre => Node_Tag /= No_Tag;
+
+   private
+
+      T : Tag                           := No_Tag;
+      S : Routine_State;
+      M : Routine_State_Hashed_Maps.Map;
+
+   end Routine_State_Map_Handler;
+
+   ----------------------------------------------------------------------------
 
 end Apsepp.Test_Node_Class;

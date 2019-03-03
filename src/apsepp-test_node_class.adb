@@ -9,29 +9,164 @@ package body Apsepp.Test_Node_Class is
 
    ----------------------------------------------------------------------------
 
+   function Initial_Routine_State
+     (Routine_Index : Test_Routine_Index := 1) return Routine_State
+     is (Routine_Index  => Routine_Index,
+         Assert_Count   => Create (0),
+         Assert_Outcome => Passed);
+
+   ----------------------------------------------------------------------------
+
+   protected body Routine_State_Map_Handler is
+
+      -----------------------------------------------------
+
+      procedure Switch_Key_If_Needed (Node_Tag : Tag) is
+
+         use Routine_State_Hashed_Maps;
+
+         procedure Update_Map_With_Work_Data is
+            C : constant Cursor := M.Find (T);
+         begin
+            if C = No_Element then
+               M.Insert (T, S);
+            else
+               M.Replace_Element (C, S);
+            end if;
+         end Update_Map_With_Work_Data;
+
+         procedure Extract_Work_Data is
+            C : constant Cursor := M.Find (Node_Tag);
+         begin
+            T := Node_Tag;
+            S := (if C = No_Element then
+                     Initial_Routine_State
+                  else
+                     Element (C));
+         end Extract_Work_Data;
+
+      begin
+
+         if T /= Node_Tag then
+
+            if T /= No_Tag then
+               Update_Map_With_Work_Data;
+            end if;
+
+            Extract_Work_Data;
+
+         end if;
+
+      end Switch_Key_If_Needed;
+
+      -----------------------------------------------------
+
+      procedure Reset_Routine_State (Node_Tag      : Tag;
+                                     Routine_Index : Test_Routine_Index) is
+
+      begin
+
+         Switch_Key_If_Needed (Node_Tag);
+         S := Initial_Routine_State (Routine_Index);
+
+      end Reset_Routine_State;
+
+      -----------------------------------------------------
+
+      procedure Increment_Assert_Count (Node_Tag : Tag) is
+
+      begin
+
+         Switch_Key_If_Needed (Node_Tag);
+         Inc (S.Assert_Count);
+
+      end Increment_Assert_Count;
+
+      -----------------------------------------------------
+
+      procedure Set_Failed_Outcome (Node_Tag : Tag) is
+
+      begin
+
+         Switch_Key_If_Needed (Node_Tag);
+         S.Assert_Outcome := Failed;
+
+      end Set_Failed_Outcome;
+
+      -----------------------------------------------------
+
+      procedure Get_Assert_Count (Node_Tag      :     Tag;
+                                  Routine_Index : out Test_Routine_Index;
+                                  Count         : out O_P_I_Test_Assert_Count)
+        is
+
+      begin
+
+         Switch_Key_If_Needed (Node_Tag);
+         Routine_Index := S.Routine_Index;
+         Count := S.Assert_Count;
+
+      end Get_Assert_Count;
+
+      -----------------------------------------------------
+
+      procedure Get_Assert_Outcome (Node_Tag :     Tag;
+                                    Outcome  : out Test_Outcome) is
+
+      begin
+
+         Switch_Key_If_Needed (Node_Tag);
+         Outcome := S.Assert_Outcome;
+
+      end Get_Assert_Outcome;
+
+      -----------------------------------------------------
+
+      procedure Delete (Node_Tag : Tag) is
+
+         use Routine_State_Hashed_Maps;
+
+         C : Cursor := M.Find (Node_Tag);
+
+      begin
+
+         if C /= No_Element then
+            M.Delete (C);
+         end if;
+
+      end Delete;
+
+      -----------------------------------------------------
+
+   end Routine_State_Map_Handler;
+
+   ----------------------------------------------------------------------------
+
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome;
                                 Kind    :     Run_Kind) is
 
+      use Ada.Assertions;
       use Private_Test_Reporter;
 
       pragma Unreferenced (Kind);
 
-      K              : Test_Routine_Count := 0;
-      R              : Test_Routine       := Null_Test_Routine'Access;
-      Unexpected_Err : Boolean            := False;
-      R_Outcome      : Test_Outcome;
+      T : constant Tag := Obj'Tag;
+
+      K   : Test_Routine_Count := 0;
+      R   : Test_Routine       := Null_Test_Routine'Access;
+      Err : Boolean            := False; -- "Unexpected error" flag.
 
       -----------------------------------------------------
 
       function Done return Boolean is
 
          N   : constant Test_Routine_Count := Obj.Routine_Count;
-         Ret :          Boolean            := K >= Obj.Routine_Count;
+         Ret :          Boolean            := K >= N;
 
       begin
 
-         if Unexpected_Err then
+         if Err then
             Ret     := True;
             Outcome := Failed;
             Test_Reporter.Report_Test_Routines_Cancellation (Obj'Tag, K, N);
@@ -49,11 +184,11 @@ package body Apsepp.Test_Node_Class is
 
       while not Done loop
 
-         K := K + 1;
-         R_Outcome := Failed;
-         Unexpected_Err := False;
+         K   := K + 1;
+         Err := True;
 
-         Test_Reporter.Report_Test_Routine_Start (Obj'Tag, K);
+         Routine_State_Map_Handler.Reset_Routine_State (T, K);
+         Test_Reporter.Report_Test_Routine_Start (T, K);
 
          begin
 
@@ -63,42 +198,56 @@ package body Apsepp.Test_Node_Class is
 
                Obj.Setup_Routine;
 
+               declare
+                  Assert_Outcome : Test_Outcome;
                begin
-                  Test_Reporter.Set_Unreported_Routine_Exception_Details_Flag
-                    (Obj'Tag);
                   R.all;
-                  R_Outcome := Passed;
-                  Test_Reporter.Report_Passed_Test_Routine (Obj'Tag);
+                  Err := False;
+                  Routine_State_Map_Handler.Get_Assert_Outcome
+                    (T, Assert_Outcome);
+                  Assert (case Assert_Outcome is
+                             when Failed => False, -- Causes a jump to
+                                                   -- Assertion_Error handler
+                                                   -- below.
+                             when Passed => True);
+                  Test_Reporter.Report_Passed_Test_Routine (T, K);
                exception
-                  when E : others =>
-                     if Test_Reporter.Unreported_Routine_Exception_Details then
-                        Test_Reporter.Report_Unexpected_Routine_Exception
-                          (Obj'Tag, E);
-                     end if;
-                     Test_Reporter.Report_Failed_Test_Routine (Obj'Tag);
+                  when Run_E : Assertion_Error =>
+                     Routine_State_Map_Handler.Get_Assert_Outcome
+                       (T, Assert_Outcome);
+                     case Assert_Outcome is
+                        when Failed =>
+                           Err := False; -- Exception very likely originates in
+                                         -- a failed test assertion and not in
+                                         -- an "unexpected error".
+                           Outcome := Failed;
+                           Test_Reporter.Report_Failed_Test_Routine (T, K);
+                        when Passed =>
+                           Test_Reporter.Report_Unexpected_Routine_Exception
+                             (T, K, Run_E);
+                     end case;
+                  when Run_E : others =>
+                     Test_Reporter.Report_Unexpected_Routine_Exception
+                       (T, K, Run_E);
                end;
-               Test_Reporter.Reset_Unreported_Routine_Exception_Details_Flag
-                 (Obj'Tag);
 
             exception
-               when others =>
-                  Unexpected_Err := True;
-                  Test_Reporter.Report_Failed_Test_Routine_Setup (Obj'Tag);
+               when Setup_E : others =>
+                  Test_Reporter.Report_Failed_Test_Routine_Setup
+                    (T, K, Setup_E);
             end;
 
          exception
 
-            when others =>
-               Unexpected_Err := True;
-               Test_Reporter.Report_Failed_Test_Routine_Access (Obj'Tag);
+            when Access_E : others =>
+               Test_Reporter.Report_Failed_Test_Routine_Access
+                 (T, K, Access_E);
 
          end;
 
-         Outcome := (case R_Outcome is
-                        when Failed => Failed,
-                        when Passed => Outcome);
-
       end loop;
+
+      Routine_State_Map_Handler.Delete (T);
 
    end Run_Test_Routines;
 
@@ -109,17 +258,24 @@ package body Apsepp.Test_Node_Class is
       use Ada.Assertions;
       use Private_Test_Reporter;
 
+      K     : Test_Routine_Index;
+      Count : O_P_I_Test_Assert_Count;
+
    begin
+
+      Routine_State_Map_Handler.Increment_Assert_Count (Node_Tag);
+      Routine_State_Map_Handler.Get_Assert_Count (Node_Tag, K, Count);
 
       if Cond then
 
-         Test_Reporter.Report_Passed_Test_Assert (Node_Tag);
+         Test_Reporter.Report_Passed_Test_Assert
+           (Node_Tag, K, not Sat (Count), Val (Count));
 
       else
 
-         Test_Reporter.Report_Failed_Test_Assert (Node_Tag, Message);
-         Test_Reporter.Reset_Unreported_Routine_Exception_Details_Flag
-           (Node_Tag);
+         Routine_State_Map_Handler.Set_Failed_Outcome (Node_Tag);
+         Test_Reporter.Report_Failed_Test_Assert
+           (Node_Tag, K, Message, not Sat (Count), Val (Count));
 
          if Message'Length = 0 then
             raise Assertion_Error;

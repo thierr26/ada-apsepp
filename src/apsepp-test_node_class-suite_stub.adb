@@ -15,6 +15,8 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
 
       use Private_Test_Reporter;
 
+      T : constant Tag := Obj'Tag;
+
       Current_Child     : Test_Node_Access := T_S_S'Access;
       Child_Run_Outcome : Test_Outcome;
 
@@ -35,15 +37,22 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
                   when Failed => Outcome := Failed;
                end case;
             exception
-               when others =>
-                  Test_Reporter.Report_Unexpected_Node_Run_Error (Obj'Tag);
+               when E : others =>
+                  Outcome := Failed;
+                  case Kind is
+                     when Check_Cond =>
+                        Test_Reporter.Report_Unexpected_Node_Cond_Check_Error
+                          (T, E);
+                     when Assert_Cond_And_Run_Test =>
+                        Test_Reporter.Report_Unexpected_Node_Run_Error (T, E);
+                  end case;
             end;
 
          exception
 
-            when others =>
+            when Access_E : others =>
                Test_Reporter.Report_Failed_Child_Test_Node_Access
-                 (Obj'Tag, K = 1, Current_Child'Tag);
+                 (T, K = 1, Current_Child'Tag, Access_E);
 
          end;
 

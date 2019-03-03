@@ -6,6 +6,6 @@ function Apsepp.Test_Reporter_Class.Instant_Standard.Create
 
 begin
 
-   return (Test_Reporter_Interfa with others => <>);
+   return (Test_Reporter_Interfa with null record);
 
 end Apsepp.Test_Reporter_Class.Instant_Standard.Create;

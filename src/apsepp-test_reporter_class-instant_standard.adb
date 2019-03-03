@@ -3,11 +3,12 @@
 
 with Ada.Text_IO;
 with Apsepp.Test_Node_Class;
-with Ada.Unchecked_Deallocation;
 
 package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    use Test_Node_Class;
+
+   ----------------------------------------------------------------------------
 
    Child_Acc     : constant String := "accessing child";
    Child_Acc_1   : constant String := "accessing first child";
@@ -20,19 +21,18 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    ----------------------------------------------------------------------------
 
-   procedure Free_Test_Routine_Count
-     is new Ada.Unchecked_Deallocation (Object => Test_Routine_Count,
-                                        Name   => Test_Routine_Count_Access);
-
-   ----------------------------------------------------------------------------
-
    generic
       type Integer_Type is range <>;
       Designation : String;
-   function Kth (K : Integer_Type) return String;
+   function Kth (K : Integer_Type; K_Avail : Boolean := True) return String;
 
-   function Kth (K : Integer_Type) return String is
-      K_Str : String := Integer_Type'Image (K);
+   ----------------------------------------------------------------------------
+
+   function Kth (K : Integer_Type; K_Avail : Boolean := True) return String is
+      K_Str : String := (if K_Avail then
+                            Integer_Type'Image (K)
+                         else
+                            " [unavailable]");
    begin
       K_Str(K_Str'First) := '#';
       return Designation & " " & K_Str;
@@ -72,9 +72,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    ----------------------------------------------------------------------------
 
-   function Kth_Kth (K_A : Test_Assert_Count;
-                     K_R : Test_Routine_Count) return String
-     is (Kth_Test_Assert (K_A) & " for " & Kth_Routine (K_R));
+   function Kth_Kth (K_A_Avail : Boolean;
+                     K_A       : Test_Assert_Count;
+                     K_R       : Test_Routine_Count) return String
+     is (Kth_Test_Assert (K_A, K_A_Avail) & " for " & Kth_Routine (K_R));
 
    ----------------------------------------------------------------------------
 
@@ -145,65 +146,23 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    procedure Report_Test_Assert_Outcome
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      Outcome  :        Test_Outcome) is
+     (Obj              : in out Test_Reporter_Instant_Standard;
+      Node_Tag         :        Tag;
+      Outcome          :        Test_Outcome;
+      K                :        Test_Routine_Count;
+      Assert_Num_Avail :        Boolean;
+      Assert_Num       :        Test_Assert_Count) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
-      if not Obj.Tag_Mismatch and then Node_Tag /= Obj.Tag_On_Assert_Reset then
-         Obj.Tag_Mismatch := True;
-      end if;
-      Obj.Assert_Count := Obj.Assert_Count + 1;
-
-      if Obj.Tag_Mismatch then
-         Put_Report_Line (Outcome_Prepended (Outcome, Test_Assert), Node_Tag);
-      else
-         Put_Report_Line
-           (Outcome_Prepended (Outcome,
-                               Kth_Kth (Obj.Assert_Count,
-                                        Obj.Routine_Index.all)),
-            Node_Tag);
-      end if;
+      Put_Report_Line
+        (Outcome_Prepended (Outcome,
+                            Kth_Kth (Assert_Num_Avail, Assert_Num, K)),
+         Node_Tag);
 
    end Report_Test_Assert_Outcome;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Set_Unreported_Routine_Exception_Details_Flag
-     (Obj                : in out Test_Reporter_Instant_Standard;
-      Node_Tag           :        Tag) is
-
-      pragma Unreferenced (Node_Tag);
-
-   begin
-
-      Obj.Unreported_Routine_Exception_Details_Flag := True;
-
-   end Set_Unreported_Routine_Exception_Details_Flag;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Reset_Unreported_Routine_Exception_Details_Flag
-     (Obj                : in out Test_Reporter_Instant_Standard;
-      Node_Tag           :        Tag) is
-
-      pragma Unreferenced (Node_Tag);
-
-   begin
-
-      Obj.Unreported_Routine_Exception_Details_Flag := False;
-
-   end Reset_Unreported_Routine_Exception_Details_Flag;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Unreported_Routine_Exception_Details
-     (Obj : Test_Reporter_Instant_Standard) return Boolean
-     is (Obj.Unreported_Routine_Exception_Details_Flag);
 
    ----------------------------------------------------------------------------
 
@@ -212,7 +171,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
      (Obj                : in out Test_Reporter_Instant_Standard;
       Node_Tag           :        Tag;
       First_Child        :        Boolean;
-      Previous_Child_Tag :        Tag) is
+      Previous_Child_Tag :        Tag;
+      E                  :        Exception_Occurrence) is
 
       pragma Unreferenced (Obj);
 
@@ -225,6 +185,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
                           Node_Tag,
                           Previous_Child_Tag);
       end if;
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
    end Report_Failed_Child_Test_Node_Access;
 
@@ -232,14 +193,16 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    overriding
    procedure Report_Unexpected_Node_Cond_Check_Error
-     (Obj                : in out Test_Reporter_Instant_Standard;
-      Node_Tag           :        Tag) is
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag;
+      E        :        Exception_Occurrence) is
 
       pragma Unreferenced (Obj);
 
    begin
 
       Put_Report_Line (Unexp_Error & "checking condition", Node_Tag);
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
    end Report_Unexpected_Node_Cond_Check_Error;
 
@@ -247,8 +210,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    overriding
    procedure Report_Unexpected_Node_Run_Error
-     (Obj                : in out Test_Reporter_Instant_Standard;
-      Node_Tag           :        Tag) is
+     (Obj      : in out Test_Reporter_Instant_Standard;
+      Node_Tag :        Tag;
+      E        :        Exception_Occurrence) is
 
       use Ada.Text_IO;
 
@@ -257,6 +221,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    begin
 
       Put_Line (Unexp_Error & "running" & Test_Node_W_Tag (Node_Tag));
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
    end Report_Unexpected_Node_Run_Error;
 
@@ -358,13 +323,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       Node_Tag :        Tag;
       K        :        Test_Routine_Count) is
 
+      pragma Unreferenced (Obj);
+
    begin
 
-      Obj.Tag_On_Assert_Reset := Node_Tag;
-      Obj.Tag_Mismatch := False;
-      Obj.Assert_Count := 0;
-      Obj.Routine_Index := new Test_Routine_Count;
-      Obj.Routine_Index.all := K;
       Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
 
    end Report_Test_Routine_Start;
@@ -373,16 +335,16 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    overriding
    procedure Report_Test_Routines_Cancellation
-     (Obj              : in out Test_Reporter_Instant_Standard;
-      Node_Tag         :        Tag;
-      First_K, Last_K  :        Test_Routine_Count) is
+     (Obj             : in out Test_Reporter_Instant_Standard;
+      Node_Tag        :        Tag;
+      First_K, Last_K :        Test_Routine_Count) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
-      Put_Report_Line
-        ("CANCELLED " & Routine_Range (First_K, Last_K),
-         Node_Tag);
-      Free_Test_Routine_Count (Obj.Routine_Index);
+      Put_Report_Line ("CANCELLED " & Routine_Range (First_K, Last_K),
+                       Node_Tag);
 
    end Report_Test_Routines_Cancellation;
 
@@ -391,15 +353,17 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    overriding
    procedure Report_Failed_Test_Routine_Access
      (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      Node_Tag :        Tag;
+      K        :        Test_Routine_Count;
+      E        :        Exception_Occurrence) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Failed,
-                            Kth_Routine_Access (Obj.Routine_Index.all)),
-         Node_Tag);
-      Free_Test_Routine_Count (Obj.Routine_Index);
+        (Outcome_Prepended (Failed, Kth_Routine_Access (K)), Node_Tag);
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
    end Report_Failed_Test_Routine_Access;
 
@@ -408,15 +372,17 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    overriding
    procedure Report_Failed_Test_Routine_Setup
      (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      Node_Tag :        Tag;
+      K        :        Test_Routine_Count;
+      E        :        Exception_Occurrence) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
       Put_Report_Line
-        (Outcome_Prepended (Failed,
-                            Kth_Routine_Setup (Obj.Routine_Index.all)),
-         Node_Tag);
-      Free_Test_Routine_Count (Obj.Routine_Index);
+        (Outcome_Prepended (Failed, Kth_Routine_Setup (K)), Node_Tag);
+      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
    end Report_Failed_Test_Routine_Setup;
 
@@ -424,12 +390,16 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    overriding
    procedure Report_Passed_Test_Assert
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+     (Obj              : in out Test_Reporter_Instant_Standard;
+      Node_Tag         :        Tag;
+      K                :        Test_Routine_Count;
+      Assert_Num_Avail :        Boolean;
+      Assert_Num       :        Test_Assert_Count) is
 
    begin
 
-      Report_Test_Assert_Outcome (Obj, Node_Tag, Passed);
+      Report_Test_Assert_Outcome
+        (Obj, Node_Tag, Passed, K, Assert_Num_Avail, Assert_Num);
 
    end Report_Passed_Test_Assert;
 
@@ -437,13 +407,17 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    overriding
    procedure Report_Failed_Test_Assert
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      Message  :        String                         := "") is
+     (Obj              : in out Test_Reporter_Instant_Standard;
+      Node_Tag         :        Tag;
+      K                :        Test_Routine_Count;
+      Message          :        String                             := "";
+      Assert_Num_Avail :        Boolean;
+      Assert_Num       :        Test_Assert_Count) is
 
    begin
 
-      Report_Test_Assert_Outcome (Obj, Node_Tag, Failed);
+      Report_Test_Assert_Outcome
+        (Obj, Node_Tag, Failed, K, Assert_Num_Avail, Assert_Num);
       Put_Exception_Message ("Message", Message, True);
 
    end Report_Failed_Test_Assert;
@@ -454,15 +428,15 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    procedure Report_Unexpected_Routine_Exception
      (Obj      : in out Test_Reporter_Instant_Standard;
       Node_Tag :        Tag;
+      K        :        Test_Routine_Count;
       E        :        Exception_Occurrence) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
-      Put_Report_Line
-        (Unexp_Error & "running " & Kth_Routine (Obj.Routine_Index.all),
-         Node_Tag);
+      Put_Report_Line (Unexp_Error & "running " & Kth_Routine (K), Node_Tag);
       Put_Exception_Message (Exception_Name (E), Exception_Message (E));
-      Free_Test_Routine_Count (Obj.Routine_Index);
 
    end Report_Unexpected_Routine_Exception;
 
@@ -471,14 +445,14 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    overriding
    procedure Report_Passed_Test_Routine
      (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      Node_Tag :        Tag;
+      K        :        Test_Routine_Count) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
-      Put_Report_Line
-        (Outcome_Prepended (Passed, Kth_Routine (Obj.Routine_Index.all)),
-         Node_Tag);
-      Free_Test_Routine_Count (Obj.Routine_Index);
+      Put_Report_Line (Outcome_Prepended (Passed, Kth_Routine (K)), Node_Tag);
 
    end Report_Passed_Test_Routine;
 
@@ -487,14 +461,14 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    overriding
    procedure Report_Failed_Test_Routine
      (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      Node_Tag :        Tag;
+      K        :        Test_Routine_Count) is
+
+      pragma Unreferenced (Obj);
 
    begin
 
-      Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine (Obj.Routine_Index.all)),
-         Node_Tag);
-      Free_Test_Routine_Count (Obj.Routine_Index);
+      Put_Report_Line (Outcome_Prepended (Failed, Kth_Routine (K)), Node_Tag);
 
    end Report_Failed_Test_Routine;
 
