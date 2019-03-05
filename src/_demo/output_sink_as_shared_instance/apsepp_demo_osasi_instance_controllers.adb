@@ -12,7 +12,7 @@ with Apsepp.Output;
 with Apsepp.Generic_Shared_Instance.Creator;
 
 -- "With" the needed creational function(s) for objects of class output sink.
-with Apsepp.Output_Class.Standard.Create;
+with Apsepp.Output_Class.Standard;
 with Apsepp.Output_Class.Quiet.Create;
 
 -- "With" the needed unit(s) needed to perform the application business. They
@@ -140,7 +140,7 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
       -- Allocator function (allocates an instance of type
       -- Apsepp.Output_Class.Standard.Output_Standard).
       function Allocate_Output_Standard return Output_Access
-        is (new Output_Standard'(Apsepp.Output_Class.Standard.Create));
+        is (new Output_Standard);
 
       -----------------------------------------------------
 

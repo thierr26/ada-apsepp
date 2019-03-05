@@ -8,9 +8,9 @@ package body Apsepp.Debug_Trace_Class.Output is
    ----------------------------------------------------------------------------
 
    overriding
-   procedure Trace (Obj         : Debug_Trace_Output;
-                    Message     : String;
-                    Entity_Name : String             := "") is
+   procedure Trace (Obj         : in out Debug_Trace_Output;
+                    Message     :        String;
+                    Entity_Name :        String             := "") is
 
    begin
 

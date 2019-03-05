@@ -7,16 +7,21 @@ package body Apsepp.Output_Class.Standard is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure Put_Line (Obj : Output_Standard; S : String) is
+   protected body Output_Standard is
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      procedure Put_Line (S : String) is
 
-      Ada.Text_IO.Put_Line (S);
+      begin
 
-   end Put_Line;
+         Ada.Text_IO.Put_Line (S);
+
+      end Put_Line;
+
+      -----------------------------------------------------
+
+   end Output_Standard;
 
    ----------------------------------------------------------------------------
 

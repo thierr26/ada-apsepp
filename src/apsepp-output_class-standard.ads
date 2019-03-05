@@ -3,13 +3,15 @@
 
 package Apsepp.Output_Class.Standard is
 
-   type Output_Standard is limited new Output_Interfa with private;
+   ----------------------------------------------------------------------------
 
-   overriding
-   procedure Put_Line (Obj : Output_Standard; S : String);
+   protected type Output_Standard is new Output_Interfa with
 
-private
+      overriding
+      procedure Put_Line (S : String);
 
-   type Output_Standard is limited new Output_Interfa with null record;
+   end Output_Standard;
+
+   ----------------------------------------------------------------------------
 
 end Apsepp.Output_Class.Standard;

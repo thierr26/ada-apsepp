@@ -38,8 +38,8 @@ package Apsepp_Scope_Debug_Test_Fixture is
    type SDFDT is limited new Debug_Trace_Stub with null record;
 
    overriding
-   procedure Trace (Obj         : SDFDT;
-                    Message     : String;
-                    Entity_Name : String := "");
+   procedure Trace (Obj         : in out SDFDT;
+                    Message     :        String;
+                    Entity_Name :        String := "");
 
 end Apsepp_Scope_Debug_Test_Fixture;

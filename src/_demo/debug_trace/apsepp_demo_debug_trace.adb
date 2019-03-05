@@ -4,7 +4,7 @@
 with Apsepp.Debug_Trace;
 with Apsepp.Debug_Trace_Class.Output.Create;
 with Apsepp.Output;
-with Apsepp.Output_Class.Standard.Create;
+with Apsepp.Output_Class.Standard;
 with Apsepp.Generic_Shared_Instance.Creator;
 with Apsepp_Demo_DT_Instance_Client; use Apsepp_Demo_DT_Instance_Client;
 with Apsepp_Demo_DT_Scope_Debug_User; use Apsepp_Demo_DT_Scope_Debug_User;
@@ -36,7 +36,7 @@ procedure Apsepp_Demo_Debug_Trace is
       -- Allocator function (allocates an instance of type
       -- Apsepp.Output_Class.Standard.Output_Standard).
       function Allocate_Output_Standard return Apsepp.Output.Output_Access
-        is (new Output_Standard'(Apsepp.Output_Class.Standard.Create));
+        is (new Output_Standard);
 
       package Output_Standard_Creator
         is new Apsepp.Output.Shared_Instance.Creator

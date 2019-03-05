@@ -146,14 +146,11 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    procedure Report_Test_Assert_Outcome
-     (Obj              : in out Test_Reporter_Instant_Standard;
-      Node_Tag         :        Tag;
+     (Node_Tag         :        Tag;
       Outcome          :        Test_Outcome;
       K                :        Test_Routine_Count;
       Assert_Num_Avail :        Boolean;
       Assert_Num       :        Test_Assert_Count) is
-
-      pragma Unreferenced (Obj);
 
    begin
 
@@ -166,341 +163,269 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure Report_Failed_Child_Test_Node_Access
-     (Obj                : in out Test_Reporter_Instant_Standard;
-      Node_Tag           :        Tag;
-      First_Child        :        Boolean;
-      Previous_Child_Tag :        Tag;
-      E                  :        Exception_Occurrence) is
+   protected body Test_Reporter_Instant_Standard is
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      procedure Report_Failed_Child_Test_Node_Access
+        (Node_Tag           :        Tag;
+         First_Child        :        Boolean;
+         Previous_Child_Tag :        Tag;
+         E                  :        Exception_Occurrence) is
 
-      if First_Child then
-         Put_Report_Line (Outcome_Prepended (Failed, Child_Acc_1), Node_Tag);
-      else
-         Put_Report_Line (Outcome_Prepended (Failed, Child_Acc),
-                          Node_Tag,
-                          Previous_Child_Tag);
-      end if;
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+      begin
 
-   end Report_Failed_Child_Test_Node_Access;
+         if First_Child then
+            Put_Report_Line
+              (Outcome_Prepended (Failed, Child_Acc_1), Node_Tag);
+         else
+            Put_Report_Line (Outcome_Prepended (Failed, Child_Acc),
+                             Node_Tag,
+                             Previous_Child_Tag);
+         end if;
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-   ----------------------------------------------------------------------------
+      end Report_Failed_Child_Test_Node_Access;
 
-   overriding
-   procedure Report_Unexpected_Node_Cond_Check_Error
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      E        :        Exception_Occurrence) is
+      -----------------------------------------------------
 
-      pragma Unreferenced (Obj);
+      procedure Report_Unexpected_Node_Cond_Check_Error
+        (Node_Tag :        Tag;
+         E        :        Exception_Occurrence) is
 
-   begin
+      begin
 
-      Put_Report_Line (Unexp_Error & "checking condition", Node_Tag);
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+         Put_Report_Line (Unexp_Error & "checking condition", Node_Tag);
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-   end Report_Unexpected_Node_Cond_Check_Error;
+      end Report_Unexpected_Node_Cond_Check_Error;
 
-   ----------------------------------------------------------------------------
+      -----------------------------------------------------
 
-   overriding
-   procedure Report_Unexpected_Node_Run_Error
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      E        :        Exception_Occurrence) is
+      procedure Report_Unexpected_Node_Run_Error
+        (Node_Tag :        Tag;
+         E        :        Exception_Occurrence) is
 
-      use Ada.Text_IO;
+         use Ada.Text_IO;
 
-      pragma Unreferenced (Obj);
+      begin
 
-   begin
+         Put_Line (Unexp_Error & "running" & Test_Node_W_Tag (Node_Tag));
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-      Put_Line (Unexp_Error & "running" & Test_Node_W_Tag (Node_Tag));
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+      end Report_Unexpected_Node_Run_Error;
 
-   end Report_Unexpected_Node_Run_Error;
+      -----------------------------------------------------
 
-   ----------------------------------------------------------------------------
+      procedure Report_Node_Cond_Check_Start (Node_Tag : Tag) is
 
-   overriding
-   procedure Report_Node_Cond_Check_Start
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      begin
 
-      pragma Unreferenced (Obj);
+         Put_Report_Line (Start & Cond_Checking, Node_Tag);
 
-   begin
+      end Report_Node_Cond_Check_Start;
 
-      Put_Report_Line (Start & Cond_Checking, Node_Tag);
+      -----------------------------------------------------
 
-   end Report_Node_Cond_Check_Start;
+      procedure Report_Passed_Node_Cond_Check (Node_Tag : Tag) is
 
-   ----------------------------------------------------------------------------
+      begin
 
-   overriding
-   procedure Report_Passed_Node_Cond_Check
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+         Put_Report_Line (Outcome_Prepended (Passed, Cond_Checking), Node_Tag);
 
-      pragma Unreferenced (Obj);
+      end Report_Passed_Node_Cond_Check;
 
-   begin
+      -----------------------------------------------------
 
-      Put_Report_Line (Outcome_Prepended (Passed, Cond_Checking), Node_Tag);
+      procedure Report_Failed_Node_Cond_Check (Node_Tag : Tag) is
 
-   end Report_Passed_Node_Cond_Check;
+      begin
 
-   ----------------------------------------------------------------------------
+         Put_Report_Line (Outcome_Prepended (Failed, Cond_Checking), Node_Tag);
 
-   overriding
-   procedure Report_Failed_Node_Cond_Check
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      end Report_Failed_Node_Cond_Check;
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      procedure Report_Passed_Node_Cond_Assert (Node_Tag : Tag) is
 
-      Put_Report_Line (Outcome_Prepended (Failed, Cond_Checking), Node_Tag);
+      begin
 
-   end Report_Failed_Node_Cond_Check;
+         Put_Report_Line (Outcome_Prepended (Passed, Cond_Assert), Node_Tag);
 
-   ----------------------------------------------------------------------------
+      end Report_Passed_Node_Cond_Assert;
 
-   overriding
-   procedure Report_Passed_Node_Cond_Assert
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      -----------------------------------------------------
 
-      pragma Unreferenced (Obj);
+      procedure Report_Failed_Node_Cond_Assert (Node_Tag : Tag) is
 
-   begin
+      begin
 
-      Put_Report_Line (Outcome_Prepended (Passed, Cond_Assert), Node_Tag);
+         Put_Report_Line (Outcome_Prepended (Failed, Cond_Assert), Node_Tag);
 
-   end Report_Passed_Node_Cond_Assert;
+      end Report_Failed_Node_Cond_Assert;
 
-   ----------------------------------------------------------------------------
+      -----------------------------------------------------
 
-   overriding
-   procedure Report_Failed_Node_Cond_Assert
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      procedure Report_Node_Run_Start (Node_Tag : Tag) is
 
-      pragma Unreferenced (Obj);
+      begin
 
-   begin
+         Put_Report_Line (Start & Ru, Node_Tag);
 
-      Put_Report_Line (Outcome_Prepended (Failed, Cond_Assert), Node_Tag);
+      end Report_Node_Run_Start;
 
-   end Report_Failed_Node_Cond_Assert;
+      -----------------------------------------------------
 
-   ----------------------------------------------------------------------------
+      procedure Report_Test_Routine_Start
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count) is
 
-   overriding
-   procedure Report_Node_Run_Start
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
+      begin
 
-      pragma Unreferenced (Obj);
+         Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
 
-   begin
+      end Report_Test_Routine_Start;
 
-      Put_Report_Line (Start & Ru, Node_Tag);
+      -----------------------------------------------------
 
-   end Report_Node_Run_Start;
+      procedure Report_Test_Routines_Cancellation
+        (Node_Tag        :        Tag;
+         First_K, Last_K :        Test_Routine_Count) is
 
-   ----------------------------------------------------------------------------
+      begin
 
-   overriding
-   procedure Report_Test_Routine_Start
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count) is
+         Put_Report_Line ("CANCELLED " & Routine_Range (First_K, Last_K),
+                          Node_Tag);
 
-      pragma Unreferenced (Obj);
+      end Report_Test_Routines_Cancellation;
 
-   begin
+      -----------------------------------------------------
 
-      Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
+      procedure Report_Failed_Test_Routine_Access
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count;
+         E        :        Exception_Occurrence) is
 
-   end Report_Test_Routine_Start;
+      begin
 
-   ----------------------------------------------------------------------------
+         Put_Report_Line
+           (Outcome_Prepended (Failed, Kth_Routine_Access (K)), Node_Tag);
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-   overriding
-   procedure Report_Test_Routines_Cancellation
-     (Obj             : in out Test_Reporter_Instant_Standard;
-      Node_Tag        :        Tag;
-      First_K, Last_K :        Test_Routine_Count) is
+      end Report_Failed_Test_Routine_Access;
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      procedure Report_Failed_Test_Routine_Setup
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count;
+         E        :        Exception_Occurrence) is
 
-      Put_Report_Line ("CANCELLED " & Routine_Range (First_K, Last_K),
-                       Node_Tag);
+      begin
 
-   end Report_Test_Routines_Cancellation;
+         Put_Report_Line
+           (Outcome_Prepended (Failed, Kth_Routine_Setup (K)), Node_Tag);
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-   ----------------------------------------------------------------------------
+      end Report_Failed_Test_Routine_Setup;
 
-   overriding
-   procedure Report_Failed_Test_Routine_Access
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count;
-      E        :        Exception_Occurrence) is
+      -----------------------------------------------------
 
-      pragma Unreferenced (Obj);
+      procedure Report_Passed_Test_Assert
+        (Node_Tag         :        Tag;
+         K                :        Test_Routine_Count;
+         Assert_Num_Avail :        Boolean;
+         Assert_Num       :        Test_Assert_Count) is
 
-   begin
+      begin
 
-      Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine_Access (K)), Node_Tag);
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+         Report_Test_Assert_Outcome
+           (Node_Tag, Passed, K, Assert_Num_Avail, Assert_Num);
 
-   end Report_Failed_Test_Routine_Access;
+      end Report_Passed_Test_Assert;
 
-   ----------------------------------------------------------------------------
+      -----------------------------------------------------
 
-   overriding
-   procedure Report_Failed_Test_Routine_Setup
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count;
-      E        :        Exception_Occurrence) is
+      procedure Report_Failed_Test_Assert
+        (Node_Tag         :        Tag;
+         K                :        Test_Routine_Count;
+         Message          :        String             := "";
+         Assert_Num_Avail :        Boolean;
+         Assert_Num       :        Test_Assert_Count) is
 
-      pragma Unreferenced (Obj);
+      begin
 
-   begin
+         Report_Test_Assert_Outcome
+           (Node_Tag, Failed, K, Assert_Num_Avail, Assert_Num);
+         Put_Exception_Message ("Message", Message, True);
 
-      Put_Report_Line
-        (Outcome_Prepended (Failed, Kth_Routine_Setup (K)), Node_Tag);
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+      end Report_Failed_Test_Assert;
 
-   end Report_Failed_Test_Routine_Setup;
+      -----------------------------------------------------
 
-   ----------------------------------------------------------------------------
+      procedure Report_Unexpected_Routine_Exception
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count;
+         E        :        Exception_Occurrence) is
 
-   overriding
-   procedure Report_Passed_Test_Assert
-     (Obj              : in out Test_Reporter_Instant_Standard;
-      Node_Tag         :        Tag;
-      K                :        Test_Routine_Count;
-      Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Assert_Count) is
+      begin
 
-   begin
+         Put_Report_Line
+           (Unexp_Error & "running " & Kth_Routine (K), Node_Tag);
+         Put_Exception_Message (Exception_Name (E), Exception_Message (E));
 
-      Report_Test_Assert_Outcome
-        (Obj, Node_Tag, Passed, K, Assert_Num_Avail, Assert_Num);
+      end Report_Unexpected_Routine_Exception;
 
-   end Report_Passed_Test_Assert;
+      -----------------------------------------------------
 
-   ----------------------------------------------------------------------------
+      procedure Report_Passed_Test_Routine
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count) is
 
-   overriding
-   procedure Report_Failed_Test_Assert
-     (Obj              : in out Test_Reporter_Instant_Standard;
-      Node_Tag         :        Tag;
-      K                :        Test_Routine_Count;
-      Message          :        String                             := "";
-      Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Assert_Count) is
+      begin
 
-   begin
+         Put_Report_Line
+           (Outcome_Prepended (Passed, Kth_Routine (K)), Node_Tag);
 
-      Report_Test_Assert_Outcome
-        (Obj, Node_Tag, Failed, K, Assert_Num_Avail, Assert_Num);
-      Put_Exception_Message ("Message", Message, True);
+      end Report_Passed_Test_Routine;
 
-   end Report_Failed_Test_Assert;
+      -----------------------------------------------------
 
-   ----------------------------------------------------------------------------
+      procedure Report_Failed_Test_Routine
+        (Node_Tag :        Tag;
+         K        :        Test_Routine_Count) is
 
-   overriding
-   procedure Report_Unexpected_Routine_Exception
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count;
-      E        :        Exception_Occurrence) is
+      begin
 
-      pragma Unreferenced (Obj);
+         Put_Report_Line
+           (Outcome_Prepended (Failed, Kth_Routine (K)), Node_Tag);
 
-   begin
+      end Report_Failed_Test_Routine;
 
-      Put_Report_Line (Unexp_Error & "running " & Kth_Routine (K), Node_Tag);
-      Put_Exception_Message (Exception_Name (E), Exception_Message (E));
+      -----------------------------------------------------
 
-   end Report_Unexpected_Routine_Exception;
+      procedure Report_Passed_Node_Run (Node_Tag : Tag) is
 
-   ----------------------------------------------------------------------------
+      begin
 
-   overriding
-   procedure Report_Passed_Test_Routine
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count) is
+         Put_Report_Line (Outcome_Prepended (Passed, Ru), Node_Tag);
 
-      pragma Unreferenced (Obj);
+      end Report_Passed_Node_Run;
 
-   begin
+      -----------------------------------------------------
 
-      Put_Report_Line (Outcome_Prepended (Passed, Kth_Routine (K)), Node_Tag);
+      procedure Report_Failed_Node_Run (Node_Tag : Tag) is
 
-   end Report_Passed_Test_Routine;
+      begin
 
-   ----------------------------------------------------------------------------
+         Put_Report_Line (Outcome_Prepended (Failed, Ru), Node_Tag);
 
-   overriding
-   procedure Report_Failed_Test_Routine
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag;
-      K        :        Test_Routine_Count) is
+      end Report_Failed_Node_Run;
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
-
-      Put_Report_Line (Outcome_Prepended (Failed, Kth_Routine (K)), Node_Tag);
-
-   end Report_Failed_Test_Routine;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Report_Passed_Node_Run
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
-
-      pragma Unreferenced (Obj);
-
-   begin
-
-      Put_Report_Line (Outcome_Prepended (Passed, Ru), Node_Tag);
-
-   end Report_Passed_Node_Run;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Report_Failed_Node_Run
-     (Obj      : in out Test_Reporter_Instant_Standard;
-      Node_Tag :        Tag) is
-
-      pragma Unreferenced (Obj);
-
-   begin
-
-      Put_Report_Line (Outcome_Prepended (Failed, Ru), Node_Tag);
-
-   end Report_Failed_Node_Run;
+   end Test_Reporter_Instant_Standard;
 
    ----------------------------------------------------------------------------
 

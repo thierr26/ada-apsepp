@@ -7,21 +7,29 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure Trace (Obj         : Debug_Trace_Standard;
-                    Message     : String;
-                    Entity_Name : String             := "") is
+   protected body Debug_Trace_Standard is
 
-   begin
+      -----------------------------------------------------
 
-      Ada.Text_IO.Put_Line
-        (if Entity_Name'Length /= 0 then
-            Debug_Trace_Standard'Class (Obj).Message_W_Entity
-              (Message, Entity_Name)
-         else
-            Message);
+      procedure Trace (Message     : String;
+                       Entity_Name : String := "") is
 
-   end Trace;
+         function Message_W_Entity (Message     : String;
+                                    Entity_Name : String) return String
+           renames Debug_Trace_Stub_Instance.Message_W_Entity;
+
+      begin
+
+         Ada.Text_IO.Put_Line (if Entity_Name'Length /= 0 then
+                                  Message_W_Entity (Message, Entity_Name)
+                               else
+                                  Message);
+
+      end Trace;
+
+      -----------------------------------------------------
+
+   end Debug_Trace_Standard;
 
    ----------------------------------------------------------------------------
 

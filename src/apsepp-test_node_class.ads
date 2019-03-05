@@ -52,20 +52,6 @@ package Apsepp.Test_Node_Class is
                                              /=
                                            Test_Node_Interfa.Child (K_2)));
 
-   -- TODO: Remove next codetag if support for Type_Invariant'Class is
-   -- confirmed. <2019-03-03>
-
-   -- PORT: Type_Invariant'Class aspect causes compilation failure.
-   -- <2019-02-19 GNAT Community 2018 (20180523-73)>
-   -- <2019-02-21 GNAT 8.2.0>
-
-     -- with Type_Invariant'Class
-     --        => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
-     --             => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
-     --                  => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)
-     --                                         /=
-     --                                       Test_Node_Interfa.Child (K_2)));
-
    type Test_Node_Access is not null access all Test_Node_Interfa'Class;
 
    not overriding

@@ -57,9 +57,9 @@ package body Apsepp_Scope_Debug_Test_Fixture is
    ----------------------------------------------------------------------------
 
    overriding
-   procedure Trace (Obj         : SDFDT;
-                    Message     : String;
-                    Entity_Name : String := "") is
+   procedure Trace (Obj         : in out SDFDT;
+                    Message     :        String;
+                    Entity_Name :        String := "") is
 
       pragma Unreferenced (Obj, Entity_Name);
 

@@ -13,7 +13,7 @@ package Apsepp.Debug_Trace_Class is
                               Entity_Name : String) return String is abstract;
 
    not overriding
-   procedure Trace (Obj         : Debug_Trace_Interfa;
+   procedure Trace (Obj         : in out Debug_Trace_Interfa;
                     Message     : String;
                     Entity_Name : String := "") is null;
 
