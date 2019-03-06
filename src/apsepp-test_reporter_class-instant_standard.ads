@@ -9,21 +9,25 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
      is new Test_Reporter_Interfa with
 
       overriding
+      procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
+                                      Accepted     : out Boolean);
+
+      overriding
       procedure Report_Failed_Child_Test_Node_Access
-        (Node_Tag           :        Tag;
-         First_Child        :        Boolean;
-         Previous_Child_Tag :        Tag;
-         E                  :        Exception_Occurrence);
+        (Node_Tag           : Tag;
+         First_Child        : Boolean;
+         Previous_Child_Tag : Tag;
+         E                  : Exception_Occurrence);
 
       overriding
       procedure Report_Unexpected_Node_Cond_Check_Error
-        (Node_Tag :        Tag;
-         E        :        Exception_Occurrence);
+        (Node_Tag : Tag;
+         E        : Exception_Occurrence);
 
       overriding
       procedure Report_Unexpected_Node_Run_Error
-        (Node_Tag :        Tag;
-         E        :        Exception_Occurrence);
+        (Node_Tag : Tag;
+         E        : Exception_Occurrence);
 
       overriding
       procedure Report_Node_Cond_Check_Start (Node_Tag : Tag);
@@ -45,56 +49,56 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
 
       overriding
       procedure Report_Test_Routine_Start
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count);
 
       overriding
       procedure Report_Test_Routines_Cancellation
-        (Node_Tag        :        Tag;
-         First_K, Last_K :        Test_Node_Class.Test_Routine_Count);
+        (Node_Tag        : Tag;
+         First_K, Last_K : Test_Node_Class.Test_Routine_Count);
 
       overriding
       procedure Report_Failed_Test_Routine_Access
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count;
-         E        :        Exception_Occurrence);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count;
+         E        : Exception_Occurrence);
 
       overriding
       procedure Report_Failed_Test_Routine_Setup
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count;
-         E        :        Exception_Occurrence);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count;
+         E        : Exception_Occurrence);
 
       overriding
       procedure Report_Passed_Test_Assert
-        (Node_Tag         :        Tag;
-         K                :        Test_Node_Class.Test_Routine_Count;
-         Assert_Num_Avail :        Boolean;
-         Assert_Num       :        Test_Node_Class.Test_Assert_Count);
+        (Node_Tag         : Tag;
+         K                : Test_Node_Class.Test_Routine_Count;
+         Assert_Num_Avail : Boolean;
+         Assert_Num       : Test_Node_Class.Test_Assert_Count);
 
       overriding
       procedure Report_Failed_Test_Assert
-        (Node_Tag         :        Tag;
-         K                :        Test_Node_Class.Test_Routine_Count;
-         Message          :        String                             := "";
-         Assert_Num_Avail :        Boolean;
-         Assert_Num       :        Test_Node_Class.Test_Assert_Count);
+        (Node_Tag         : Tag;
+         K                : Test_Node_Class.Test_Routine_Count;
+         Assert_Num_Avail : Boolean;
+         Assert_Num       : Test_Node_Class.Test_Assert_Count;
+         E                : Exception_Occurrence);
 
       overriding
       procedure Report_Unexpected_Routine_Exception
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count;
-         E        :        Exception_Occurrence);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count;
+         E        : Exception_Occurrence);
 
       overriding
       procedure Report_Passed_Test_Routine
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count);
 
       overriding
       procedure Report_Failed_Test_Routine
-        (Node_Tag :        Tag;
-         K        :        Test_Node_Class.Test_Routine_Count);
+        (Node_Tag : Tag;
+         K        : Test_Node_Class.Test_Routine_Count);
 
       overriding
       procedure Report_Passed_Node_Run (Node_Tag : Tag);

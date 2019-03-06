@@ -14,8 +14,9 @@ package Apsepp.Test_Reporter_Class is
    type Test_Reporter_Access is access all Test_Reporter_Interfa'Class;
 
    not overriding
-   procedure Report_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
-                                  Node_Lineage :        Tag_Array) is null;
+   procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
+                                   Node_Lineage :        Tag_Array;
+                                   Accepted     :    out Boolean) is null;
 
    -- TODOC: Called by Test_Node_Class.Suite_Stub.Run_Children.
    -- <2019-03-03>
@@ -130,9 +131,9 @@ package Apsepp.Test_Reporter_Class is
      (Obj              : in out Test_Reporter_Interfa;
       Node_Tag         :        Tag;
       K                :        Test_Node_Class.Test_Routine_Count;
-      Message          :        String                             := "";
       Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Node_Class.Test_Assert_Count) is null;
+      Assert_Num       :        Test_Node_Class.Test_Assert_Count;
+      E                :        Exception_Occurrence) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
    not overriding
@@ -172,6 +173,6 @@ package Apsepp.Test_Reporter_Class is
 
    -- TODOC: Called by Test_Node_Class.Runner_Sequential.Run. <2019-03-03>
    not overriding
-   procedure Processing (Obj : in out Test_Reporter_Interfa) is null;
+   procedure Process (Obj : in out Test_Reporter_Interfa) is null;
 
 end Apsepp.Test_Reporter_Class;

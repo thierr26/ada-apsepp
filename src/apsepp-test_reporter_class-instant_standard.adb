@@ -146,11 +146,11 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    procedure Report_Test_Assert_Outcome
-     (Node_Tag         :        Tag;
-      Outcome          :        Test_Outcome;
-      K                :        Test_Routine_Count;
-      Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Assert_Count) is
+     (Node_Tag         : Tag;
+      Outcome          : Test_Outcome;
+      K                : Test_Routine_Count;
+      Assert_Num_Avail : Boolean;
+      Assert_Num       : Test_Assert_Count) is
 
    begin
 
@@ -167,11 +167,24 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       -----------------------------------------------------
 
+      procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
+                                      Accepted     : out Boolean) is
+
+         pragma Unreferenced (Node_Lineage);
+
+      begin
+
+         Accepted := True;
+
+      end Provide_Node_Lineage;
+
+      -----------------------------------------------------
+
       procedure Report_Failed_Child_Test_Node_Access
-        (Node_Tag           :        Tag;
-         First_Child        :        Boolean;
-         Previous_Child_Tag :        Tag;
-         E                  :        Exception_Occurrence) is
+        (Node_Tag           : Tag;
+         First_Child        : Boolean;
+         Previous_Child_Tag : Tag;
+         E                  : Exception_Occurrence) is
 
       begin
 
@@ -190,8 +203,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Unexpected_Node_Cond_Check_Error
-        (Node_Tag :        Tag;
-         E        :        Exception_Occurrence) is
+        (Node_Tag : Tag;
+         E        : Exception_Occurrence) is
 
       begin
 
@@ -203,8 +216,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Unexpected_Node_Run_Error
-        (Node_Tag :        Tag;
-         E        :        Exception_Occurrence) is
+        (Node_Tag : Tag;
+         E        : Exception_Occurrence) is
 
          use Ada.Text_IO;
 
@@ -278,8 +291,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Test_Routine_Start
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count) is
 
       begin
 
@@ -290,8 +303,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Test_Routines_Cancellation
-        (Node_Tag        :        Tag;
-         First_K, Last_K :        Test_Routine_Count) is
+        (Node_Tag        : Tag;
+         First_K, Last_K : Test_Routine_Count) is
 
       begin
 
@@ -303,9 +316,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Failed_Test_Routine_Access
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count;
-         E        :        Exception_Occurrence) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count;
+         E        : Exception_Occurrence) is
 
       begin
 
@@ -318,9 +331,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Failed_Test_Routine_Setup
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count;
-         E        :        Exception_Occurrence) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count;
+         E        : Exception_Occurrence) is
 
       begin
 
@@ -333,10 +346,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Passed_Test_Assert
-        (Node_Tag         :        Tag;
-         K                :        Test_Routine_Count;
-         Assert_Num_Avail :        Boolean;
-         Assert_Num       :        Test_Assert_Count) is
+        (Node_Tag         : Tag;
+         K                : Test_Routine_Count;
+         Assert_Num_Avail : Boolean;
+         Assert_Num       : Test_Assert_Count) is
 
       begin
 
@@ -348,26 +361,26 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Failed_Test_Assert
-        (Node_Tag         :        Tag;
-         K                :        Test_Routine_Count;
-         Message          :        String             := "";
-         Assert_Num_Avail :        Boolean;
-         Assert_Num       :        Test_Assert_Count) is
+        (Node_Tag         : Tag;
+         K                : Test_Routine_Count;
+         Assert_Num_Avail : Boolean;
+         Assert_Num       : Test_Assert_Count;
+         E                : Exception_Occurrence) is
 
       begin
 
          Report_Test_Assert_Outcome
            (Node_Tag, Failed, K, Assert_Num_Avail, Assert_Num);
-         Put_Exception_Message ("Message", Message, True);
+         Put_Exception_Message ("Message", Exception_Message (E), True);
 
       end Report_Failed_Test_Assert;
 
       -----------------------------------------------------
 
       procedure Report_Unexpected_Routine_Exception
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count;
-         E        :        Exception_Occurrence) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count;
+         E        : Exception_Occurrence) is
 
       begin
 
@@ -380,8 +393,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Passed_Test_Routine
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count) is
 
       begin
 
@@ -393,8 +406,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Report_Failed_Test_Routine
-        (Node_Tag :        Tag;
-         K        :        Test_Routine_Count) is
+        (Node_Tag : Tag;
+         K        : Test_Routine_Count) is
 
       begin
 

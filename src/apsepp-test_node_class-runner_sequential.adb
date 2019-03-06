@@ -53,7 +53,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
          Test_Suite_Stub (Obj).Run (Outcome, Kind);
       end if;
 
-      Test_Reporter.Processing;
+      Test_Reporter.Process;
 
    end Run;
 

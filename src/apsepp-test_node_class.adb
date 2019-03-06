@@ -274,14 +274,15 @@ package body Apsepp.Test_Node_Class is
       else
 
          Routine_State_Map_Handler.Set_Failed_Outcome (Node_Tag);
-         Test_Reporter.Report_Failed_Test_Assert
-           (Node_Tag, K, Message, not Sat (Count), Val (Count));
 
-         if Message'Length = 0 then
-            raise Assertion_Error;
-         else
+         begin
             raise Assertion_Error with Message;
-         end if;
+         exception
+            when E : others =>
+               Test_Reporter.Report_Failed_Test_Assert
+                 (Node_Tag, K, not Sat (Count), Val (Count), E);
+               raise;
+         end;
 
       end if;
 
