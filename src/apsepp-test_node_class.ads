@@ -83,9 +83,10 @@ package Apsepp.Test_Node_Class is
 
    not overriding
    procedure Run
-     (Obj     :     Test_Node_Interfa;
-      Outcome : out Test_Outcome;
-      Kind    :     Run_Kind          := Assert_Cond_And_Run_Test) is abstract;
+     (Obj     : in out Test_Node_Interfa;
+      Outcome :    out Test_Outcome;
+      Kind    :        Run_Kind          := Assert_Cond_And_Run_Test)
+     is abstract;
 
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome;

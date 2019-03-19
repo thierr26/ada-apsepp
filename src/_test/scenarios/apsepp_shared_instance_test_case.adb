@@ -500,10 +500,10 @@ package body Apsepp_Shared_Instance_Test_Case is
 
    overriding
    procedure Run
-     (Obj     :     Apsepp_Shared_Instance_T_C;
-      Outcome : out Test_Outcome;
-      Kind    :     Run_Kind                   := Assert_Cond_And_Run_Test)
-   is
+     (Obj     : in out Apsepp_Shared_Instance_T_C;
+      Outcome :    out Test_Outcome;
+      Kind    :        Run_Kind                   := Assert_Cond_And_Run_Test)
+     is
 
       -----------------------------------------------------
 

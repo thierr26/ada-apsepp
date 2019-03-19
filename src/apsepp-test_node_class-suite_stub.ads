@@ -8,9 +8,10 @@ package Apsepp.Test_Node_Class.Suite_Stub is
    type Test_Suite_Stub is limited new Test_Node_Interfa with private;
 
    overriding
-   procedure Run (Obj     :     Test_Suite_Stub;
-                  Outcome : out Test_Outcome;
-                  Kind    :     Run_Kind        := Assert_Cond_And_Run_Test);
+   procedure Run
+     (Obj     : in out Test_Suite_Stub;
+      Outcome :    out Test_Outcome;
+      Kind    :        Run_Kind        := Assert_Cond_And_Run_Test);
 
    overriding
    function Child_Count (Obj : Test_Suite_Stub) return Test_Node_Count

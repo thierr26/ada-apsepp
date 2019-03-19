@@ -13,9 +13,9 @@ package body Apsepp.Test_Node_Class.Case_Stub is
    ----------------------------------------------------------------------------
 
    overriding
-   procedure Run (Obj     :     Test_Case_Stub;
-                  Outcome : out Test_Outcome;
-                  Kind    :     Run_Kind       := Assert_Cond_And_Run_Test)
+   procedure Run (Obj     : in out Test_Case_Stub;
+                  Outcome :    out Test_Outcome;
+                  Kind    :        Run_Kind       := Assert_Cond_And_Run_Test)
      is
 
       -----------------------------------------------------

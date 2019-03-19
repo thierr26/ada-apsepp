@@ -16,9 +16,9 @@ package Apsepp.Test_Node_Class.Case_Stub is
                      K   : Test_Routine_Index) return Test_Routine;
 
    overriding
-   procedure Run (Obj     :     Test_Case_Stub;
-                  Outcome : out Test_Outcome;
-                  Kind    :     Run_Kind       := Assert_Cond_And_Run_Test);
+   procedure Run (Obj     : in out Test_Case_Stub;
+                  Outcome :    out Test_Outcome;
+                  Kind    :        Run_Kind       := Assert_Cond_And_Run_Test);
 
    overriding
    function Child_Count (Obj : Test_Case_Stub) return Test_Node_Count

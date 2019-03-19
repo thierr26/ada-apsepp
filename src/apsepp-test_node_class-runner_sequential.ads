@@ -27,9 +27,9 @@ package Apsepp.Test_Node_Class.Runner_Sequential is
 
    overriding
    procedure Run
-     (Obj     :     Test_Runner_Sequential;
-      Outcome : out Test_Outcome;
-      Kind    :     Run_Kind               := Assert_Cond_And_Run_Test);
+     (Obj     : in out Test_Runner_Sequential;
+      Outcome :    out Test_Outcome;
+      Kind    :        Run_Kind               := Assert_Cond_And_Run_Test);
 
 private
 
