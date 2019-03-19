@@ -1,12 +1,12 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Tags;
-with Apsepp.Generic_Shared_Instance.Access_Setter;
-with Apsepp.Generic_Shared_Instance.Creator;
-with Apsepp.Generic_Shared_Instance.Fallback_Switch;
-with Apsepp_Shared_Instance_Test_Fixture;
-with Apsepp.Generic_Fixture.Creator;
+with Ada.Tags,
+     Apsepp.Generic_Shared_Instance.Access_Setter,
+     Apsepp.Generic_Shared_Instance.Creator,
+     Apsepp.Generic_Shared_Instance.Fallback_Switch,
+     Apsepp_Shared_Instance_Test_Fixture,
+     Apsepp.Generic_Fixture.Creator;
 
 package body Apsepp_Shared_Instance_Test_Case is
 

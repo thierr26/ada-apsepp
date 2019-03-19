@@ -2,7 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Apsepp.Test_Node_Class.Generic_Assert; use Apsepp.Test_Node_Class;
-with Apsepp.Abstract_Test_Case; use Apsepp.Abstract_Test_Case;
+with Apsepp.Abstract_Test_Case;             use Apsepp.Abstract_Test_Case;
 
 package Apsepp_Scope_Bound_Locks_Test_Case is
 

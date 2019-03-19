@@ -2,7 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Tags; use Ada.Tags;
+with Ada.Tags;       use Ada.Tags;
 limited with Apsepp.Test_Node_Class;
 
 package Apsepp.Test_Reporter_Class is
@@ -16,7 +16,7 @@ package Apsepp.Test_Reporter_Class is
    not overriding
    procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
                                    Node_Lineage :        Tag_Array;
-                                   Accepted     :    out Boolean) is null;
+                                   Active       :    out Boolean) is null;
 
    -- TODOC: Called by Test_Node_Class.Suite_Stub.Run_Children.
    -- <2019-03-03>

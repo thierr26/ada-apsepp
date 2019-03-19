@@ -83,9 +83,8 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
 
    procedure Show_Output_Sink_Instance_State is
 
-      use Ada.Text_IO;
-
-      use Apsepp.Output.Shared_Instance;
+      use Ada.Text_IO,
+          Apsepp.Output.Shared_Instance;
                     -- Makes functions Apsepp.Output.Shared_Instance.Locked and
                     -- Apsepp.Output.Shared_Instance.Instantiated visible.
 
@@ -129,8 +128,8 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
 
    procedure Output_Sink_Instance_Controller is
 
-      use Apsepp.Output; -- Makes type Apsepp.Output.Output_Access visible.
-      use Apsepp.Output_Class.Standard;
+      use Apsepp.Output, -- Makes type Apsepp.Output.Output_Access visible.
+          Apsepp.Output_Class.Standard;
                          -- Makes type
                          -- Apsepp.Output_Class.Standard.Output_Standard
                          -- visible.
@@ -213,8 +212,8 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
 
    procedure Deeper_Output_Sink_Instance_Controller (J_P : Boolean := False) is
 
-      use Apsepp.Output; -- Makes type Apsepp.Output.Output_Access visible.
-      use Apsepp.Output_Class.Quiet;
+      use Apsepp.Output, -- Makes type Apsepp.Output.Output_Access visible.
+          Apsepp.Output_Class.Quiet;
                          -- Makes type
                          -- Apsepp.Output_Class.Standard.Output_Quiet
                          -- visible.

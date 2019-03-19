@@ -1,12 +1,12 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Debug_Trace;
-with Apsepp.Debug_Trace_Class.Output.Create;
-with Apsepp.Output;
-with Apsepp.Output_Class.Standard;
-with Apsepp.Generic_Shared_Instance.Creator;
-with Apsepp_Demo_DT_Instance_Client; use Apsepp_Demo_DT_Instance_Client;
+with Apsepp.Debug_Trace,
+     Apsepp.Debug_Trace_Class.Output.Create,
+     Apsepp.Output,
+     Apsepp.Output_Class.Standard,
+     Apsepp.Generic_Shared_Instance.Creator;
+with Apsepp_Demo_DT_Instance_Client;  use Apsepp_Demo_DT_Instance_Client;
 with Apsepp_Demo_DT_Scope_Debug_User; use Apsepp_Demo_DT_Scope_Debug_User;
 
 procedure Apsepp_Demo_Debug_Trace is

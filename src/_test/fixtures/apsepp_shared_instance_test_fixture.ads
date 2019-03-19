@@ -1,8 +1,8 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Generic_Fixture;
-with Apsepp.Generic_Shared_Instance;
+with Apsepp.Generic_Fixture,
+     Apsepp.Generic_Shared_Instance;
 
 package Apsepp_Shared_Instance_Test_Fixture is
 

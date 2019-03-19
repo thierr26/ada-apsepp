@@ -2,9 +2,9 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Ada.Tags; use Ada.Tags;
-private with Ada.Containers.Hashed_Maps;
-private with Ada.Strings.Hash;
-private with Apsepp.Generic_Prot_Integer;
+private with Ada.Containers.Hashed_Maps,
+             Ada.Strings.Hash,
+             Apsepp.Generic_Prot_Integer;
 
 package Apsepp.Test_Node_Class is
 
@@ -31,9 +31,6 @@ package Apsepp.Test_Node_Class is
      is Test_Routine_Count range 1 .. Test_Routine_Count'Last;
 
    type Test_Assert_Count is new Natural;
-
-   subtype Test_Assert_Index
-     is Test_Assert_Count range 1 .. Test_Assert_Count'Last;
 
    type Test_Routine is not null access procedure;
 
@@ -74,6 +71,8 @@ package Apsepp.Test_Node_Class is
 
      with Pre'Class => K <= Obj.Routine_Count;
 
+   -- TODOC: Never called in implementations where Routine_Count returns 0.
+   -- <2019-03-19>
    not overriding
    procedure Setup_Routine (Obj : Test_Node_Interfa) is null;
 
@@ -98,12 +97,11 @@ package Apsepp.Test_Node_Class is
 
 private
 
-   use Ada.Containers;
-
    package Prot_Test_Assert_Count
      is new Generic_Prot_Integer (Test_Assert_Count);
 
-   use Prot_Test_Assert_Count;
+   use Ada.Containers,
+       Prot_Test_Assert_Count;
 
    subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
 

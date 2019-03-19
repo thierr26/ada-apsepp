@@ -29,9 +29,11 @@ package body Apsepp.Test_Node_Class is
             C : constant Cursor := M.Find (T);
          begin
             if C = No_Element then
-               M.Insert (T, S);
+               M.Insert (Key      => T,
+                         New_Item => S);
             else
-               M.Replace_Element (C, S);
+               M.Replace_Element (Position => C,
+                                  New_Item => S);
             end if;
          end Update_Map_With_Work_Data;
 
@@ -146,8 +148,8 @@ package body Apsepp.Test_Node_Class is
                                 Outcome : out Test_Outcome;
                                 Kind    :     Run_Kind) is
 
-      use Ada.Assertions;
-      use Private_Test_Reporter;
+      use Ada.Assertions,
+          Private_Test_Reporter;
 
       pragma Unreferenced (Kind);
 
@@ -205,11 +207,14 @@ package body Apsepp.Test_Node_Class is
                   Err := False;
                   Routine_State_Map_Handler.Get_Assert_Outcome
                     (T, Assert_Outcome);
-                  Assert (case Assert_Outcome is
-                             when Failed => False, -- Causes a jump to
-                                                   -- Assertion_Error handler
-                                                   -- below.
-                             when Passed => True);
+                  case Assert_Outcome is
+                     when Failed =>
+                        raise Assertion_Error; -- Causes a jump to
+                                               -- Assertion_Error handler
+                                               -- below.
+                     when Passed =>
+                        null;
+                  end case;
                   Test_Reporter.Report_Passed_Test_Routine (T, K);
                exception
                   when Run_E : Assertion_Error =>
@@ -255,8 +260,8 @@ package body Apsepp.Test_Node_Class is
 
    procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "") is
 
-      use Ada.Assertions;
-      use Private_Test_Reporter;
+      use Ada.Assertions,
+          Private_Test_Reporter;
 
       K     : Test_Routine_Index;
       Count : O_P_I_Test_Assert_Count;

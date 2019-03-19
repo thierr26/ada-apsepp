@@ -1,7 +1,7 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Scope_Bound_Locks; use Apsepp.Scope_Bound_Locks;
+with Apsepp.Scope_Bound_Locks;          use Apsepp.Scope_Bound_Locks;
 with Apsepp.Test_Reporter_Class;
 with Apsepp.Test_Node_Class.Suite_Stub; use Apsepp.Test_Node_Class.Suite_Stub;
 

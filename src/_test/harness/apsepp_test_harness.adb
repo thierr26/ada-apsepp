@@ -1,8 +1,8 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Command_Line;
-with Apsepp.Test_Node_Class.Runner_Sequential.Create;
+with Ada.Command_Line,
+     Apsepp.Test_Node_Class.Runner_Sequential.Create;
 
 package body Apsepp_Test_Harness is
 

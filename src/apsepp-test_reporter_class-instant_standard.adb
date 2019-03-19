@@ -168,13 +168,13 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       -----------------------------------------------------
 
       procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
-                                      Accepted     : out Boolean) is
+                                      Active       : out Boolean) is
 
          pragma Unreferenced (Node_Lineage);
 
       begin
 
-         Accepted := True;
+         Active := True;
 
       end Provide_Node_Lineage;
 

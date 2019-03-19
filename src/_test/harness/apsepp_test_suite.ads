@@ -2,9 +2,9 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Apsepp.Abstract_Test_Suite; use Apsepp.Abstract_Test_Suite;
-private with Apsepp_Scope_Bound_Locks_Test_Case;
-private with Apsepp_Shared_Instance_Test_Case;
-private with Apsepp_Scope_Debug_Test_Case;
+private with Apsepp_Scope_Bound_Locks_Test_Case,
+             Apsepp_Shared_Instance_Test_Case,
+             Apsepp_Scope_Debug_Test_Case;
 
 package Apsepp_Test_Suite is
 

@@ -46,11 +46,13 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
       Outcome := Passed;
 
       if Kind = Assert_Cond_And_Run_Test then
-         Test_Suite_Stub (Obj).Run (Outcome, Check_Cond);
+         Test_Suite_Stub (Obj).Run (Outcome,
+                                    Check_Cond); -- Inherited procedure call.
       end if;
 
       if Outcome = Passed then
-         Test_Suite_Stub (Obj).Run (Outcome, Kind);
+         Test_Suite_Stub (Obj).Run (Outcome,
+                                    Kind);       -- Inherited procedure call.
       end if;
 
       Test_Reporter.Process;

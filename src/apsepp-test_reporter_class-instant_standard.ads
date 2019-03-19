@@ -10,7 +10,7 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
 
       overriding
       procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
-                                      Accepted     : out Boolean);
+                                      Active       : out Boolean);
 
       overriding
       procedure Report_Failed_Child_Test_Node_Access

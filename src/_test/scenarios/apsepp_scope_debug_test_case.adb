@@ -1,10 +1,10 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Apsepp.Scope_Debug;
-with Apsepp.Generic_Fixture.Creator;
-with Apsepp.Generic_Shared_Instance.Access_Setter;
-with Apsepp.Debug_Trace;
+with Apsepp.Scope_Debug,
+     Apsepp.Generic_Fixture.Creator,
+     Apsepp.Generic_Shared_Instance.Access_Setter,
+     Apsepp.Debug_Trace;
 
 package body Apsepp_Scope_Debug_Test_Case is
 

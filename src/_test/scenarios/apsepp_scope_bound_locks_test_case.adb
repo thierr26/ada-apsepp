@@ -1,15 +1,15 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Unchecked_Deallocation;
-with Apsepp.Scope_Bound_Locks;
-with Apsepp_Scope_Bound_Locks_Test_Fixture;
-with Apsepp.Generic_Fixture.Creator;
+with Ada.Unchecked_Deallocation,
+     Apsepp.Scope_Bound_Locks,
+     Apsepp_Scope_Bound_Locks_Test_Fixture,
+     Apsepp.Generic_Fixture.Creator;
 
 package body Apsepp_Scope_Bound_Locks_Test_Case is
 
-   use Apsepp.Scope_Bound_Locks;
-   use Apsepp_Scope_Bound_Locks_Test_Fixture;
+   use Apsepp.Scope_Bound_Locks,
+       Apsepp_Scope_Bound_Locks_Test_Fixture;
 
    ----------------------------------------------------------------------------
 
