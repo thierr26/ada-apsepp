@@ -6,10 +6,7 @@ package body Apsepp.Test_Node_Class.Private_Test_Reporter is
    ----------------------------------------------------------------------------
 
    function Test_Reporter return Test_Reporter_Access
-     is (if Shared_Instance.Instantiated then
-            Test_Reporter_Access (Shared_Instance.Instance)
-         else
-            Fallback_Instance'Access);
+     is (Test_Reporter_Access (Shared_Instance_Fallback_Switch.Instance_FS));
 
    ----------------------------------------------------------------------------
 
