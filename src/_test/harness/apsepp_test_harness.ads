@@ -10,8 +10,8 @@ package Apsepp_Test_Harness is
 
 private
 
-   use Apsepp.Test_Reporter_Class.Instant_Standard;
-   use Apsepp_Test_Suite;
+   use Apsepp.Test_Reporter_Class.Instant_Standard,
+       Apsepp_Test_Suite;
 
    Reporter   : aliased Test_Reporter_Instant_Standard;
    Test_Suite : aliased Apsepp_T_S;

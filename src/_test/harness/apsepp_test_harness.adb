@@ -10,9 +10,9 @@ package body Apsepp_Test_Harness is
 
    procedure Apsepp_Test_Procedure is
 
-      use Ada.Command_Line;
-      use Apsepp.Test_Node_Class;
-      use Apsepp.Test_Node_Class.Runner_Sequential;
+      use Ada.Command_Line,
+          Apsepp.Test_Node_Class,
+          Apsepp.Test_Node_Class.Runner_Sequential;
 
       Test_Runner : Test_Runner_Sequential
         := Create (Test_Suite'Access, Reporter'Access);
