@@ -106,7 +106,10 @@ private
    subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
 
    function Tag_Hash (T : Tag) return Hash_Type
-     is (Ada.Strings.Hash (Expanded_Name (T)));
+     is (Ada.Strings.Hash ("." & (if T = No_Tag then
+                                     ""
+                                  else
+                                     Expanded_Name (T))));
 
    type Routine_State is record
       Routine_Index  : Test_Routine_Index;
