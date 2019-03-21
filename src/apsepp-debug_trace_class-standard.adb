@@ -11,12 +11,14 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
       -----------------------------------------------------
 
+      function Message_W_Entity (Message     : String;
+                                 Entity_Name : String) return String
+        is (Debug_Trace_Stub_Instance.Message_W_Entity (Message, Entity_Name));
+
+      -----------------------------------------------------
+
       procedure Trace (Message     : String;
                        Entity_Name : String := "") is
-
-         function Message_W_Entity (Message     : String;
-                                    Entity_Name : String) return String
-           renames Debug_Trace_Stub_Instance.Message_W_Entity;
 
       begin
 

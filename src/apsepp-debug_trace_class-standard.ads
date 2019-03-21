@@ -10,6 +10,10 @@ package Apsepp.Debug_Trace_Class.Standard is
    protected type Debug_Trace_Standard is new Debug_Trace_Interfa with
 
       overriding
+      function Message_W_Entity (Message     : String;
+                                 Entity_Name : String) return String;
+
+      overriding
       procedure Trace (Message     : String;
                        Entity_Name : String := "");
 
