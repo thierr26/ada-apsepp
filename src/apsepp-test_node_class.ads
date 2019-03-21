@@ -130,30 +130,44 @@ private
       procedure Reset_Routine_State (Node_Tag      : Tag;
                                      Routine_Index : Test_Routine_Index)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
 
       procedure Increment_Assert_Count (Node_Tag : Tag)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
 
       procedure Set_Failed_Outcome (Node_Tag : Tag)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
 
       procedure Get_Assert_Count (Node_Tag      :     Tag;
                                   Routine_Index : out Test_Routine_Index;
                                   Count         : out O_P_I_Test_Assert_Count)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
 
       procedure Get_Assert_Outcome (Node_Tag :     Tag;
                                     Outcome  : out Test_Outcome)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
 
       procedure Delete (Node_Tag : Tag)
 
-        with Pre => Node_Tag /= No_Tag;
+        with Pre  => Node_Tag /= No_Tag,
+
+             Post => Invariant;
+
+      function Invariant return Boolean;
 
    private
 

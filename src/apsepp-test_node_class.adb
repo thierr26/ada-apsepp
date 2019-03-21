@@ -140,6 +140,19 @@ package body Apsepp.Test_Node_Class is
 
       -----------------------------------------------------
 
+      function Invariant return Boolean
+        is (
+             (
+               T /= No_Tag
+                 or else
+               M.Length = 0
+             )
+               and then
+             not M.Contains (No_Tag)
+           );
+
+      -----------------------------------------------------
+
    end Routine_State_Map_Handler;
 
    ----------------------------------------------------------------------------
@@ -294,5 +307,9 @@ package body Apsepp.Test_Node_Class is
    end Assert;
 
    ----------------------------------------------------------------------------
+
+begin
+
+   Ada.Assertions.Assert (Routine_State_Map_Handler.Invariant);
 
 end Apsepp.Test_Node_Class;
