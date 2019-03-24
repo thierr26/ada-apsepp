@@ -55,8 +55,6 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
                                     Kind);       -- Inherited procedure call.
       end if;
 
-      Test_Reporter.Process;
-
    end Run;
 
    ----------------------------------------------------------------------------

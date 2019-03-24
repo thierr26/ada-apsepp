@@ -6,8 +6,11 @@ with Apsepp.Test_Reporter_Class.Stub.Create; use Apsepp.Test_Reporter_Class;
 
 private package Apsepp.Test_Node_Class.Private_Test_Reporter is
 
-   package Shared_Instance
-     is new Generic_Shared_Instance (Test_Reporter_Interfa);
+   procedure Run_Instance_Process_Primitive;
+
+   package Shared_Instance is new Generic_Shared_Instance
+     (Instance_Ancestor_Type => Test_Reporter_Interfa,
+      Unlock_CB              => Run_Instance_Process_Primitive'Access);
 
    function Test_Reporter return Test_Reporter_Access;
 
