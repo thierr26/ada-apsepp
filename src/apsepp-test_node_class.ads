@@ -45,9 +45,15 @@ package Apsepp.Test_Node_Class is
      with Type_Invariant'Class
             => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
                  => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
-                      => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)
+                      => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)'Tag
                                              /=
-                                           Test_Node_Interfa.Child (K_2)));
+                                           Test_Node_Interfa.Child (K_2)'Tag))
+                 and then
+               (
+                 Test_Node_Interfa.Has_Early_Test
+                   or else
+                 Test_Node_Interfa.Early_Run_Done
+               );
 
    type Test_Node_Access is not null access all Test_Node_Interfa'Class;
 
@@ -81,11 +87,32 @@ package Apsepp.Test_Node_Class is
      return Boolean is abstract;
 
    not overriding
+   function Has_Early_Test
+     (Obj : Test_Node_Interfa) return Boolean is abstract;
+
+   not overriding
+   function Early_Run_Done (Obj : Test_Node_Interfa) return Boolean
+     is abstract;
+
+   not overriding
+   procedure Early_Run (Obj : in out Test_Node_Interfa) is abstract
+
+     with Pre'Class  => not Obj.Early_Run_Done,
+
+          Post'Class => Obj.Early_Run_Done;
+
+   not overriding
    procedure Run
      (Obj     : in out Test_Node_Interfa;
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind          := Assert_Cond_And_Run_Test)
-     is abstract;
+     is abstract
+
+     with Post'Class => (case Kind is
+                            when Check_Cond
+                               => True,
+                            when Assert_Cond_And_Run_Test
+                               => Obj.Has_Early_Test xor Obj.Early_Run_Done);
 
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome;
@@ -122,6 +149,16 @@ private
                                         Element_Type    => Routine_State,
                                         Hash            => Tag_Hash,
                                         Equivalent_Keys => "=");
+
+   type Routine_State_Record is record
+      T : Tag;
+      S : Routine_State;
+   end record;
+
+   subtype Index_Type is Count_Type range 1 .. Count_Type'Last;
+
+   type Routine_State_Record_Array
+     is array (Index_Type range <>) of Routine_State_Record;
 
    ----------------------------------------------------------------------------
 

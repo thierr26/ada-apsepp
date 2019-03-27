@@ -5,7 +5,17 @@ with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body;
 
 package Apsepp.Test_Node_Class.Suite_Stub is
 
-   type Test_Suite_Stub is limited new Test_Node_Interfa with private;
+   type Test_Suite_Stub is limited new Test_Node_Interfa with private
+
+     with Type_Invariant'Class
+            => Test_Suite_Stub.Invariant_Class_Test_Suite_Stub;
+
+   not overriding
+   function Invariant_Class_Test_Suite_Stub
+     (Obj : Test_Suite_Stub) return Boolean
+     is (Test_Suite_Stub'Class (Obj).Routine_Count = 0
+           and then
+         Test_Suite_Stub'Class (Obj).Has_Early_Test);
 
    overriding
    procedure Run
@@ -23,9 +33,7 @@ package Apsepp.Test_Node_Class.Suite_Stub is
 
    overriding
    function Routine_Count (Obj : Test_Suite_Stub) return Test_Routine_Count
-     is (0)
-
-     with Post'Class => Routine_Count'Result = 0;
+     is (0);
 
    overriding
    function Routine (Obj : Test_Suite_Stub;
@@ -38,6 +46,16 @@ package Apsepp.Test_Node_Class.Suite_Stub is
    function No_Subtasking (Obj : Test_Suite_Stub) return Boolean
      is (False);
 
+   overriding
+   function Has_Early_Test (Obj : Test_Suite_Stub) return Boolean
+     is (True);
+
+   overriding
+   function Early_Run_Done (Obj : Test_Suite_Stub) return Boolean;
+
+   overriding
+   procedure Early_Run (Obj : in out Test_Suite_Stub);
+
    procedure Run_Children (Obj     :     Test_Node_Interfa'Class;
                            Outcome : out Test_Outcome;
                            Kind    :     Run_Kind);
@@ -47,6 +65,8 @@ package Apsepp.Test_Node_Class.Suite_Stub is
 
 private
 
-   type Test_Suite_Stub is limited new Test_Node_Interfa with null record;
+   type Test_Suite_Stub is limited new Test_Node_Interfa with record
+      Early_Run_Done_Flag : Boolean := False;
+   end record;
 
 end Apsepp.Test_Node_Class.Suite_Stub;

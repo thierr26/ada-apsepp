@@ -88,6 +88,11 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
 
       Run_Body (Obj, Outcome, Kind, Cond'Access);
 
+      case Kind is
+         when Check_Cond               => null;
+         when Assert_Cond_And_Run_Test => Obj.Early_Run_Done_Flag := False;
+      end case;
+
    end Run;
 
    ----------------------------------------------------------------------------
@@ -97,6 +102,40 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
                    K   : Test_Node_Index) return Test_Node_Access
      is (T_S_S'Access); -- Raises because of class-wide pre-condition violation
                         -- (K <= Obj.Child_Count).
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Early_Run_Done (Obj : Test_Suite_Stub) return Boolean
+     is (Obj.Early_Run_Done_Flag);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Early_Run (Obj : in out Test_Suite_Stub) is
+
+   begin
+
+      Obj.Early_Run_Done_Flag := True;
+
+      for K in 1 .. Test_Suite_Stub'Class (Obj).Child_Count loop
+
+         declare
+
+            Ch : constant Test_Node_Access
+              := Test_Suite_Stub'Class (Obj).Child (K);
+
+         begin
+
+            if not Ch.Early_Run_Done then
+               Ch.Early_Run;
+            end if;
+
+         end;
+
+      end loop;
+
+   end Early_Run;
 
    ----------------------------------------------------------------------------
 

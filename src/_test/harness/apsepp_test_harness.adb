@@ -21,6 +21,7 @@ package body Apsepp_Test_Harness is
 
    begin
 
+      Test_Runner.Early_Run;
       Test_Runner.Run (Outcome);
       Set_Exit_Status (if Outcome = Passed then
                           Success

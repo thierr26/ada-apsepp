@@ -5,6 +5,6 @@ function Apsepp.Test_Node_Class.Suite_Stub.Create return Test_Suite_Stub is
 
 begin
 
-   return (Test_Node_Interfa with null record);
+   return (Test_Node_Interfa with others => <>);
 
 end Apsepp.Test_Node_Class.Suite_Stub.Create;

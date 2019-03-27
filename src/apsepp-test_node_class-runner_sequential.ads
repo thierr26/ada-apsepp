@@ -36,9 +36,9 @@ private
    use Test_Reporter_Class;
 
    type Test_Runner_Sequential is limited new Test_Suite_Stub with record
-      Child_Access    : Test_Node_Access;
-      Reporter_Access : Test_Reporter_Access;
-      R_A_S_CB        : SB_Lock_CB;
+      Child_Access         : Test_Node_Access;
+      Reporter_Access      : Test_Reporter_Access;
+      R_A_S_CB             : SB_Lock_CB;
    end record;
 
 end Apsepp.Test_Node_Class.Runner_Sequential;
