@@ -26,7 +26,7 @@ package body Apsepp.Scope_Bound_Locks is
 
    begin
 
-      Protected_Handler.Do_Lock (Lock          => Obj.Lock,
+      Protected_Handler.Do_Lock (Lock            => Obj.Lock,
                                  Actually_Locked => Obj.Has_Locked);
       Obj.Is_Instantiated := True;
 
