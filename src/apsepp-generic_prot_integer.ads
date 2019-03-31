@@ -24,7 +24,9 @@ package Apsepp.Generic_Prot_Integer is
                                    or else
                                  V = Integer_Type'Last),
 
-          Post => not sat (Create'Result);
+          Post => Val (Create'Result) = V
+                    and then
+                  Sat (Create'Result) = S;
 
    function Val (X : O_P_I_Type) return Integer_Type;
 
