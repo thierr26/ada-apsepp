@@ -1,9 +1,9 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Tags; use Ada.Tags;
+with Ada.Tags;    use Ada.Tags;
+with Apsepp.Tags; use Apsepp.Tags;
 private with Ada.Containers.Hashed_Maps,
-             Ada.Strings.Hash,
              Apsepp.Generic_Prot_Integer;
 
 package Apsepp.Test_Node_Class is
@@ -131,12 +131,6 @@ private
        Prot_Test_Assert_Count;
 
    subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
-
-   function Tag_Hash (T : Tag) return Hash_Type
-     is (Ada.Strings.Hash ("." & (if T = No_Tag then
-                                     ""
-                                  else
-                                     Expanded_Name (T))));
 
    type Routine_State is record
       Routine_Index  : Test_Routine_Index;
