@@ -3,6 +3,7 @@
 
 with Ada.Text_IO;
 with Apsepp.Test_Node_Class;
+with Apsepp.Abstract_Early_Test_Case;
 
 package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
@@ -10,14 +11,32 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    ----------------------------------------------------------------------------
 
-   Child_Acc     : constant String := "accessing child";
-   Child_Acc_1   : constant String := "accessing first child";
-   Start         : constant String := "Start ";
-   Cond_Checking : constant String := "condition checking";
-   Cond_Assert   : constant String := "condition assertion";
-   Test_Assert   : constant String := "test assertion";
-   Ru            : constant String := "run";
-   Unexp_Error   : constant String := "UNEXPECTED ERROR while ";
+   Child_Acc       : constant String := "accessing child";
+   Child_Acc_1     : constant String := "accessing first child";
+   Early_R         : constant String := "early test routine";
+   Start           : constant String := "Start ";
+   Cond_Checking   : constant String := "condition checking";
+   Cond_Assert     : constant String := "condition assertion";
+   Early_R_Not_Run : constant String := " (" & Early_R & " not run)";
+   Test_Assert     : constant String := "test assertion";
+   Ru              : constant String := "run";
+   Unexp_Error     : constant String := "UNEXPECTED ERROR while ";
+
+   ----------------------------------------------------------------------------
+
+   function Is_Early_Test (Node_Tag : Tag) return Boolean
+     is (Is_Descendant_At_Same_Level
+           (Node_Tag,
+            Abstract_Early_Test_Case.Early_Test_Case'Tag));
+
+   ----------------------------------------------------------------------------
+
+   function Early_R_Not_Run_Compliment (Node_Tag : Tag;
+                                        Str      : String) return String
+     is (Str & (if Is_Early_Test (Node_Tag) then
+                   Early_R_Not_Run
+                else
+                   ""));
 
    ----------------------------------------------------------------------------
 
@@ -104,6 +123,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
      (Name, Message                : String;
       Quiet_If_Zero_Length_Message : Boolean := False) is
 
+      Zero_Length_Name    : constant Boolean := Name'Length = 0;
       Zero_Length_Message : constant Boolean := Message'Length = 0;
       Quiet               : constant Boolean := Zero_Length_Message
                                                   and then
@@ -116,7 +136,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
          if Zero_Length_Message then
             Ada.Text_IO.Put_Line(Name);
          else
-            Ada.Text_IO.Put_Line(Name & ": " & Message);
+            Ada.Text_IO.Put_Line(Name & (if Zero_Length_Name then
+                                            ""
+                                         else
+                                            ": ") & Message);
          end if;
          Ada.Text_IO.New_Line;
       end if;
@@ -156,7 +179,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       Put_Report_Line
         (Outcome_Prepended (Outcome,
-                            Kth_Kth (Assert_Num_Avail, Assert_Num, K)),
+                            (if Is_Early_Test (Node_Tag) then
+                                Early_R
+                             else
+                                Kth_Kth (Assert_Num_Avail, Assert_Num, K))),
          Node_Tag);
 
    end Report_Test_Assert_Outcome;
@@ -254,7 +280,11 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       begin
 
-         Put_Report_Line (Outcome_Prepended (Failed, Cond_Checking), Node_Tag);
+         Put_Report_Line (Outcome_Prepended
+                            (Failed,
+                             Early_R_Not_Run_Compliment (Node_Tag,
+                                                         Cond_Checking)),
+                          Node_Tag);
 
       end Report_Failed_Node_Cond_Check;
 
@@ -274,7 +304,11 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       begin
 
-         Put_Report_Line (Outcome_Prepended (Failed, Cond_Assert), Node_Tag);
+         Put_Report_Line (Outcome_Prepended
+                            (Failed,
+                             Early_R_Not_Run_Compliment (Node_Tag,
+                                                         Cond_Assert)),
+                          Node_Tag);
 
       end Report_Failed_Node_Cond_Assert;
 
@@ -296,7 +330,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       begin
 
-         Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
+         if not Is_Early_Test (Node_Tag) then
+            Put_Report_Line (Start & Kth_Routine (K), Node_Tag);
+         end if;
 
       end Report_Test_Routine_Start;
 
@@ -371,7 +407,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
          Report_Test_Assert_Outcome
            (Node_Tag, Failed, K, Assert_Num_Avail, Assert_Num);
-         Put_Exception_Message ("Message", Exception_Message (E), True);
+         Put_Exception_Message ((if Is_Early_Test (Node_Tag) then
+                                    ""
+                                 else
+                                    "Message"), Exception_Message (E), True);
 
       end Report_Failed_Test_Assert;
 
@@ -398,8 +437,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       begin
 
-         Put_Report_Line
-           (Outcome_Prepended (Passed, Kth_Routine (K)), Node_Tag);
+         if not Is_Early_Test (Node_Tag) then
+            Put_Report_Line
+              (Outcome_Prepended (Passed, Kth_Routine (K)), Node_Tag);
+         end if;
 
       end Report_Passed_Test_Routine;
 
@@ -411,8 +452,10 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       begin
 
-         Put_Report_Line
-           (Outcome_Prepended (Failed, Kth_Routine (K)), Node_Tag);
+         if not Is_Early_Test (Node_Tag) then
+            Put_Report_Line
+              (Outcome_Prepended (Failed, Kth_Routine (K)), Node_Tag);
+         end if;
 
       end Report_Failed_Test_Routine;
 
