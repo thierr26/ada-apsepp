@@ -16,7 +16,9 @@ package Apsepp.Test_Reporter_Class is
    not overriding
    procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
                                    Node_Lineage :        Tag_Array;
-                                   Active       :    out Boolean) is null;
+                                   Active       :    out Boolean) is null
+
+     with Pre'Class => (for all T of Node_Lineage => T /= No_Tag);
 
    -- TODOC: Called by Test_Node_Class.Suite_Stub.Run_Children.
    -- <2019-03-03>

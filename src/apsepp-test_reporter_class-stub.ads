@@ -5,6 +5,11 @@ package Apsepp.Test_Reporter_Class.Stub is
 
    type Test_Reporter_Stub is new Test_Reporter_Interfa with private;
 
+   overriding
+   procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Stub;
+                                   Node_Lineage :        Tag_Array;
+                                   Active       :    out Boolean) is null;
+
 private
 
    type Test_Reporter_Stub is new Test_Reporter_Interfa with null record;
