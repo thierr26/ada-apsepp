@@ -26,7 +26,7 @@ obj_dir = obj
 # right hand sides are initialized farther down).
 
 # lcov executable (--quiet option always used).
-lcov_prg = lcov --quiet
+lcov_prg = lcov $(lcov_branchswi) --quiet
 
 # lcov capture command leader.
 lcov_c = $(lcov_prg) --capture --directory $(obj_dir)
@@ -56,9 +56,9 @@ html_cov_dir = $(lcov_out_dir)/html
 html_cov_index = $(html_cov_dir)/index.html
 
 # HTML coverage report generation command.
-html_cov_command = $(genhtml_prg) $(branchswi) $(html_cov_prefix) --legend \
-  --title "$(prg_name) ($(BUILD_MODE))" --output-directory $(html_cov_dir) \
-  $(cov_filtered)
+html_cov_command = $(genhtml_prg) $(genhtml_branchswi) $(html_cov_prefix) \
+  --legend --title "$(prg_name) ($(BUILD_MODE))" \
+  --output-directory $(html_cov_dir) $(cov_filtered)
 
 # Path to Firefox application (or empty).
 firefox_path = $(shell which firefox)
@@ -132,12 +132,15 @@ ifdef BRANCH_COV
     $(error BRANCH_COV=$(BRANCH_COV) $(invalid))
   endif
   ifeq ($(BRANCH_COV), yes)
-    branchswi = --branch-coverage
+    lcov_branchswi = --rc lcov_branch_coverage=1
+    genhtml_branchswi = --branch-coverage
   else
-    branchswi = --no-branch-coverage
+    lcov_branchswi =
+    genhtml_branchswi = --no-branch-coverage
   endif
 else
-  branchswi = --no-branch-coverage
+  lcov_branchswi = --rc lcov_branch_coverage=1
+  genhtml_branchswi = --no-branch-coverage
 endif
 
 # -----------------------------------------------------------------------------
