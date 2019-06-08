@@ -144,15 +144,14 @@ private
                                         Hash            => Tag_Hash,
                                         Equivalent_Keys => "=");
 
-   type Routine_State_Record is record
+   type Tag_Routine_State is record
       T : Tag;
       S : Routine_State;
    end record;
 
    subtype Index_Type is Count_Type range 1 .. Count_Type'Last;
-
-   type Routine_State_Record_Array
-     is array (Index_Type range <>) of Routine_State_Record;
+   type Tag_Routine_State_Array
+     is array (Index_Type range <>) of Tag_Routine_State;
 
    ----------------------------------------------------------------------------
 
