@@ -3,7 +3,7 @@
 
 package Apsepp.Test_Reporter_Class.Stub is
 
-   type Test_Reporter_Stub is new Test_Reporter_Interfa with private;
+   type Test_Reporter_Stub is limited new Test_Reporter_Interfa with private;
 
    overriding
    procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Stub;
@@ -12,6 +12,7 @@ package Apsepp.Test_Reporter_Class.Stub is
 
 private
 
-   type Test_Reporter_Stub is new Test_Reporter_Interfa with null record;
+   type Test_Reporter_Stub
+     is limited new Test_Reporter_Interfa with null record;
 
 end Apsepp.Test_Reporter_Class.Stub;
