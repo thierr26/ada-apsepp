@@ -41,9 +41,9 @@ package Apsepp.Scope_Debug is
      with Pre'Class => Entity_Name'Length <= Debug_Entity_Name_Max_Length;
 
    not overriding
-   function Entity_Name (Obj : Controlled_Debug_Tracer) return String
+   function Entity (Obj : Controlled_Debug_Tracer) return String
 
-     with Post'Class => Entity_Name'Result'Length
+     with Post'Class => Entity'Result'Length
                           <=
                         Debug_Entity_Name_Max_Length;
 
@@ -58,7 +58,7 @@ private
    type Controlled_Debug_Tracer (Entity_Name_Length : Debug_Entity_Name_Length)
      is limited new Limited_Controlled with record
 
-      Entity_Name         : String (1 .. Entity_Name_Length);
+      Entity_Name_Str     : String (1 .. Entity_Name_Length);
       Exit_Trace_Required : Boolean;
 
    end record;

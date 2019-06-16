@@ -20,7 +20,7 @@ package body Apsepp.Scope_Debug is
 
       return (Limited_Controlled
                 with Entity_Name_Length  => Entity_Name'Length,
-                     Entity_Name         => Entity_Name,
+                     Entity_Name_Str     => Entity_Name,
                      Exit_Trace_Required => Ex);
 
    end C;
@@ -52,8 +52,8 @@ package body Apsepp.Scope_Debug is
    ----------------------------------------------------------------------------
 
    not overriding
-   function Entity_Name (Obj : Controlled_Debug_Tracer) return String
-     is (Obj.Entity_Name);
+   function Entity (Obj : Controlled_Debug_Tracer) return String
+     is (Obj.Entity_Name_Str);
 
    ----------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ package body Apsepp.Scope_Debug is
 
    begin
 
-      Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity_Name);
+      Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity);
 
    end Trace;
 
@@ -75,7 +75,7 @@ package body Apsepp.Scope_Debug is
 
       if Obj.Exit_Trace_Required then
 
-         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity_Name);
+         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity_Name_Str);
 
       end if;
 
