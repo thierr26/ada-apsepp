@@ -62,7 +62,8 @@ package body Apsepp.Scope_Debug is
 
    begin
 
-      Debug_Trace.Debug_Trace.Trace (Message, Obj.Entity);
+      Debug_Trace.Debug_Trace.Trace
+        (Message, Controlled_Debug_Tracer'Class (Obj).Entity);
 
    end Trace;
 
@@ -74,7 +75,8 @@ package body Apsepp.Scope_Debug is
 
    begin
 
-      Debug_Trace.Debug_Trace.Trace_E (E, Obj.Entity);
+      Debug_Trace.Debug_Trace.Trace_E
+        (E, Controlled_Debug_Tracer'Class (Obj).Entity);
 
    end Trace_E;
 
@@ -87,7 +89,8 @@ package body Apsepp.Scope_Debug is
 
       if Obj.Exit_Trace_Required then
 
-         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity);
+         Debug_Trace.Debug_Trace.Trace
+           ("Exit", Controlled_Debug_Tracer'Class (Obj).Entity);
 
       end if;
 
