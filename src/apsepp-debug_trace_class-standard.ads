@@ -14,8 +14,13 @@ package Apsepp.Debug_Trace_Class.Standard is
                                  Entity_Name : String) return String;
 
       overriding
-      procedure Trace (Message     : String;
-                       Entity_Name : String := "");
+      function E_To_String (E : Exception_Occurrence) return String;
+
+      overriding
+      procedure Trace (Message : String; Entity_Name : String := "");
+
+      overriding
+      procedure Trace_E (E : Exception_Occurrence; Entity_Name : String := "");
 
    end Debug_Trace_Standard;
 

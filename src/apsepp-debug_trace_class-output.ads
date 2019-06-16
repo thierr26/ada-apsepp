@@ -14,6 +14,11 @@ package Apsepp.Debug_Trace_Class.Output is
                     Message     :        String;
                     Entity_Name :        String             := "");
 
+   overriding
+   procedure Trace_E (Obj         : in out Debug_Trace_Output;
+                      E           :        Exception_Occurrence;
+                      Entity_Name :        String               := "");
+
 private
 
    type Debug_Trace_Output is limited new Debug_Trace_Stub with null record;

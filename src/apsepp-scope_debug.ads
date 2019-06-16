@@ -1,6 +1,7 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
+with Ada.Exceptions;   use Ada.Exceptions;
 with Ada.Finalization; use Ada.Finalization;
 
 package Apsepp.Scope_Debug is
@@ -49,6 +50,9 @@ package Apsepp.Scope_Debug is
 
    not overriding
    procedure Trace (Obj : Controlled_Debug_Tracer; Message : String);
+
+   not overriding
+   procedure Trace_E (Obj : Controlled_Debug_Tracer; E : Exception_Occurrence);
 
    overriding
    procedure Finalize (Obj : in out Controlled_Debug_Tracer);

@@ -68,6 +68,18 @@ package body Apsepp.Scope_Debug is
 
    ----------------------------------------------------------------------------
 
+   not overriding
+   procedure Trace_E (Obj : Controlled_Debug_Tracer;
+                      E   : Exception_Occurrence) is
+
+   begin
+
+      Debug_Trace.Debug_Trace.Trace_E (E, Obj.Entity);
+
+   end Trace_E;
+
+   ----------------------------------------------------------------------------
+
    overriding
    procedure Finalize (Obj : in out Controlled_Debug_Tracer) is
 

@@ -17,8 +17,12 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
       -----------------------------------------------------
 
-      procedure Trace (Message     : String;
-                       Entity_Name : String := "") is
+      function E_To_String (E : Exception_Occurrence) return String
+        is (Debug_Trace_Stub_Instance.E_To_String (E));
+
+      -----------------------------------------------------
+
+      procedure Trace (Message : String; Entity_Name : String := "") is
 
       begin
 
@@ -28,6 +32,17 @@ package body Apsepp.Debug_Trace_Class.Standard is
                                   Message);
 
       end Trace;
+
+      -----------------------------------------------------
+
+      procedure Trace_E (E           : Exception_Occurrence;
+                         Entity_Name : String               := "") is
+
+      begin
+
+         Trace (E_To_String (E), Entity_Name);
+
+      end Trace_E;
 
       -----------------------------------------------------
 
