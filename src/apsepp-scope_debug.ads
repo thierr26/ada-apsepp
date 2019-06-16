@@ -13,7 +13,7 @@ package Apsepp.Scope_Debug is
    Debug_Entity_Name_Max_Length : constant := 220;
 
    subtype Debug_Entity_Name_Length
-     is Positive range 1 .. Debug_Entity_Name_Max_Length;
+     is Natural range 0 .. Debug_Entity_Name_Max_Length;
 
    type Controlled_Debug_Tracer (Entity_Name_Length : Debug_Entity_Name_Length)
      is limited new Limited_Controlled with private;
