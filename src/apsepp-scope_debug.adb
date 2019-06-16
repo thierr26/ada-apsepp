@@ -87,7 +87,7 @@ package body Apsepp.Scope_Debug is
 
       if Obj.Exit_Trace_Required then
 
-         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity_Name_Str);
+         Debug_Trace.Debug_Trace.Trace ("Exit", Obj.Entity);
 
       end if;
 
