@@ -264,8 +264,9 @@ help:
 	@echo
 	@echo
 	@echo [P] can be nothing or one of:
-	@echo '  PROJ=apsepp_test (default)'
-	@echo '  PROJ=apsepp      (does not include test program)'
+	@echo '  PROJ=apsepp_test (default, includes test program)'
+	@echo '  PROJ=apsepp_demo (includes demo programs)'
+	@echo '  PROJ=apsepp      (does not include test or demo programs)'
 	@echo
 	@echo [B] can be nothing or one of:
 	@echo '  BUILD_MODE=debug_info_and_assertions (default)'
