@@ -26,9 +26,7 @@ abstract project Apsepp_Build_Setup is
          when "debug_info_and_assertions" =>
             for Switches ("Ada") use ("-gnat2012",
                                       "-g",
-                                      "-gnata",
-                                      "-gnatwa",
-                                      "-gnateE");
+                                      "-gnata");
 
          when "debug_info" =>
             for Switches ("Ada") use ("-gnat2012",
@@ -65,5 +63,22 @@ abstract project Apsepp_Build_Setup is
       end case;
 
    end Binder;
+
+   -- -no-pie   Disable PIE (Position Independant Executable) build mode
+   --           (without this switch, addr2line does not provide any useful
+   --           information when fed with addresses from exception traces).
+   package Linker is
+
+      case Build_Mode is
+
+         when "debug_info_and_assertions" | "debug_info" =>
+            for Default_Switches ("Ada") use ("-no-pie");
+
+         when "optimizations" =>
+            null;
+
+      end case;
+
+   end Linker;
 
 end Apsepp_Build_Setup;

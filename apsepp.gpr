@@ -13,4 +13,6 @@ project Apsepp is
 
    package Binder renames Apsepp_Build_Setup.Binder;
 
+   package Linker renames Apsepp_Build_Setup.Linker;
+
 end Apsepp;
