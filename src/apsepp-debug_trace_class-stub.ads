@@ -18,6 +18,11 @@ package Apsepp.Debug_Trace_Class.Stub is
                          E   : Exception_Occurrence) return String
      is (Exception_Name (E) & " (" & Exception_Message (E) & ")");
 
+
+   overriding
+   procedure Trace_E (Obj         : in out Debug_Trace_Stub;
+                      E           :        Exception_Occurrence;
+                      Entity_Name :        String               := "");
 private
 
    type Debug_Trace_Stub is limited new Debug_Trace_Interfa with null record;

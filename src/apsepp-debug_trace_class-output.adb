@@ -25,18 +25,4 @@ package body Apsepp.Debug_Trace_Class.Output is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure Trace_E (Obj         : in out Debug_Trace_Output;
-                      E           :        Exception_Occurrence;
-                      Entity_Name :        String               := "") is
-
-   begin
-
-      Debug_Trace_Output'Class (Obj).Trace
-        (Debug_Trace_Output'Class (Obj).E_To_String (E), Entity_Name);
-
-   end Trace_E;
-
-   ----------------------------------------------------------------------------
-
 end Apsepp.Debug_Trace_Class.Output;
