@@ -7,10 +7,25 @@ with Ada.Strings.Hash;
 
 package Apsepp.Tags is
 
+   function Total_Expanded_Name (T : Tag) return String
+     is ("." & (if T = No_Tag then
+                   ""
+                else
+                   Expanded_Name (T)));
+
+   function "<" (Left, Right : Tag) return Boolean
+     is (Total_Expanded_Name (Left) < Total_Expanded_Name (Right));
+
+   function "<=" (Left, Right : Tag) return Boolean
+     is (Total_Expanded_Name (Left) <= Total_Expanded_Name (Right));
+
+   function ">" (Left, Right : Tag) return Boolean
+     is (Total_Expanded_Name (Left) > Total_Expanded_Name (Right));
+
+   function ">=" (Left, Right : Tag) return Boolean
+     is (Total_Expanded_Name (Left) >= Total_Expanded_Name (Right));
+
    function Tag_Hash (T : Tag) return Hash_Type
-     is (Ada.Strings.Hash ("." & (if T = No_Tag then
-                                     ""
-                                  else
-                                     Expanded_Name (T))));
+     is (Ada.Strings.Hash (Total_Expanded_Name (T)));
 
 end Apsepp.Tags;

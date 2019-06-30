@@ -7,8 +7,8 @@ package Apsepp.Test_Node_Class.Case_Stub is
 
    type Test_Case_Stub is limited new Test_Node_Interfa with private
 
-     with Type_Invariant'Class
-            => Test_Case_Stub.Invariant_Class_Test_Case_Stub;
+     with Type_Invariant'Class =>
+            Test_Case_Stub.Invariant_Class_Test_Case_Stub;
 
    not overriding
    function Invariant_Class_Test_Case_Stub

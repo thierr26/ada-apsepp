@@ -1,9 +1,9 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Assertions;
-with Apsepp.Test_Reporter_Class;
-with Apsepp.Test_Node_Class.Private_Test_Reporter;
+with Ada.Assertions,
+     Apsepp.Test_Reporter_Class,
+     Apsepp.Test_Node_Class.Private_Test_Reporter;
 
 package body Apsepp.Test_Node_Class is
 
@@ -12,7 +12,7 @@ package body Apsepp.Test_Node_Class is
    function Initial_Routine_State
      (Routine_Index : Test_Routine_Index := 1) return Routine_State
      is (Routine_Index  => Routine_Index,
-         Assert_Count   => Create (0),
+         Assert_Count   => Prot_Test_Assert_Count.Create (0),
          Assert_Outcome => Passed);
 
    ----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ package body Apsepp.Test_Node_Class is
       begin
 
          Switch_Key_If_Needed (Node_Tag);
-         Inc (S.Assert_Count);
+         Prot_Test_Assert_Count.Inc (S.Assert_Count);
 
       end Increment_Assert_Count;
 
@@ -174,6 +174,57 @@ package body Apsepp.Test_Node_Class is
 
       -----------------------------------------------------
 
+      function Count return Count_Type
+        is (M.Length + (if T = No_Tag or else M.Contains (T) then
+                           0
+                        else
+                           1));
+
+      -----------------------------------------------------
+
+      function To_Array return Tag_Routine_State_Array is
+
+         use Routine_State_Hashed_Maps;
+
+         N : constant Count_Type := Count;
+         Ret : Tag_Routine_State_Array (1 .. N);
+
+         procedure Populate_Current is
+         begin
+            if N /= 0 then
+               Ret(1).T := T;
+               Ret(1).S := S;
+            end if;
+         end Populate_Current;
+
+         procedure Populate_Others is
+            K : Index_Type := 1;
+            procedure Process (C : Cursor) is
+               Key_C : constant Tag := Key (C);
+            begin
+               if Key_C /= T then
+                  K := K + 1;
+                  Ret(K).T := Key_C;
+                  Ret(K).S := Element (C);
+               end if;
+            end Process;
+         begin
+            M.Iterate (Process'Access);
+            Ada.Assertions.Assert ((N = 0 and then K = 1)
+                                     or else
+                                   (N > 0 and then K = N));
+         end Populate_Others;
+
+      begin
+
+         Populate_Current;
+         Populate_Others;
+         return Ret;
+
+      end To_Array;
+
+      -----------------------------------------------------
+
    end Routine_State_Map_Handler;
 
    ----------------------------------------------------------------------------
@@ -245,7 +296,10 @@ package body Apsepp.Test_Node_Class is
                      when Failed =>
                         raise Assertion_Error; -- Causes a jump to
                                                -- Assertion_Error handler
-                                               -- below.
+                                               -- below. Happens when a test
+                                               -- assertion has failed but has
+                                               -- been handled in the test
+                                               -- routine.
                      when Passed =>
                         null;
                   end case;
@@ -254,18 +308,20 @@ package body Apsepp.Test_Node_Class is
                   when Run_E : Assertion_Error =>
                      Routine_State_Map_Handler.Get_Assert_Outcome
                        (T, Assert_Outcome);
+                     Err     := False;
+                     Outcome := Failed;
                      case Assert_Outcome is
-                        when Failed =>
-                           Err := False; -- Exception very likely originates in
-                                         -- a failed test assertion and not in
-                                         -- an "unexpected error".
-                           Outcome := Failed;
+                        when Failed => -- Exception very likely originates in
+                                       -- a failed test assertion and not in
+                                       -- an "unexpected error".
                            Test_Reporter.Report_Failed_Test_Routine (T, K);
-                        when Passed =>
+                        when Passed => -- Exception may originates in a failed
+                                       -- contract.
                            Test_Reporter.Report_Unexpected_Routine_Exception
                              (T, K, Run_E);
                      end case;
-                  when Run_E : others =>
+                  when Run_E : others => -- Exception originates in an
+                                         -- unexpected error.
                      Test_Reporter.Report_Unexpected_Routine_Exception
                        (T, K, Run_E);
                end;
@@ -295,7 +351,8 @@ package body Apsepp.Test_Node_Class is
    procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "") is
 
       use Ada.Assertions,
-          Private_Test_Reporter;
+          Private_Test_Reporter,
+          Prot_Test_Assert_Count;
 
       K     : Test_Routine_Index;
       Count : O_P_I_Test_Assert_Count;

@@ -10,8 +10,8 @@ package Apsepp.Abstract_Early_Test_Case is
 
    type Early_Test_Case is abstract limited new Test_Case_Stub with private
 
-     with Type_Invariant'Class
-            => Early_Test_Case.Invariant_Class_Early_Test_Case;
+     with Type_Invariant'Class =>
+            Early_Test_Case.Invariant_Class_Early_Test_Case;
 
    not overriding
    function Invariant_Class_Early_Test_Case
@@ -70,8 +70,10 @@ private
       entry Set (T : Tag;
                  E : Exception_Occurrence_Access);
 
+      -- TODOC: Pre => Locked <2019-06-09>
       function T return Tag;
 
+      -- TODOC: Pre => Locked <2019-06-09>
       function E return Exception_Occurrence_Access;
 
       -- TODOC: Post => not Locked <2019-03-27>

@@ -2,6 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Ada.Unchecked_Deallocation;
+with Ada.Assertions;
 
 package body Apsepp.Abstract_Early_Test_Case is
 
@@ -29,13 +30,26 @@ package body Apsepp.Abstract_Early_Test_Case is
 
       -----------------------------------------------------
 
-      function T return Tag
-        is (T_Val);
+      function T return Tag is
+
+      begin
+
+         Ada.Assertions.Assert (Locked);
+         return T_Val;
+
+      end T;
 
       -----------------------------------------------------
 
-      function E return Exception_Occurrence_Access
-        is (E_Access);
+      function E return Exception_Occurrence_Access is
+
+      begin
+
+         Ada.Assertions.Assert (Locked);
+         return E_Access;
+
+      end E;
+
 
       -----------------------------------------------------
 

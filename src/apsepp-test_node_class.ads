@@ -1,10 +1,12 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Tags;    use Ada.Tags;
-with Apsepp.Tags; use Apsepp.Tags;
-private with Ada.Containers.Hashed_Maps,
-             Apsepp.Generic_Prot_Integer;
+with Ada.Tags;                    use Ada.Tags;
+with Ada.Containers;              use Ada.Containers;
+with Apsepp.Containers;           use Apsepp.Containers;
+with Apsepp.Tags;                 use Apsepp.Tags;
+with Apsepp.Generic_Prot_Integer;
+private with Ada.Containers.Hashed_Maps;
 
 package Apsepp.Test_Node_Class is
 
@@ -30,30 +32,50 @@ package Apsepp.Test_Node_Class is
    subtype Test_Routine_Index
      is Test_Routine_Count range 1 .. Test_Routine_Count'Last;
 
-   type Test_Assert_Count is new Natural;
-
    type Test_Routine is not null access procedure;
 
    procedure Null_Test_Routine is null;
+
+   type Test_Assert_Count is new Natural;
+
+   package Prot_Test_Assert_Count
+     is new Generic_Prot_Integer (Test_Assert_Count);
+
+   subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
+
+   type Routine_State is record
+      Routine_Index  : Test_Routine_Index;
+      Assert_Count   : O_P_I_Test_Assert_Count;
+      Assert_Outcome : Test_Outcome;
+   end record;
+
+   type Tag_Routine_State is record
+      T : Tag;
+      S : Routine_State;
+   end record;
 
    -- TODOC: A test node must not have two children with the same tag.
    -- <2019-03-02>
    -- TODOC: A runner must make sure that only one test node with a given tag
    -- is running at a given time. <2019-03-02>
-   type Test_Node_Interfa is limited interface
+   type Test_Node_Interfa is limited interface;
 
-     with Type_Invariant'Class
-            => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
-                 => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
-                      => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)'Tag
-                                             /=
-                                           Test_Node_Interfa.Child (K_2)'Tag))
-                 and then
-               (
-                 Test_Node_Interfa.Has_Early_Test
-                   or else
-                 Test_Node_Interfa.Early_Run_Done
-               );
+   -- PORT: Type_Invariant'Class aspect causes compiler error.
+   -- 8.3.0 (x86_64-linux-gnu) GCC error:
+   -- in gnat_to_gnu_entity, at ada/gcc-interface/decl.c:425
+   -- <2019-06-10>
+   --   with Type_Invariant'Class
+   --          => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
+   --               => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
+   --                    => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)'Tag
+   --                                           /=
+   --                                         Test_Node_Interfa.Child (K_2)'Tag))
+   --               and then
+   --             (
+   --               Test_Node_Interfa.Has_Early_Test
+   --                 or else
+   --               Test_Node_Interfa.Early_Run_Done
+   --             );
 
    type Test_Node_Access is not null access all Test_Node_Interfa'Class;
 
@@ -109,10 +131,10 @@ package Apsepp.Test_Node_Class is
      is abstract
 
      with Post'Class => (case Kind is
-                            when Check_Cond
-                               => True,
-                            when Assert_Cond_And_Run_Test
-                               => Obj.Has_Early_Test xor Obj.Early_Run_Done);
+                            when Check_Cond =>
+                               True,
+                            when Assert_Cond_And_Run_Test =>
+                               Obj.Has_Early_Test xor Obj.Early_Run_Done);
 
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome;
@@ -120,23 +142,9 @@ package Apsepp.Test_Node_Class is
 
      with Pre => Kind = Assert_Cond_And_Run_Test;
 
-   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String  := "");
+   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "");
 
 private
-
-   package Prot_Test_Assert_Count
-     is new Generic_Prot_Integer (Test_Assert_Count);
-
-   use Ada.Containers,
-       Prot_Test_Assert_Count;
-
-   subtype O_P_I_Test_Assert_Count is Prot_Test_Assert_Count.O_P_I_Type;
-
-   type Routine_State is record
-      Routine_Index  : Test_Routine_Index;
-      Assert_Count   : O_P_I_Test_Assert_Count;
-      Assert_Outcome : Test_Outcome;
-   end record;
 
    package Routine_State_Hashed_Maps
      is new Ada.Containers.Hashed_Maps (Key_Type        => Tag,
@@ -144,12 +152,6 @@ private
                                         Hash            => Tag_Hash,
                                         Equivalent_Keys => "=");
 
-   type Tag_Routine_State is record
-      T : Tag;
-      S : Routine_State;
-   end record;
-
-   subtype Index_Type is Count_Type range 1 .. Count_Type'Last;
    type Tag_Routine_State_Array
      is array (Index_Type range <>) of Tag_Routine_State;
 
@@ -199,9 +201,17 @@ private
 
       function Invariant return Boolean;
 
+      function Count return Count_Type;
+
+      function To_Array return Tag_Routine_State_Array
+
+        with Post => To_Array'Result'First = 1
+                       and then
+                     (for all R of To_Array'Result => R.T /= No_Tag);
+
    private
 
-      T : Tag                           := No_Tag;
+      T : Tag;
       S : Routine_State;
       M : Routine_State_Hashed_Maps.Map;
 

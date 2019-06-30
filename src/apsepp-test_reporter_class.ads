@@ -3,6 +3,8 @@
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Tags;       use Ada.Tags;
+with Apsepp.Test_Reporter_Data_Struct_Class;
+  use Apsepp.Test_Reporter_Data_Struct_Class;
 limited with Apsepp.Test_Node_Class;
 
 package Apsepp.Test_Reporter_Class is

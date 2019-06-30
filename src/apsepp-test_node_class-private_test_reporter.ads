@@ -18,6 +18,8 @@ private
 
    use Test_Reporter_Class.Stub;
 
+   -- TODO: Consider removing Test_Reporter_Stub creational function.
+   -- <2019-06-08>
    Fallback_Instance : aliased Test_Reporter_Stub := Create;
 
    package Shared_Instance_Fallback_Switch
