@@ -54,6 +54,12 @@ package Apsepp.Scope_Debug is
    not overriding
    procedure Trace_E (Obj : Controlled_Debug_Tracer; E : Exception_Occurrence);
 
+   not overriding
+   procedure Trace_Time
+     (Obj           : Controlled_Debug_Tracer;
+      Entity_Name   : String                  := "";
+      Reset_Elapsed : Boolean                 := False);
+
    overriding
    procedure Finalize (Obj : in out Controlled_Debug_Tracer);
 

@@ -82,6 +82,21 @@ package body Apsepp.Scope_Debug is
 
    ----------------------------------------------------------------------------
 
+   not overriding
+   procedure Trace_Time
+     (Obj           : Controlled_Debug_Tracer;
+      Entity_Name   : String                  := "";
+      Reset_Elapsed : Boolean                 := False) is
+
+   begin
+
+      Debug_Trace.Debug_Trace.Trace_Time
+        (Controlled_Debug_Tracer'Class (Obj).Entity, Reset_Elapsed);
+
+   end Trace_Time;
+
+   ----------------------------------------------------------------------------
+
    overriding
    procedure Finalize (Obj : in out Controlled_Debug_Tracer) is
 

@@ -22,6 +22,11 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
       -----------------------------------------------------
 
+      function Clock_String (Reset_Elapsed : Boolean := False) return String
+        is (Debug_Trace_Stub_Instance.Clock_String (Reset_Elapsed));
+
+      -----------------------------------------------------
+
       procedure Trace (Message : String; Entity_Name : String := "") is
 
       begin
@@ -43,6 +48,37 @@ package body Apsepp.Debug_Trace_Class.Standard is
          Trace (E_To_String (E), Entity_Name);
 
       end Trace_E;
+
+      -----------------------------------------------------
+
+      procedure Set_Time_Zone (Time_Zone : Time_Offset) is
+
+      begin
+
+         Debug_Trace_Stub_Instance.Set_Time_Zone (Time_Zone);
+
+      end Set_Time_Zone;
+
+      -----------------------------------------------------
+
+      procedure Set_Local_Time_Zone is
+
+      begin
+
+         Debug_Trace_Stub_Instance.Set_Local_Time_Zone;
+
+      end Set_Local_Time_Zone;
+
+      -----------------------------------------------------
+
+      procedure Trace_Time (Entity_Name   : String  := "";
+                            Reset_Elapsed : Boolean := False) is
+
+      begin
+
+         Trace (Clock_String (Reset_Elapsed), Entity_Name);
+
+      end Trace_Time;
 
       -----------------------------------------------------
 
