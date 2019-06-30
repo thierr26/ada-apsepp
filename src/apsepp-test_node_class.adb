@@ -128,12 +128,33 @@ package body Apsepp.Test_Node_Class is
 
          use Routine_State_Hashed_Maps;
 
-         C : Cursor := M.Find (Node_Tag);
-
       begin
 
-         if C /= No_Element then
-            M.Delete (C);
+         if M.Length = 0 then
+            T := No_Tag;
+         else
+
+            declare
+               C : Cursor := M.Find (Node_Tag);
+            begin
+
+               if C /= No_Element then
+                  M.Delete (C);
+               end if;
+
+               if T = Node_Tag and then M.Length > 0 then
+                  declare
+                     C_First : Cursor := M.First;
+                  begin
+                     T := Key (C_First);
+                     S := Element (C_First);
+                  end;
+               elsif T = Node_Tag then
+                  T := No_Tag;
+               end if;
+
+            end;
+
          end if;
 
       end Delete;
