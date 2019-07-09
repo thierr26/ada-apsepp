@@ -207,6 +207,8 @@ private
 
         with Post => To_Array'Result'First = 1
                        and then
+                     To_Array'Result'Length = Count
+                       and then
                      (for all R of To_Array'Result => R.T /= No_Tag);
 
    private

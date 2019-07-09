@@ -490,6 +490,9 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
       Ada.Assertions.Assert (not Barrier.Failed_Validation,
          "Failed validation, please analyse trace for details");
 
+      Ada.Assertions.Assert (To_Array'Length = 0,
+         "Array returned by To_Array is expected to be empty at this point");
+
    exception
 
       when Others =>
