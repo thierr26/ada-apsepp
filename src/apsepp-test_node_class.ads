@@ -2,11 +2,10 @@
 -- MIT license. Please refer to the LICENSE file.
 
 with Ada.Tags;                    use Ada.Tags;
-with Ada.Containers;              use Ada.Containers;
-with Apsepp.Containers;           use Apsepp.Containers;
-with Apsepp.Tags;                 use Apsepp.Tags;
 with Apsepp.Generic_Prot_Integer;
-private with Ada.Containers.Hashed_Maps;
+private with Ada.Containers.Hashed_Maps,
+             Apsepp.Containers,
+             Apsepp.Tags;
 
 package Apsepp.Test_Node_Class is
 
@@ -145,6 +144,10 @@ package Apsepp.Test_Node_Class is
    procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "");
 
 private
+
+   use Ada.Containers,
+       Apsepp.Containers,
+       Apsepp.Tags;
 
    package Routine_State_Hashed_Maps
      is new Ada.Containers.Hashed_Maps (Key_Type        => Tag,

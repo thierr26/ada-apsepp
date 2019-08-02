@@ -4,6 +4,7 @@
 with Ada.Exceptions;                  use Ada.Exceptions;
 with Ada.Calendar;                    use Ada.Calendar;
 with Ada.Characters.Handling;         use Ada.Characters.Handling;
+with Apsepp.Tags;                     use Apsepp.Tags;
 with Apsepp.Test_Reporter_Class.Stub; use Apsepp.Test_Reporter_Class.Stub;
 with Apsepp.Characters;               use Apsepp.Characters;
 with Apsepp.Test_Reporter_Data_Struct_Class;
