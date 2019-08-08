@@ -424,7 +424,7 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
 
       Reporter.Set_Barrier (Barrier'Access);
 
-      Barrier.Set_Param (Barrier_Param'Access);
+      Barrier.Set_Param (Barrier_Param);
       Barrier_Stimulus.Set_Barrier (Barrier'Access);
 
       for K in Runner_Task'Range loop

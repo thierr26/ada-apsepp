@@ -73,12 +73,13 @@ package Apsepp.Test_Node_Class.Testing is
 
    -- TODOC: Refresh_Delay component is the delay between two consective calls
    -- to Refresh procedure of type Test_Node_Barrier done by a task of type
-   -- Test_Node_Barrier_Stimulus_Task. Delay between last crossing and Barrier
-   -- actual time out is in any case lower than Refresh_Delay * 2. <2019-06-29>
+   -- Test_Node_Barrier_Stimulus_Task. Delay between last barrier crossing and
+   -- barrier actual time out is in any case lower than Refresh_Delay * 2.
+   -- <2019-06-29>
    type Test_Node_Barrier_Param is record
-      Tag_To_Char            : not null Tag_To_Char_Func;
-      Char_To_Tag            : not null Char_To_Tag_Func;
-      Expected_Routine_State : not null Routine_State_Array_Access;
+      Tag_To_Char            : Tag_To_Char_Func;
+      Char_To_Tag            : Char_To_Tag_Func;
+      Expected_Routine_State : Routine_State_Array_Access;
       Refresh_Delay          : Day_Duration
         := Default_Test_Node_Barrier_Refresh_Delay ;
    end record;
@@ -91,13 +92,11 @@ package Apsepp.Test_Node_Class.Testing is
                                                       Overflow,
                                                       Time_Out);
 
-   type Test_Node_Barrier_Param_Access is access all Test_Node_Barrier_Param;
-
    package Prot_Event_Count is new Generic_Prot_Integer (Event_Count);
 
    protected type Test_Node_Barrier is
 
-      procedure Set_Param (Param : not null Test_Node_Barrier_Param_Access)
+      procedure Set_Param (Param : Test_Node_Barrier_Param)
 
         with Pre => Param.Expected_Routine_State'First = 1;
 
@@ -105,7 +104,7 @@ package Apsepp.Test_Node_Class.Testing is
 
       procedure Refresh;
 
-      function Get_Param return not null Test_Node_Barrier_Param_Access;
+      function Get_Param return Test_Node_Barrier_Param;
 
       function Cross_Count return Event_Count;
 
@@ -124,7 +123,7 @@ package Apsepp.Test_Node_Class.Testing is
 
    private
 
-      P : Test_Node_Barrier_Param_Access;
+      P : Test_Node_Barrier_Param;
 
       Crossing_Count : Prot_Event_Count.O_P_I_Type
         := Prot_Event_Count.Create (0);

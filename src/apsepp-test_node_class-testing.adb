@@ -59,7 +59,7 @@ package body Apsepp.Test_Node_Class.Testing is
 
       -----------------------------------------------------
 
-      procedure Set_Param (Param : not null Test_Node_Barrier_Param_Access) is
+      procedure Set_Param (Param : Test_Node_Barrier_Param) is
 
       begin
 
@@ -319,7 +319,7 @@ package body Apsepp.Test_Node_Class.Testing is
 
       -----------------------------------------------------
 
-      function Get_Param return not null Test_Node_Barrier_Param_Access
+      function Get_Param return Test_Node_Barrier_Param
         is (P);
 
       -----------------------------------------------------
