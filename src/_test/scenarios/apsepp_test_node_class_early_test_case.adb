@@ -25,6 +25,7 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
        Apsepp.Test_Node_Class.Testing,
        Apsepp.Test_Node_Class.Abstract_Simu_Case,
        Apsepp.Test_Node_Class.Runner_Sequential,
+       Apsepp.Test_Node_Class,
        Apsepp.Scope_Debug,
        Apsepp.Test_Reporter_Data_Struct_Class;
 
@@ -507,8 +508,8 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
    ----------------------------------------------------------------------------
 
    overriding
-   function Early_Routine
-     (Obj : Apsepp_Test_Node_Class_E_T_C) return Test_Routine
+   function Early_Routine (Obj : Apsepp_Test_Node_Class_E_T_C)
+     return Apsepp.Abstract_Early_Test_Case.Test_Routine
      is (Test_Node_Class_Early_Test'Access);
 
    ----------------------------------------------------------------------------

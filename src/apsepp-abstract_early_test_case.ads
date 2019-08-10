@@ -8,6 +8,8 @@ with Apsepp.Test_Node_Class.Case_Stub; use Apsepp.Test_Node_Class.Case_Stub;
 
 package Apsepp.Abstract_Early_Test_Case is
 
+   subtype Test_Routine is Test_Node_Class.Test_Routine;
+
    type Early_Test_Case is abstract limited new Test_Case_Stub with private
 
      with Type_Invariant'Class =>

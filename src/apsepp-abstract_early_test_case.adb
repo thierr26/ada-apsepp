@@ -135,7 +135,7 @@ package body Apsepp.Abstract_Early_Test_Case is
    procedure Run
      (Obj     : in out Early_Test_Case;
       Outcome :    out Test_Outcome;
-      Kind    :        Run_Kind             := Assert_Cond_And_Run_Test) is
+      Kind    :        Run_Kind        := Assert_Cond_And_Run_Test) is
 
       -----------------------------------------------------
 
