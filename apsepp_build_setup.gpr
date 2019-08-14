@@ -26,7 +26,9 @@ abstract project Apsepp_Build_Setup is
          when "debug_info_and_assertions" =>
             for Switches ("Ada") use ("-gnat2012",
                                       "-g",
-                                      "-gnata");
+                                      "-gnata",
+                                      "-gnatwa",
+                                      "-gnateE");
 
          when "debug_info" =>
             for Switches ("Ada") use ("-gnat2012",

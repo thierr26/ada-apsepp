@@ -14,12 +14,12 @@ package body Apsepp.Calendar is
 
       use Formatting;
 
-      Negative_Offset : Boolean     := Time_Zone < 0;
+      Negative_Offset : constant Boolean     := Time_Zone < 0;
 
-      Abs_Offset      : Time_Offset := (if Negative_Offset then
-                                           -Time_Zone
-                                        else
-                                           Time_Zone);
+      Abs_Offset      : constant Time_Offset := (if Negative_Offset then
+                                                    -Time_Zone
+                                                 else
+                                                    Time_Zone);
 
       -----------------------------------------------------
 

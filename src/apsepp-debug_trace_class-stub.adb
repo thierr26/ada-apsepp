@@ -1,8 +1,7 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Strings.Fixed,
-     Apsepp.Calendar;
+with Ada.Strings.Fixed;
 
 package body Apsepp.Debug_Trace_Class.Stub is
 
@@ -13,13 +12,14 @@ package body Apsepp.Debug_Trace_Class.Stub is
      (Obj           : Debug_Trace_Stub;
       Reset_Elapsed : Boolean          := False) return String is
 
-      use Ada.Strings.Fixed,
-          Apsepp.Calendar;
+      use Ada.Strings.Fixed;
 
       Date         : Time;
       Time_Zone    : Time_Offset;
       Elapsed_Time : Duration;
       Par_Index    : Positive;
+
+      pragma Unreferenced (Obj);
 
    begin
 
@@ -58,6 +58,8 @@ package body Apsepp.Debug_Trace_Class.Stub is
    overriding
    procedure Set_Time_Zone (Obj       : in out Debug_Trace_Stub;
                             Time_Zone :        Time_Offset) is
+
+      pragma Unreferenced (Obj);
 
    begin
 

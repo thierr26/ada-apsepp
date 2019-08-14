@@ -144,7 +144,7 @@ package body Apsepp.Test_Node_Class is
 
                if T = Node_Tag and then M.Length > 0 then
                   declare
-                     C_First : Cursor := M.First;
+                     C_First : constant Cursor := M.First;
                   begin
                      T := Key (C_First);
                      S := Element (C_First);
