@@ -420,7 +420,7 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
             (for all K_2 in Runner'Range =>
                K_1 = K_2
                  or else
-               Runner(K_1)'Tag /= Simu_Case(K_2)'Tag)),
+               Runner(K_1)'Tag /= Runner(K_2)'Tag)),
          "Duplicate tag in Runner array");
 
       Reporter.Set_Barrier (Barrier'Access);
