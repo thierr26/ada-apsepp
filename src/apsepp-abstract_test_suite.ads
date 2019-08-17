@@ -6,13 +6,13 @@ with Apsepp.Test_Node_Class.Suite_Stub; use Apsepp.Test_Node_Class.Suite_Stub;
 
 package Apsepp.Abstract_Test_Suite is
 
-   type Child_Test_Node_Array
+   type Test_Node_Array
      is array (Test_Node_Index range <>) of Test_Node_Access;
 
    type Test_Suite is abstract limited new Test_Suite_Stub with private;
 
    not overriding
-   function Child_Array (Obj : Test_Suite) return Child_Test_Node_Array
+   function Child_Array (Obj : Test_Suite) return Test_Node_Array
      is abstract;
 
    overriding

@@ -12,7 +12,7 @@ package Apsepp_Test_Suite is
    type Apsepp_T_S is limited new Test_Suite with null record;
 
    overriding
-   function Child_Array (Obj : Apsepp_T_S) return Child_Test_Node_Array;
+   function Child_Array (Obj : Apsepp_T_S) return Test_Node_Array;
 
 private
 
