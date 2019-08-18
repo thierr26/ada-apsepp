@@ -16,21 +16,6 @@ package Apsepp.Test_Node_Class.Testing is
    function "<" (Left, Right : Flattened_Routine_State) return Boolean
      is (Tags."<" (Left.T, Right.T));
 
-   function To_Flattened_Routine_State
-     (T_R_S : Tag_Routine_State) return Flattened_Routine_State
-     is (T         => T_R_S.T,
-         Routine_I => T_R_S.S.Routine_Index,
-         Assert_C  => Prot_Test_Assert_Count.Val (T_R_S.S.Assert_Count),
-         Assert_O  => T_R_S.S.Assert_Outcome);
-
-   function From_Flattened_Routine_State
-     (F_R_S : Flattened_Routine_State) return Tag_Routine_State
-     is (T => F_R_S.T,
-         S => (Routine_Index  => F_R_S.Routine_I,
-               Assert_Count   =>
-                 Prot_Test_Assert_Count.Create (F_R_S.Assert_C),
-               Assert_Outcome => F_R_S.Assert_O));
-
    type Routine_State_Array
      is array (Positive range <>) of Flattened_Routine_State;
 
@@ -47,5 +32,14 @@ package Apsepp.Test_Node_Class.Testing is
      with Post => To_Array'Result'First = 1
                     and then
                   Monotonic_Incr (To_Array'Result(2 .. To_Array'Result'Last));
+
+private
+
+   function To_Flattened_Routine_State
+     (T_R_S : Tag_Routine_State) return Flattened_Routine_State
+     is (T         => T_R_S.T,
+         Routine_I => T_R_S.S.Routine_Index,
+         Assert_C  => Prot_Test_Assert_Count.Val (T_R_S.S.Assert_Count),
+         Assert_O  => T_R_S.S.Assert_Outcome);
 
 end Apsepp.Test_Node_Class.Testing;
