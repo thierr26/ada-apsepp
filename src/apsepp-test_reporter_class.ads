@@ -12,11 +12,19 @@ package Apsepp.Test_Reporter_Class is
    type Test_Reporter_Access is access all Test_Reporter_Interfa'Class;
 
    not overriding
-   procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
-                                   Node_Lineage :        Tag_Array;
-                                   Active       :    out Boolean) is null
+   function Is_Conflicting_Node_Tag
+     (Obj      : Test_Reporter_Interfa;
+      Node_Tag : Tag) return Boolean is abstract;
 
-     with Pre'Class => (for all T of Node_Lineage => T /= No_Tag);
+   not overriding
+   procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Interfa;
+                                   Node_Lineage :        Tag_Array) is null
+
+     with Pre'Class
+       => (for all T of Node_Lineage => T /= No_Tag)
+            and then
+          not Test_Reporter_Interfa'Class (Obj).Is_Conflicting_Node_Tag
+                                            (Node_Lineage (Node_Lineage'Last));
 
    -- TODOC: Called by Test_Node_Class.Suite_Stub.Run_Children.
    -- <2019-03-03>

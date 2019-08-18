@@ -9,8 +9,10 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
      is new Test_Reporter_Interfa with
 
       overriding
-      procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
-                                      Active       : out Boolean);
+      function Is_Conflicting_Node_Tag (Node_Tag : Tag) return Boolean;
+
+      overriding
+      procedure Provide_Node_Lineage (Node_Lineage : Tag_Array);
 
       overriding
       procedure Report_Failed_Child_Test_Node_Access

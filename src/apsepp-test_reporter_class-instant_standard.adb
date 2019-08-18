@@ -193,14 +193,18 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       -----------------------------------------------------
 
-      procedure Provide_Node_Lineage (Node_Lineage :     Tag_Array;
-                                      Active       : out Boolean) is
+      function Is_Conflicting_Node_Tag (Node_Tag : Tag) return Boolean
+        is (False);
+
+      -----------------------------------------------------
+
+      procedure Provide_Node_Lineage (Node_Lineage : Tag_Array) is
 
          pragma Unreferenced (Node_Lineage);
 
       begin
 
-         Active := True;
+         null;
 
       end Provide_Node_Lineage;
 

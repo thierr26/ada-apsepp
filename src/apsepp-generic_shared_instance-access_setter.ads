@@ -2,7 +2,7 @@
 -- MIT license. Please refer to the LICENSE file.
 
 generic
-   Inst_Access : Instance_Type_Access;
+   Inst_Access : in Instance_Type_Access;
    with procedure CB is null;
 package Apsepp.Generic_Shared_Instance.Access_Setter is
 

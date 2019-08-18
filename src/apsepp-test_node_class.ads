@@ -78,6 +78,11 @@ package Apsepp.Test_Node_Class is
 
    type Test_Node_Access is not null access all Test_Node_Interfa'Class;
 
+   type Test_Node_Array
+     is array (Test_Node_Index range <>) of Test_Node_Access;
+
+   type Test_Node_Array_Access is access Test_Node_Array;
+
    not overriding
    function Child_Count (Obj : Test_Node_Interfa)
      return Test_Node_Count is abstract;

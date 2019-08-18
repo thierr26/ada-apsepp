@@ -6,9 +6,13 @@ package Apsepp.Test_Reporter_Class.Stub is
    type Test_Reporter_Stub is limited new Test_Reporter_Interfa with private;
 
    overriding
+   function Is_Conflicting_Node_Tag (Obj      : Test_Reporter_Stub;
+                                     Node_Tag : Tag) return Boolean
+     is (False);
+
+   overriding
    procedure Provide_Node_Lineage (Obj          : in out Test_Reporter_Stub;
-                                   Node_Lineage :        Tag_Array;
-                                   Active       :    out Boolean) is null;
+                                   Node_Lineage :        Tag_Array) is null;
 
 private
 

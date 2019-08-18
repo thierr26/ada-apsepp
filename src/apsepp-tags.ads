@@ -4,6 +4,7 @@
 with Ada.Tags;       use Ada.Tags;
 with Ada.Containers; use Ada.Containers;
 with Ada.Strings.Hash;
+with Ada.Unchecked_Deallocation;
 
 package Apsepp.Tags is
 
@@ -27,5 +28,11 @@ package Apsepp.Tags is
 
    function Tag_Hash (T : Tag) return Hash_Type
      is (Ada.Strings.Hash (Total_Expanded_Name (T)));
+
+   type Tag_Array_Access is access Tag_Array;
+
+   procedure Free is new Ada.Unchecked_Deallocation
+     (Object => Tag_Array,
+      Name   => Tag_Array_Access);
 
 end Apsepp.Tags;
