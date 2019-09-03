@@ -61,7 +61,7 @@ html_cov_command = $(genhtml_prg) $(genhtml_branchswi) $(html_cov_prefix) \
   --output-directory $(html_cov_dir) $(cov_filtered)
 
 # Path to Firefox application (or empty).
-firefox_path = $(shell which firefox)
+firefox_path = $(shell which firefox 2>/dev/null)
 
 # -----------------------------------------------------------------------------
 
