@@ -93,7 +93,7 @@ make test PROJ=apsepp_demo PRG=apsepp_demo_output_sink_as_shared_instance
 
 ## Author
 
-Thierry Rascle <thierr26@free.fr>
+[Thierry Rascle](thierr26@free.fr)
 
 
 ## License
