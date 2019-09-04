@@ -17,7 +17,26 @@ package Apsepp_Test_Node_Barrier is
 
    ----------------------------------------------------------------------------
 
-   package Prot_Natural is new Apsepp.Generic_Prot_Integer (Natural);
+   type Test_Event_Kind is (Failed_Child_Test_Node_Access,
+                            Unexpected_Node_Cond_Check_Error,
+                            Unexpected_Node_Run_Error,
+                            Node_Cond_Check_Start,
+                            Passed_Node_Cond_Check,
+                            Failed_Node_Cond_Check,
+                            Passed_Node_Cond_Assert,
+                            Failed_Node_Cond_Assert,
+                            Node_Run_Start,
+                            Test_Routine_Start,
+                            Test_Routines_Cancellation,
+                            Failed_Test_Routine_Access,
+                            Failed_Test_Routine_Setup,
+                            Passed_Test_Assert,
+                            Failed_Test_Assert,
+                            Unexpected_Routine_Exception,
+                            Passed_Test_Routine,
+                            Failed_Test_Routine,
+                            Passed_Node_Run,
+                            Failed_Node_Run);
 
    type Char_Name_Image_Func is access function (Char : ISO_646) return String;
 
@@ -27,6 +46,7 @@ package Apsepp_Test_Node_Barrier is
      is access function (Char : ISO_646_Upper_Letter) return Tag;
 
    type Validate_Proc is access procedure (Crossing_Count : Natural;
+                                           Event_Kind     : Test_Event_Kind;
                                            Char           : ISO_646;
                                            Char_To_Tag    : Char_To_Tag_Func;
                                            Msg_Pref       : String);
@@ -36,6 +56,8 @@ package Apsepp_Test_Node_Barrier is
                                                       Overflow,
                                                       Time_Out);
 
+   package Prot_Natural is new Apsepp.Generic_Prot_Integer (Natural);
+
    protected type Test_Node_Barrier is
 
       procedure Setup (Ch_I  : not null Char_Name_Image_Func;
@@ -44,7 +66,7 @@ package Apsepp_Test_Node_Barrier is
                        V     : not null Validate_Proc;
                        Exp   : not null Tag_Array_Access);
 
-      entry Cross(ISO_646);
+      entry Cross(ISO_646) (Event_Kind : Test_Event_Kind);
 
       procedure Time_Out;
 
@@ -70,7 +92,7 @@ package Apsepp_Test_Node_Barrier is
 
       Expected_Tag : Tag_Array_Access;
 
-      Crossing_Count : Prot_Natural.O_P_I_Type := Prot_Natural.Create (0);
+      Crossing_Count : Prot_Natural.O_P_I_Type;
 
       -- TODOC: Meaningless if Permanent_Opening_Cause /= Time_Out.
       -- <2019-08-08>
@@ -80,10 +102,9 @@ package Apsepp_Test_Node_Barrier is
       -- <2019-08-16>
       Crossing_Count_On_Overflow : Natural;
 
-      Permanent_Opening_Cause
-        : Test_Node_Barrier_Permanent_Opening_Cause := None;
+      Permanent_Opening_Cause : Test_Node_Barrier_Permanent_Opening_Cause;
 
-      Failed_Validation_Flag : Boolean := False;
+      Failed_Validation_Flag : Boolean;
 
       Char_Name_Image : Char_Name_Image_Func;
 
