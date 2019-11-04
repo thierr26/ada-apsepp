@@ -32,7 +32,6 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Failed_Child_Test_Node_Access
      (Obj                : in out Test_Reporter_Interfa;
       Node_Tag           :        Tag;
-      First_Child        :        Boolean;
       Previous_Child_Tag :        Tag;
       E                  :        Exception_Occurrence) is null;
 

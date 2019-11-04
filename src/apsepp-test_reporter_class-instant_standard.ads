@@ -17,7 +17,6 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
       overriding
       procedure Report_Failed_Child_Test_Node_Access
         (Node_Tag           : Tag;
-         First_Child        : Boolean;
          Previous_Child_Tag : Tag;
          E                  : Exception_Occurrence);
 

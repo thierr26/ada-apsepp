@@ -212,13 +212,12 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Failed_Child_Test_Node_Access
         (Node_Tag           : Tag;
-         First_Child        : Boolean;
          Previous_Child_Tag : Tag;
          E                  : Exception_Occurrence) is
 
       begin
 
-         if First_Child then
+         if Previous_Child_Tag = No_Tag then
             Put_Report_Line
               (Outcome_Prepended (Failed, Child_Acc_1), Node_Tag);
          else

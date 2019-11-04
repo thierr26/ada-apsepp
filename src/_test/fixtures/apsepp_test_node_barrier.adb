@@ -301,14 +301,13 @@ package body Apsepp_Test_Node_Barrier is
    procedure Report_Failed_Child_Test_Node_Access
      (Obj                : in out Test_Reporter_W_Barrier;
       Node_Tag           :        Tag;
-      First_Child        :        Boolean;
       Previous_Child_Tag :        Tag;
       E                  :        Exception_Occurrence) is
 
       Event_Kind : constant Test_Event_Kind := Failed_Child_Test_Node_Access;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (First_Child, Previous_Child_Tag, E);
+      pragma Unreferenced (Previous_Child_Tag, E);
 
    begin
 

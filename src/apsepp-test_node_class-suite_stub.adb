@@ -52,7 +52,7 @@ package body Apsepp.Test_Node_Class.Suite_Stub is
 
             when Access_E : others =>
                Test_Reporter.Report_Failed_Child_Test_Node_Access
-                 (T, K = 1, Current_Child'Tag, Access_E);
+                 (T, (if K = 1 then No_Tag else Current_Child'Tag), Access_E);
 
          end;
 
