@@ -253,10 +253,12 @@ package body Apsepp.Test_Node_Class is
 
       begin
 
-         if Err then
+         if Err and then not Ret then
             Ret     := True;
             Outcome := Failed;
-            Test_Reporter.Report_Test_Routines_Cancellation (Obj'Tag, K, N);
+            Test_Reporter.Report_Test_Routines_Cancellation (Obj'Tag,
+                                                             K + 1,
+                                                             N);
          end if;
 
          return Ret;
