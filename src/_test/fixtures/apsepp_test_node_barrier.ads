@@ -45,7 +45,7 @@ package Apsepp_Test_Node_Barrier is
    type Char_To_Tag_Func
      is access function (Char : ISO_646_Upper_Letter) return Tag;
 
-   type Validate_Proc is access procedure (Crossing_Count : Natural;
+   type Validate_Proc is access procedure (Crossing_Count : Positive;
                                            Event_Kind     : Test_Event_Kind;
                                            Char           : ISO_646;
                                            Char_To_Tag    : Char_To_Tag_Func;

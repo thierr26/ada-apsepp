@@ -159,7 +159,7 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   procedure Validate (K           : Natural;
+   procedure Validate (K           : Positive;
                        Event_Kind  : Test_Event_Kind;
                        Char        : ISO_646;
                        Char_To_Tag : Char_To_Tag_Func;
