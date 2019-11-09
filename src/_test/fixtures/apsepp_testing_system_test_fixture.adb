@@ -104,7 +104,7 @@ package body Apsepp_Testing_System_Test_Fixture is
          (Kind => Contract_Failure,       Successful_Test_Assert_Count => 4),
          (Kind => Setup_Failure,          Successful_Test_Assert_Count => 0),
          (Kind => No_Failure,             Successful_Test_Assert_Count => 0));
-   -- 4th test routine not run (setup failure on 3rd test routine causes the
+   -- 4th test routine not run (setup failure on 4th test routine causes the
    -- following test routines to be cancelled).
 
       -----------------------------------------------------
