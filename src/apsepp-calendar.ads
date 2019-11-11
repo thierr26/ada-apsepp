@@ -11,9 +11,17 @@ package Apsepp.Calendar is
                                           Day     => Day_Number'First,
                                           Seconds => Day_Duration'First);
 
+   function Unknown_Time_zone return Boolean;
+
+   function Default_Time_Offset return Time_Offset
+     is (if Unknown_Time_zone then
+            0
+         else
+            UTC_Time_Offset);
+
    function To_ISO_8601
      (Date                  : Time;
-      Time_Zone             : Time_Offset := 0;
+      Time_Zone             : Time_Offset := Default_Time_Offset;
       Include_Time_Fraction : Boolean     := False) return String;
 
 end Apsepp.Calendar;

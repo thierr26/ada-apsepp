@@ -7,9 +7,38 @@ package body Apsepp.Calendar is
 
    ----------------------------------------------------------------------------
 
+   Unknown_Time_Zone_Cached_Avail : Boolean := False;
+   Unknown_Time_Zone_Cached       : Boolean;
+
+   function Unknown_Time_zone return Boolean is
+
+   begin
+
+      if not Unknown_Time_Zone_Cached_Avail then
+
+         declare
+            UTC_Time_Offset_Ret : Time_Offset;
+            pragma Unreferenced (UTC_Time_Offset_Ret);
+         begin
+            UTC_Time_Offset_Ret      := UTC_Time_Offset;
+            Unknown_Time_Zone_Cached := False;
+         exception
+            when Unknown_Zone_Error => Unknown_Time_Zone_Cached := True;
+         end;
+
+         Unknown_Time_Zone_Cached_Avail := True;
+
+      end if;
+
+      return Unknown_Time_Zone_Cached;
+
+   end Unknown_Time_zone;
+
+   ----------------------------------------------------------------------------
+
    function To_ISO_8601
      (Date                  : Time;
-      Time_Zone             : Time_Offset := 0;
+      Time_Zone             : Time_Offset := Default_Time_Offset;
       Include_Time_Fraction : Boolean     := False) return String is
 
       use Formatting;
