@@ -221,13 +221,13 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
          -- TODO: Refactor (use generics). <2019-08-11>
 
          Ada.Assertions.Assert (Exp_R_I = 0,
-           Msg_Pref & "Exp_R_I =" & Test_Routine_Count'Image (Exp_R_I)
+           "Exp_R_I =" & Test_Routine_Count'Image (Exp_R_I)
            & ", 0 expected");
          Ada.Assertions.Assert (Exp_A_C = 0,
-           Msg_Pref & "Exp_A_C =" & Test_Assert_Count'Image (Exp_A_C)
+           "Exp_A_C =" & Test_Assert_Count'Image (Exp_A_C)
            & ", 0 expected");
          Ada.Assertions.Assert (Exp_A_O = Passed,
-           Msg_Pref & "Exp_A_O = " & Test_Outcome'Image (Exp_A_O)
+           "Exp_A_O = " & Test_Outcome'Image (Exp_A_O)
            & ", PASSED expected");
 
       else
@@ -273,17 +273,17 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
             Ada.Assertions.Assert (A'Length > 0
                                      or else
                                    Exp_R_I = 0,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & ", Exp_R_I should be 0");
             Ada.Assertions.Assert (A'Length > 0
                                      or else
                                    Exp_A_C = 0,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & ", Exp_A_C should be 0");
             Ada.Assertions.Assert (A'Length > 0
                                      or else
                                    Exp_A_O = Passed,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & ", Exp_A_O should be PASSED");
 
             -- TODO: Write function Find or Find_First in
@@ -300,21 +300,21 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
             Ada.Assertions.Assert ((A'Length = 0 or else A(K_T).T /= T)
                                      or else
                                    A_K_R_I (K_T) = Exp_R_I,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & "," & Test_Routine_Count'Image (A_K_R_I (K_T))
               & " (A_K_R_I (" & Positive_Image (K_T) & ")) /="
               & Test_Routine_Count'Image (Exp_R_I) & " (Exp_R_I)");
             Ada.Assertions.Assert ((A'Length = 0 or else A(K_T).T /= T)
                                      or else
                                    A_K_A_C (K_T) = Exp_A_C,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & "," & Test_Assert_Count'Image (A_K_A_C (K_T))
               & " (A_K_A_C (" & Positive_Image (K_T) & ")) /="
               & Test_Assert_Count'Image (Exp_A_C) & " (Exp_A_C)");
             Ada.Assertions.Assert ((A'Length = 0 or else A(K_T).T /= T)
                                      or else
                                    A_K_A_O (K_T) = Exp_A_O,
-              Msg_Pref & "A'Length =" & Integer'Image (A'Length)
+              "A'Length =" & Integer'Image (A'Length)
               & ", " & Test_Outcome'Image (A_K_A_O (K_T))
               & " (A_K_A_O (" & Positive_Image (K_T) & ")) /= "
               & Test_Outcome'Image (Exp_A_O) & " (Exp_A_O)");

@@ -1,7 +1,7 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
 -- MIT license. Please refer to the LICENSE file.
 
-with Ada.Strings.Fixed;
+with Ada.Unchecked_Deallocation;
 
 package body Apsepp_Test_Node_Barrier is
 
@@ -167,15 +167,7 @@ package body Apsepp_Test_Node_Barrier is
             exception
                when E : others => -- Probably
                                   -- Ada.Assertions.Assertion_Error.
-                  declare
-                     Msg       : constant String   := Exception_Message (E);
-                     Colon_Idx : constant Positive
-                       := Ada.Strings.Fixed.Index (Msg, ":");
-                  begin
-                     C_D_T.Trace (Msg_Pref & Msg(Colon_Idx + 2
-                                                   ..
-                                                 Msg'Last));
-                  end;
+                  C_D_T.Trace (Msg_Pref & Exception_Message (E));
                   Failed_Validation_Flag := True;
                   Failed_Val             := True;
             end;
