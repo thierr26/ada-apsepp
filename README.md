@@ -14,7 +14,7 @@ very early infancy.
 
 You can compile this project with GNAT and gprbuild. These tools are available
 in [GNAT Community edition](https://www.adacore.com/community). They're also
-packaged in most GNU/Linux and BSD distribution. On [Debian
+packaged in most GNU/Linux distributions. On [Debian
 GNU/Linux](https://www.debian.org/) for example, you can install GNAT and
 gprbuild with this command (as root):
 ```
