@@ -121,7 +121,8 @@ package body Apsepp_Test_Node_Barrier is
       -----------------------------------------------------
 
       entry Cross(for Char in ISO_646)
-        (Event_Kind : Test_Event_Kind) when Cross_Condition (Char) is
+        (Event_Kind : Test_Event_Kind;
+         Event_Data : Test_Event_Data) when Cross_Condition (Char) is
 
          use Prot_Natural;
 
@@ -137,6 +138,10 @@ package body Apsepp_Test_Node_Barrier is
             C_C_Str(1) := '#';
             return "Crossing " & C_C_Str & Char_Name_Image (Char);
          end Msg_Pref;
+
+         procedure Free is new Ada.Unchecked_Deallocation
+           (Object => Exception_Occurrence,
+            Name   => Exception_Occurrence_Access);
 
       begin
 
@@ -158,12 +163,18 @@ package body Apsepp_Test_Node_Barrier is
          end if;
 
          if not Permanently_Opened then
+            declare
+               Excep : Exception_Occurrence_Access := Event_Data.E;
             begin
                Validate (Val (Crossing_Count),
                          Event_Kind,
+                         Event_Data,
                          Char,
                          Char_To_Tag,
                          Msg_Pref);
+               Free (Excep); -- Free the exception allocated by Save_Occurrence
+                             -- in the Report_ primitives of
+                             -- Test_Reporter_W_Barrier.
             exception
                when E : others => -- Probably
                                   -- Ada.Assertions.Assertion_Error.
@@ -299,14 +310,16 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Failed_Child_Test_Node_Access;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (Previous_Child_Tag, E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E                  => Save_Occurrence (E),
+          Previous_Child_Tag => Previous_Child_Tag,
+          others             => <>));
 
    end Report_Failed_Child_Test_Node_Access;
 
@@ -322,14 +335,15 @@ package body Apsepp_Test_Node_Barrier is
         := Unexpected_Node_Cond_Check_Error;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E      => Save_Occurrence (E),
+          others => <>));
 
    end Report_Unexpected_Node_Cond_Check_Error;
 
@@ -344,14 +358,15 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Unexpected_Node_Run_Error;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E      => Save_Occurrence (E),
+          others => <>));
 
    end Report_Unexpected_Node_Run_Error;
 
@@ -370,7 +385,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Node_Cond_Check_Start;
 
@@ -389,7 +405,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Passed_Node_Cond_Check;
 
@@ -408,7 +425,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Failed_Node_Cond_Check;
 
@@ -427,7 +445,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Passed_Node_Cond_Assert;
 
@@ -446,7 +465,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Failed_Node_Cond_Assert;
 
@@ -464,7 +484,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Node_Run_Start;
 
@@ -479,14 +500,14 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Test_Routine_Start;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (R_Index => K,
+                                                       others  => <>));
 
    end Report_Test_Routine_Start;
 
@@ -501,14 +522,16 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Test_Routines_Cancellation;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (First_K, Last_K);
+      pragma Unreferenced (First_K);
 
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (R_Index => Last_K,
+                                                       others  => <>));
 
    end Report_Test_Routines_Cancellation;
 
@@ -524,14 +547,16 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Failed_Test_Routine_Access;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K, E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E       => Save_Occurrence (E),
+          R_Index => K,
+          others  => <>));
 
    end Report_Failed_Test_Routine_Access;
 
@@ -547,14 +572,16 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Failed_Test_Routine_Setup;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K, E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E       => Save_Occurrence (E),
+          R_Index => K,
+          others  => <>));
 
    end Report_Failed_Test_Routine_Setup;
 
@@ -571,14 +598,20 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Passed_Test_Assert;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K, Assert_Num_Avail, Assert_Num);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (if Assert_Num_Avail then
+             (R_Index    => K,
+              Assert_Num => Assert_Num,
+              others     => <>)
+          else
+             (R_Index => K,
+              others  => <>)));
 
    end Report_Passed_Test_Assert;
 
@@ -596,14 +629,22 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Failed_Test_Assert;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K, Assert_Num_Avail, Assert_Num, E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (if Assert_Num_Avail then
+             (E          => Save_Occurrence (E),
+              R_Index    => K,
+              Assert_Num => Assert_Num,
+              others     => <>)
+          else
+             (E       => Save_Occurrence (E),
+              R_Index => K,
+              others  => <>)));
 
    end Report_Failed_Test_Assert;
 
@@ -619,14 +660,16 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Unexpected_Routine_Exception;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K, E);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag))
+        (Event_Kind,
+         (E       => Save_Occurrence (E),
+          R_Index => K,
+          others  => <>));
 
    end Report_Unexpected_Routine_Exception;
 
@@ -641,14 +684,14 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Passed_Test_Routine;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (R_Index => K,
+                                                       others  => <>));
 
    end Report_Passed_Test_Routine;
 
@@ -663,14 +706,14 @@ package body Apsepp_Test_Node_Barrier is
       Event_Kind : constant Test_Event_Kind := Failed_Test_Routine;
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
-      pragma Unreferenced (K);
-
    begin
 
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (R_Index => K,
+                                                       others  => <>));
 
    end Report_Failed_Test_Routine;
 
@@ -688,7 +731,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Passed_Node_Run;
 
@@ -706,7 +750,8 @@ package body Apsepp_Test_Node_Barrier is
       Obj.C_D_T.Trace
         (Test_Reporter_W_Barrier'Class (Obj).Arriv_To_Cross_Message
            (Proc_Name, Node_Tag));
-      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind);
+      Obj.Barrier.Cross (Obj.Tag_To_Char (Node_Tag)) (Event_Kind,
+                                                      (others => <>));
 
    end Report_Failed_Node_Run;
 

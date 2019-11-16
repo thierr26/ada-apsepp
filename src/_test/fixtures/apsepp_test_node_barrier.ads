@@ -9,6 +9,7 @@ with Apsepp.Tags;                     use Apsepp.Tags;
 with Apsepp.Characters;               use Apsepp.Characters;
 with Apsepp.Test_Reporter_Class.Stub; use Apsepp.Test_Reporter_Class.Stub;
 with Apsepp.Scope_Debug;              use Apsepp.Scope_Debug;
+with Apsepp.Test_Event_Class;         use Apsepp.Test_Event_Class;
 with Apsepp.Generic_Prot_Integer,
      Apsepp.Test_Node_Class;
 use Apsepp;
@@ -47,6 +48,7 @@ package Apsepp_Test_Node_Barrier is
 
    type Validate_Proc is access procedure (Crossing_Count : Positive;
                                            Event_Kind     : Test_Event_Kind;
+                                           Event_Data     : Test_Event_Data;
                                            Char           : ISO_646;
                                            Char_To_Tag    : Char_To_Tag_Func;
                                            Msg_Pref       : String);
@@ -66,7 +68,8 @@ package Apsepp_Test_Node_Barrier is
                        V     : not null Validate_Proc;
                        Exp   : not null Tag_Array_Access);
 
-      entry Cross(ISO_646) (Event_Kind : Test_Event_Kind);
+      entry Cross(ISO_646) (Event_Kind : Test_Event_Kind;
+                            Event_Data : Test_Event_Data);
 
       procedure Time_Out;
 

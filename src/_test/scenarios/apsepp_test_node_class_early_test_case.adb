@@ -7,14 +7,16 @@ with Ada.Assertions,
      Apsepp.Generic_Fixture.Creator,
      Apsepp.Scope_Debug,
      Apsepp.Tags,
-     Apsepp_Test_Node_Barrier;
+     Apsepp_Test_Node_Barrier,
+     Apsepp.Test_Event_Class;
 
 package body Apsepp_Test_Node_Class_Early_Test_Case is
 
    use Ada.Characters.Handling,
        Apsepp.Test_Node_Class,
        Apsepp_Testing_System_Test_Fixture,
-       Apsepp_Test_Node_Barrier;
+       Apsepp_Test_Node_Barrier,
+       Apsepp.Test_Event_Class;
 
    ----------------------------------------------------------------------------
 
@@ -23,8 +25,8 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   Expected : constant Routine_State_Array
-     := ((T => TSF.A_R, Routine_I => 0, Assert_C => 0, Assert_O => Passed),
+   function Expected_Routine_State_Array return Routine_State_Array
+     is ((T => TSF.A_R, Routine_I => 0, Assert_C => 0, Assert_O => Passed),
          (T => TSF.A,   Routine_I => 0, Assert_C => 0, Assert_O => Passed),
          (T => TSF.A,   Routine_I => 0, Assert_C => 0, Assert_O => Passed),
          (T => TSF.A_R, Routine_I => 0, Assert_C => 0, Assert_O => Passed),
@@ -161,11 +163,12 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
 
    procedure Validate (K           : Positive;
                        Event_Kind  : Test_Event_Kind;
+                       Event_Data  : Test_Event_Data;
                        Char        : ISO_646;
                        Char_To_Tag : Char_To_Tag_Func;
                        Msg_Pref    : String) is
 
-      pragma Unreferenced (Event_Kind);
+      pragma Unreferenced (Event_Kind, Event_Data);
 
       -----------------------------------------------------
 
@@ -209,7 +212,8 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
 
       Is_Runner : constant Boolean := Ada.Characters.Handling.Is_Lower (Char);
 
-      Exp     : constant Flattened_Routine_State := Expected(K);
+      Exp     : constant Flattened_Routine_State
+        := Expected_Routine_State_Array(K);
       Exp_R_I : constant Test_Routine_Count      := Exp.Routine_I;
       Exp_A_C : constant Test_Assert_Count       := Exp.Assert_C;
       Exp_A_O : constant Test_Outcome            := Exp.Assert_O;
@@ -338,8 +342,8 @@ package body Apsepp_Test_Node_Class_Early_Test_Case is
       Ada.Assertions.Assert (Testing_System_T_F_Creator.Has_Actually_Created,
         "Test fixture already locked");
 
-      Expected_Tag
-        := new Tag_Array'(Routine_State_Array_To_Tag_Array (Expected));
+      Expected_Tag := new Tag_Array'(Routine_State_Array_To_Tag_Array
+                                       (Expected_Routine_State_Array));
 
       TSF.Run_Test (Expected_Tag, Validate'Access);
 
