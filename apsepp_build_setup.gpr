@@ -5,7 +5,8 @@ abstract project Apsepp_Build_Setup is
    -- via an environment variable or via the -X switch in the gprbuild command.
    type Build_Mode_Type is ("debug_info_and_assertions",
                             "debug_info",
-                            "optimizations");
+                            "optimizations",
+                            "style_check");
    Build_Mode : Build_Mode_Type
       := external ("BUILD_MODE", "debug_info_and_assertions");
 
@@ -13,32 +14,77 @@ abstract project Apsepp_Build_Setup is
 
    for Object_Dir use "obj";
 
-   -- -O3       Enable highest optimization.
-   -- -g        Generate debugging information.
-   -- -gnat2012 Allow Ada 2012 features.
-   -- -gnata    Enable assertions.
-   -- -gnateE   Generate extra information in exception messages.
-   -- -gnatwa   Turn on all normal warnings.
    package Compiler is
+
+      Common_Switches
+        := (
+             "-gnat2012" -- Allow Ada 2012 features.
+           );
+
+      Debug_Switches
+        := (
+             "-g"     , -- Generate debugging information.
+             "-gnatwa", -- Turn on all normal warnings.
+             "-gnateE"  -- Generate extra information in exception messages.
+           );
+
+      -- GNAT style checking switches are documented here:
+      -- https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking
+      Style_Check_Switches
+        := (
+             "-gnaty3", -- Check indentation width (3 characters).
+             "-gnatyd", -- Forbid CR/LF style end of lines.
+             "-gnatyf", -- Forbid form feeds and vertical tabulations.
+             "-gnatyh", -- Forbid horizontal tabulations.
+             "-gnatyb", -- Forbid trailing blanks.
+             "-gnatya", -- Check attribute casing (mixed case).
+             "-gnatyA", -- Check use of array index number in array attributes.
+             "-gnatyB", -- Require short-circuit logical operators.
+             "-gnatyC", -- Check comments (but don't require double space).
+             "-gnatyk", -- Check keyword casing (lower case).
+             "-gnatyn", -- Check case of the entities of Standard.
+             "-gnatyp", -- Check pragma casing (mixed case).
+             -- "-gnatyD", -- Check declared identifiers case. (Unsupported ?)
+             "-gnatyr", -- Check references case.
+             "-gnatye", -- Check labels on "end" end "exit" lines.
+             "-gnatyI", -- Forbid parameter mode when it's "in".
+             "-gnatyl", -- Check layout.
+             "-gnatym", -- Check line length (79 characters).
+             "-gnatyO", -- Require "overriding" or "not overriding" indicator.
+             "-gnatyt", -- Check token spacing.
+             "-gnatyu", -- Forbid unnecessary blank lines.
+             "-gnatyx"  -- Forbid unnecessary extra level of parentheses.
+           );
+
+      Debug_Info_Switches := Common_Switches
+                               &
+                             Debug_Switches;
+
+      Debug_Info_And_Assertions_Switches := Debug_Info_Switches
+                                              &
+                                            (
+                                              "-gnata" -- Enable assertions.
+                                            );
 
       case Build_Mode is
 
          when "debug_info_and_assertions" =>
-            for Switches ("Ada") use ("-gnat2012",
-                                      "-g",
-                                      "-gnata",
-                                      "-gnatwa",
-                                      "-gnateE");
+            for Switches ("Ada") use Debug_Info_And_Assertions_Switches;
 
          when "debug_info" =>
-            for Switches ("Ada") use ("-gnat2012",
-                                      "-g",
-                                      "-gnatwa",
-                                      "-gnateE");
+            for Switches ("Ada") use Debug_Info_Switches;
 
          when "optimizations" =>
-            for Switches ("Ada") use ("-gnat2012",
-                                      "-O3");
+            for Switches ("Ada") use Common_Switches
+                                       &
+                                     (
+                                       "-O3" -- Enable highest optimization.
+                                     );
+
+         when "style_check" =>
+            for Switches ("Ada") use Debug_Info_And_Assertions_Switches
+                                       &
+                                     Style_Check_Switches;
 
       end case;
 
@@ -55,7 +101,10 @@ abstract project Apsepp_Build_Setup is
 
       case Build_Mode is
 
-         when "debug_info_and_assertions" | "debug_info" =>
+         when "debug_info_and_assertions"
+            | "debug_info"
+            | "style_check" =>
+
             for Switches ("Ada") use ("-E",
                                       "-g");
 
@@ -73,7 +122,10 @@ abstract project Apsepp_Build_Setup is
 
       case Build_Mode is
 
-         when "debug_info_and_assertions" | "debug_info" =>
+         when "debug_info_and_assertions"
+            | "debug_info"
+            | "style_check" =>
+
             for Default_Switches ("Ada") use ("-no-pie");
 
          when "optimizations" =>

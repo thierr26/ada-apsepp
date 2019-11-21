@@ -272,6 +272,7 @@ help:
 	@echo '  BUILD_MODE=debug_info_and_assertions (default)'
 	@echo '  BUILD_MODE=debug_info'
 	@echo '  BUILD_MODE=optimizations'
+	@echo '  BUILD_MODE=style_check (like default, but with style warnings)'
 	@echo
 	@echo [F] can be nothing or like:
 	@echo '  FILES=path/to/a/source/file'
