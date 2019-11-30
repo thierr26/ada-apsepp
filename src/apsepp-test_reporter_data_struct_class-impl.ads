@@ -8,7 +8,8 @@ with Apsepp.Tags; use Apsepp.Tags;
 
 package Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
-   type Test_Reporter_Data is new Test_Reporter_Data_Interfa with private;
+   type Test_Reporter_Data
+     is limited new Test_Reporter_Data_Interfa with private;
 
    overriding
    function Is_Empty (Obj : Test_Reporter_Data) return Boolean;
@@ -65,7 +66,8 @@ private
      (Index_Type   => Event_Index,
       Element_Type => Node_Event);
 
-   type Test_Reporter_Data is new Test_Reporter_Data_Interfa with record
+   type Test_Reporter_Data
+     is limited new Test_Reporter_Data_Interfa with record
       Node_Data_Tree  : Node_Data_Trees.Tree;
       Event_Vector    : Node_Event_Vectors.Vector;
       Active_Node_Map : Node_Data_Hashed_Maps.Map;
