@@ -93,10 +93,10 @@ make test PROJ=apsepp_demo PRG=apsepp_demo_output_sink_as_shared_instance
 
 ## Author
 
-[Thierry Rascle](thierr26@free.fr)
+[Thierry Rascle](mailto:thierr26@free.fr)
 
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for
-details.
+This project is licensed under the MIT License. For more information, please
+refer to the [LICENSE](LICENSE) file.
