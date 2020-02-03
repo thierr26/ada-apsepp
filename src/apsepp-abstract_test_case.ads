@@ -1,5 +1,5 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
--- MIT license. Please refer to the LICENSE file.
+-- MIT license. For more information, please refer to the LICENSE file.
 
 with Apsepp.Test_Node_Class.Case_Stub; use Apsepp.Test_Node_Class.Case_Stub;
   use Apsepp.Test_Node_Class;

@@ -1,5 +1,5 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
--- MIT license. Please refer to the LICENSE file.
+-- MIT license. For more information, please refer to the LICENSE file.
 
 with Apsepp.Generic_Shared_Instance.Fallback_Switch;
 with Apsepp.Test_Reporter_Class.Stub.Create; use Apsepp.Test_Reporter_Class;

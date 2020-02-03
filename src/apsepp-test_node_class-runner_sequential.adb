@@ -1,5 +1,5 @@
 -- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
--- MIT license. Please refer to the LICENSE file.
+-- MIT license. For more information, please refer to the LICENSE file.
 
 with Apsepp.Generic_Shared_Instance.Access_Setter,
      Apsepp.Test_Node_Class.Private_Test_Reporter;
