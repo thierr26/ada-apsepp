@@ -1,8 +1,8 @@
--- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
+-- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Command_Line,
-     Apsepp.Test_Node_Class.Runner_Sequential.Create;
+with Apsepp.Output,
+     Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc;
 
 package body Apsepp_Test_Harness is
 
@@ -10,23 +10,26 @@ package body Apsepp_Test_Harness is
 
    procedure Apsepp_Test_Procedure is
 
-      use Ada.Command_Line,
-          Apsepp.Test_Node_Class,
-          Apsepp.Test_Node_Class.Runner_Sequential;
+      use Apsepp.Output;
 
-      Test_Runner : Test_Runner_Sequential
-        := Create (Test_Suite'Access, Reporter'Access);
+      Output_Lock_Holder : Output_Shared_Instance.Holder;
 
-      Outcome : Test_Outcome;
+      Output_Instance_Access : constant Output_Standard_Access
+        := (if Output_Lock_Holder.Holds then
+               new Output_Standard
+            else
+               null);
+
+      package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
+        (Instance_Access  => Output_Instance_Access,
+         Lock_Holder_Type => Output_Shared_Instance.Holder,
+         Lock_Holder      => Output_Lock_Holder);
+
+      pragma Unreferenced (Output_S_R);
 
    begin
 
-      Test_Runner.Early_Run;
-      Test_Runner.Run (Outcome);
-      Set_Exit_Status (if Outcome = Passed then
-                          Success
-                       else
-                          Failure);
+      Output.Put_Line ("Hello world!");
 
    end Apsepp_Test_Procedure;
 

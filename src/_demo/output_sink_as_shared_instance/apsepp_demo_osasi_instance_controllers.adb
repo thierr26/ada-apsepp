@@ -1,208 +1,182 @@
--- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
+-- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Text_IO;
-with Ada.Tags;
+with Ada.Text_IO,
+     Ada.Tags,
+     Generic_Char_Count_String,
+     Apsepp_Demo_OSASI_Constants;
 
 -- "With" the shared output sink instance access point package.
 with Apsepp.Output;
 
--- "With" the generic instance creator package (useful to instantiate the
--- Creator child package of Apsepp.Output.Shared_Instance).
-with Apsepp.Generic_Shared_Instance.Creator;
+-- "With" the generic instance set / reset package (useful to instantiate the
+-- 'Finalized_S_R_Dealloc' child package of
+-- 'Apsepp.Output.Output_Shared_Instance').
+with Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc;
 
--- "With" the needed creational function(s) for objects of class output sink.
-with Apsepp.Output_Class.Standard;
-with Apsepp.Output_Class.Quiet.Create;
+-- "With" the generic instance set / reset package (useful to instantiate the
+-- 'Finalized_S_R' child package of 'Apsepp.Output.Output_Shared_Instance').
+with Apsepp.Generic_Shared_Instance.Finalized_S_R;
 
 -- "With" the needed unit(s) needed to perform the application business. They
 -- can reference the shared output sink instance access point package
--- (Apsepp.Output), and or reference other units that reference it.
+-- ('Apsepp.Output'), and/or reference other units that reference it.
 with Apsepp_Demo_OSASI_Business;
 
 package body Apsepp_Demo_OSASI_Instance_Controllers is
 
-   ----------------------------------------------------------------------------
-
-   A_Count : Natural := 0;
-
-   function A return String is
-
-      N : constant Natural := A_Count + 1;
-      Ret : String := Natural'Image (N) & " ";
-
-   begin
-
-      Ret (Ret'First) := 'A';
-
-      A_Count := N;
-
-      return Ret;
-
-   end A;
+   use Apsepp_Demo_OSASI_Constants;
 
    ----------------------------------------------------------------------------
 
-   C_Count : Natural := 0;
+   package A_Count_String is new Generic_Char_Count_String
+     (Char        => 'A',
+      Suffix      => " ",
+      Count_Width => Line_Count_Width);
 
-   function C return String is
-
-      N : constant Natural := C_Count + 1;
-      Ret : String := Natural'Image (N) & " ";
-
-   begin
-
-      Ret (Ret'First) := 'C';
-
-      C_Count := N;
-
-      return Ret;
-
-   end C;
+   function A return A_Count_String.Char_Count_String renames A_Count_String.S;
 
    ----------------------------------------------------------------------------
 
-   D_Count : Natural := 0;
+   package B_Count_String is new Generic_Char_Count_String
+     (Char        => 'B',
+      Suffix      => " ",
+      Count_Width => Line_Count_Width);
 
-   function D return String is
+   function B return B_Count_String.Char_Count_String renames B_Count_String.S;
 
-      N : constant Natural := D_Count + 1;
-      Ret : String := Natural'Image (N) & " ";
+   ----------------------------------------------------------------------------
 
-   begin
+   package C_Count_String is new Generic_Char_Count_String
+     (Char        => 'C',
+      Suffix      => " ",
+      Count_Width => Line_Count_Width);
 
-      Ret (Ret'First) := 'D';
-
-      D_Count := N;
-
-      return Ret;
-
-   end D;
+   function C return C_Count_String.Char_Count_String renames C_Count_String.S;
 
    ----------------------------------------------------------------------------
 
    procedure Show_Output_Sink_Instance_State is
 
-      use Ada.Text_IO,
-          Apsepp.Output.Shared_Instance;
-                    -- Makes functions Apsepp.Output.Shared_Instance.Locked and
-                    -- Apsepp.Output.Shared_Instance.Instantiated visible.
+      -- Make the output sink shared instance lock
+      -- ('Apsepp.Output.Output_Shared_Instance.Instance_Lock') and the
+      -- unguarded access function to the instance
+      -- ('Apsepp.Output.Output_Shared_Instance.Unguarded_Instance_Access')
+      -- visible.
+      use Apsepp.Output.Output_Shared_Instance;
+
+      use Ada.Tags;
 
    begin
 
-      Put_Line (A & "Output sink instance state: "
-                  &
-                (if Locked then "locked" else "unlocked")
-                  &
-                ", "
-                  &
-                (if Instantiated then "instantiated" else "not instantiated")
-                  &
-                ".");
+      Ada.Text_IO.Put_Line (A
+                            & "Output sink instance state: "
+                            & (if Instance_Lock.Locked then
+                                  "locked"
+                               else
+                                  "unlocked")
+                            & ", "
+                            & (if Unguarded_Instance_Access /= null then
+                                  "instantiated"
+                               else
+                                  "not instantiated")
+                            & ".");
+
+      -- Note that the 'Unguarded_Instance_Access /= null' would be always
+      -- false if non-null actual for the 'Fallback_Instance_Access' formal
+      -- parameter had been provided when instantiating
+      -- 'Apsepp.Generic_Shared_Instance' in 'Apsepp.Output'.
+      --
+      -- 'Unguarded_Instance_Access' returns the "raw" access to the shared
+      -- instance if it is non-null, and 'Fallback_Instance_Access' otherwise
+      -- (which can be null).
+      --
+      -- 'Instance_Access' is similar to 'Unguarded_Instance_Access', but it
+      -- has a barrier. The barrier is closed if the shared instance is locked
+      -- and the "raw" access to the shared instance is null. This prevents a
+      -- client accessing the instance after locking but before instance access
+      -- assignment from getting a null access.
+
+      Ada.Text_IO.Put_Line (B
+                            & "Output sink instance tag: "
+                            & (if Unguarded_Instance_Access /= null then
+                                  Expanded_Name (Unguarded_Instance_Access'Tag)
+                               else
+                                  "N/A")
+                            & ".");
 
    end Show_Output_Sink_Instance_State;
 
    ----------------------------------------------------------------------------
 
-   procedure Tell_If_Has_Allocated (Proc_Name : String;
-                                    F         : Boolean;
-                                    J_P       : Boolean := False) is
-
-      use Ada.Text_IO;
+   procedure Tell_If_Holds
+     (Proc_Name : String;
+      Holder    : Apsepp.Output.Output_Shared_Instance.Holder) is
 
    begin
 
-      Put_Line (C & Proc_Name & " has "
-                  &
-                (if F then "" else "not ")
-                  &
-                "allocated"
-                  &
-                (if J_P then " (well, has just pretented to allocate)" else "")
-                  &
-                ".");
+      Ada.Text_IO.Put_Line (C
+                            & Proc_Name
+                            & " does "
+                            & (if Holder.Holds then
+                                  ""
+                               else
+                                  "not ")
+                            & "hold.");
 
-   end Tell_If_Has_Allocated;
+   end Tell_If_Holds;
 
    ----------------------------------------------------------------------------
 
    procedure Output_Sink_Instance_Controller is
 
-      use Apsepp.Output, -- Makes type Apsepp.Output.Output_Access visible.
-          Apsepp.Output_Class.Standard;
-                         -- Makes type
-                         -- Apsepp.Output_Class.Standard.Output_Standard
-                         -- visible.
+      use Apsepp.Output; -- Makes package
+                         -- 'Apsepp.Output.Output_Shared_Instance' visible.
 
-      -----------------------------------------------------
+      -- Declare a lock holder. It must of a type be derived from
+      -- 'Apsepp.Scope_Bound_Locking.Controlled_Lock_Holder' and have an 'L'
+      -- discriminant pointing to the output sink instance lock
+      -- ('Apsepp.Output.Output_Shared_Instance.Instance_Lock'). The lock
+      -- holder automatically takes the lock if it's not already held by
+      -- another holder and releases it automatically when going out of scope.
+      Output_Lock_Holder : Output_Shared_Instance.Holder;
 
-      -- Allocator function (allocates an instance of type
-      -- Apsepp.Output_Class.Standard.Output_Standard).
-      function Allocate_Output_Standard return Output_Access
-        is (new Output_Standard);
+      -- Allocate an output sink instance, but only if the lock holder declared
+      -- above has actually taken the lock (i.e. "holds" the lock). Providing a
+      -- non-null value when the lock holder does not hold is probably useless.
+      -- And providing a null value when the lock holder holds is forbidden and
+      -- causes an assertion failure (in
+      -- 'Apsepp.Generic_Shared_Instance.Parameterized_S').
+      Output_Instance_Access : constant Output_Standard_Access
+        := (if Output_Lock_Holder.Holds then
+               new Output_Standard
+            else
+               null);
 
-      -----------------------------------------------------
+      -- Instantiate the 'Finalized_S_R_Dealloc' child of
+      -- 'Apsepp.Output.Output_Shared_Instance'. This causes the allocated
+      -- instance to be automatically set as the output sink instance. The
+      -- instance will be reset automatically on scope exit (before lock
+      -- release). And the allocated storage is reclaimed (via a
+      -- 'Ada.Unchecked_Deallocation' call in
+      -- 'Apsepp.Generic_Shared_Instance.Parameterized_R').
+      package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
+        (Instance_Access  => Output_Instance_Access,
+         Lock_Holder_Type => Output_Shared_Instance.Holder,
+         Lock_Holder      => Output_Lock_Holder);
 
-      -- Callback procedure, provided as the CB parameter on instantiation of
-      -- the Creator child package of Apsepp.Output.Shared_Instance.
-      procedure Callback is
-
-         use Ada.Text_IO;
-
-      begin
-
-         Put_Line (D & "Output sink instance tag is: "
-                     & Ada.Tags.Expanded_Name (Apsepp.Output.Output'Tag));
-                                                             -- Output line D1.
-
-      end Callback;
-
-      -----------------------------------------------------
-
-      -- Instantiate the Creator child package of
-      -- Apsepp.Output.Shared_Instance (which is itself an intance of
-      -- Apsepp.Generic_Shared_Instance).
-      --
-      -- This will automatically allocate an output sink instance of type
-      -- Apsepp.Output_Class.Standard.Output_Standard via a call to
-      -- Allocate_Output_Standard and set it as the shared output sink instance
-      -- is not locked (that is if none of the caller, grand-caller,
-      -- great-grand-caller and so forth has already set (or pretented to set)
-      -- an instance).
-      --
-      -- The instance is accessible from any point of the program via function
-      -- Apsepp.Output.Output.
-      --
-      -- The instance will be deallocated at the exit point of the scope (here
-      -- the return point of procedure Output_Sink_Instance_Controller).
-      --
-      -- Note the CB parameter in the generic instantiation: It is a callback
-      -- procedure, called immediately after the instance allocation.
-      --
-      -- Other callbacks may occur on locking and or unlocking, depending on
-      -- how Apsepp.Generic_Shared_Instance has been instantiated by
-      -- Apsepp.Output. See the Lock_CB and Unlock_CB formal parameters of
-      -- Apsepp.Generic_Shared_Instance.
-      --
-      -- Note also that Apsepp.Generic_Shared_Instance has another child
-      -- (Access_Setter), similar to Creator, except that you provide an access
-      -- to an already allocated instance instead of an allocator function.
-      package Output_Standard_Creator
-        is new Shared_Instance.Creator (Allocate => Allocate_Output_Standard,
-                                        CB       => Callback);
-
-      -----------------------------------------------------
+      pragma Unreferenced (Output_S_R);
 
    begin
 
-      Show_Output_Sink_Instance_State; -- Output line A2.
+      Show_Output_Sink_Instance_State; -- Output line A02, B02.
 
-      Tell_If_Has_Allocated ("Output_Sink_Instance_Controller",
-                             Output_Standard_Creator.Has_Actually_Created);
-                                       -- Output line C1.
+      Tell_If_Holds
+        ("Output_Sink_Instance_Controller",
+         Output_Lock_Holder);          -- Output line C01.
 
       Apsepp_Demo_OSASI_Business.Run_Business;
-                                       -- Output line B1.
+                                       -- Output line D01.
 
       Deeper_Output_Sink_Instance_Controller;
 
@@ -210,58 +184,83 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
 
    ----------------------------------------------------------------------------
 
-   procedure Deeper_Output_Sink_Instance_Controller (J_P : Boolean := False) is
+   procedure Deeper_Output_Sink_Instance_Controller is
 
-      use Apsepp.Output, -- Makes type Apsepp.Output.Output_Access visible.
-          Apsepp.Output_Class.Quiet;
-                         -- Makes type
-                         -- Apsepp.Output_Class.Standard.Output_Quiet
-                         -- visible.
+      -- Comments in 'Output_Sink_Instance_Controller' apply here as well.
 
-      -----------------------------------------------------
+      use Apsepp.Output;
 
-      -- Allocator function (allocates an instance of type
-      -- Apsepp.Output_Class.Quiet.Output_Quiet).
-      function Allocate_Output_Quiet return Output_Access
-        is (new Output_Quiet'(Apsepp.Output_Class.Quiet.Create));
+      Output_Lock_Holder : Output_Shared_Instance.Holder;
 
-      -----------------------------------------------------
+      Output_Instance_Access : constant Output_Quiet_Access
+        := (if Output_Lock_Holder.Holds then
+               new Output_Quiet
+            else
+               null);
 
-      -- Similar to Output_Standard_Creator in procedure
-      -- Output_Sink_Instance_Controller, except that:
-      --
-      -- - It allocates an output sink instance of type
-      --   Apsepp.Output_Class.Quiet.Output_Quiet.
-      --
-      -- - There's no callback procedure provided.
-      --
-      -- - The Just_Pretend parameter (which defaults to False) may be True
-      --   (depending on the procedure parameter). A True value implies that
-      --   the instance allocation won't be done and the callback procedure not
-      --   called (if any). But locking is done normally. This "just pretend"
-      --   thing makes it possible to do some kind of "dry runs" to check
-      --   whether allocation would occur or not.
-      package Output_Quiet_Creator
-        is new Shared_Instance.Creator (Allocate     => Allocate_Output_Quiet,
-                                        Just_Pretend => J_P);
+      package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
+        (Instance_Access  => Output_Instance_Access,
+         Lock_Holder_Type => Output_Shared_Instance.Holder,
+         Lock_Holder      => Output_Lock_Holder);
 
-      -----------------------------------------------------
+      pragma Unreferenced (Output_S_R);
 
    begin
 
-      Show_Output_Sink_Instance_State; -- Output line A3, A5, A7.
+      Show_Output_Sink_Instance_State;
+                         -- Output line A03, B03, A05, B05, A07, B07, A10, B10.
 
-      Tell_If_Has_Allocated ("Deeper_Output_Sink_Instance_Controller",
-                             Output_Quiet_Creator.Has_Actually_Created,
-                             J_P);
-                                       -- Output line C2, C3, C4.
+      Tell_If_Holds
+        ("Deeper_Output_Sink_Instance_Controller",
+         Output_Lock_Holder);
+                         -- Output line C02, C03, C04, C06.
 
-      if not J_P then
-         Apsepp_Demo_OSASI_Business.Run_Business;
-                                       -- Output line B2.
-      end if;
+      Apsepp_Demo_OSASI_Business.Run_Business;
+                         -- Output line D02, D06.
 
    end Deeper_Output_Sink_Instance_Controller;
+
+   ----------------------------------------------------------------------------
+
+   procedure Output_Sink_Instance_Controller_Custom_Instance is
+
+      -- This procedure is similar to 'Output_Sink_Instance_Controller' except
+      -- that it instantiates the 'Finalized_S_R' child of
+      -- 'Apsepp.Output.Output_Shared_Instance' instead of the
+      -- 'Finalized_S_R_Dealloc' child. Instantiating the 'Finalized_S_R' child
+      -- is appropriate when the shared instance is already declared or
+      -- allocated (here 'Output_Exclam_Instance' is declared in the private
+      -- part of the package specification).
+      --
+      -- Note that the 'Instance_Access' formal of the 'Finalized_S_R' child
+      -- has null exclusion. And the 'Finalized_S_R' child does not attempt to
+      -- deallocate the shared instance on scope exit.
+
+      use Apsepp.Output;
+
+      Output_Lock_Holder : Output_Shared_Instance.Holder;
+
+      package Output_S_R is new Output_Shared_Instance.Finalized_S_R
+        (Instance_Access  => Output_Exclam_Instance'Access,
+         Lock_Holder_Type => Output_Shared_Instance.Holder,
+         Lock_Holder      => Output_Lock_Holder);
+
+      pragma Unreferenced (Output_S_R);
+
+   begin
+
+      Show_Output_Sink_Instance_State; -- Output line A09, B09.
+
+      Tell_If_Holds
+        ("Output_Sink_Instance_Controller_Custom_Instance",
+         Output_Lock_Holder);          -- Output line C05.
+
+      Apsepp_Demo_OSASI_Business.Run_Business;
+                                       -- Output line D05.
+
+      Deeper_Output_Sink_Instance_Controller;
+
+   end Output_Sink_Instance_Controller_Custom_Instance;
 
    ----------------------------------------------------------------------------
 

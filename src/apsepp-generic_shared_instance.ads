@@ -1,35 +1,82 @@
--- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
+-- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Apsepp.Scope_Bound_Locks; use Apsepp.Scope_Bound_Locks;
+with Apsepp.Scope_Bound_Locking; use Apsepp.Scope_Bound_Locking;
 
 generic
+
    type Instance_Ancestor_Type (<>) is abstract tagged limited private;
-   Lock_CB, Unlock_CB : SB_Lock_CB := null;
+
+   type Lock_Type is limited new Lock with private;
+
+   Fallback_Instance_Access : access Instance_Ancestor_Type'Class := null;
+
 package Apsepp.Generic_Shared_Instance is
 
-   type Instance_Type_Access is access all Instance_Ancestor_Type'Class;
+   -- Force pre-conditions evaluation in this package.
+   pragma Assertion_Policy (Pre => Check);
 
-   function Instance return Instance_Type_Access;
+   Instance_Lock : aliased Lock_Type;
 
-   function Locked return Boolean;
+   function Unguarded_Instance_Access
+     return access Instance_Ancestor_Type'Class;
 
-   function Instantiated return Boolean
+   function U return access Instance_Ancestor_Type'Class
+     renames Unguarded_Instance_Access;
 
-     with Post => (
-                    (Instantiated'Result xor (Instance = null))
-                      and then
-                    (Locked or else not Instantiated'Result)
-                  );
+   function Instance_Access return access Instance_Ancestor_Type'Class
+     with Post => Instance_Access'Result /= null
+                    or else
+                  not Instance_Lock.Locked;
+
+   function A return access Instance_Ancestor_Type'Class
+     renames Instance_Access;
+
+   type Holder
+     is limited new Controlled_Lock_Holder (L => Instance_Lock'Access)
+     with null record;
+
+   procedure Set
+     (Lock_Holder : Controlled_Lock_Holder'Class;
+      I_A         : access Instance_Ancestor_Type'Class)
+     with Pre  => Lock_Holder.L = Instance_Lock'Access;
+
+   procedure Reset (Lock_Holder : Controlled_Lock_Holder'Class)
+     with Pre  => Lock_Holder.L = Instance_Lock'Access;
 
 private
 
-   procedure Unl_CB;
+   type Locked_State is (Unknown, Unlocked, Locked);
 
-   Lock : aliased SB_Lock (Lock_CB, Unl_CB'Access);
+   type Instance_Ancestor_Access is access all Instance_Ancestor_Type'Class;
 
-   Instance_Access : Instance_Type_Access;
+   protected Protected_Instance_Access is
 
-   Deallocation_Needed : Boolean := False;
+      procedure Set_Instance_Lock_Locked_State (State : Locked_State);
+
+      procedure Set (I_A : Instance_Ancestor_Access);
+
+      procedure Get (I_A : out Instance_Ancestor_Access);
+
+      entry Get_W_Barrier (I_A : out Instance_Ancestor_Access);
+
+   private
+
+      Instance_Access : Instance_Ancestor_Access;
+
+      Instance_Lock_Locked_State : Locked_State := Unknown;
+
+   end Protected_Instance_Access;
+
+   type S_R_Kind is (W_Deallocation, Wo_Deallocation);
+
+   procedure Parameterized_S
+     (Kind        : S_R_Kind;
+      Lock_Holder : Controlled_Lock_Holder'Class;
+      I_A         : access Instance_Ancestor_Type'Class);
+
+   procedure Parameterized_R
+     (Kind        : S_R_Kind;
+      Lock_Holder : Controlled_Lock_Holder'Class);
 
 end Apsepp.Generic_Shared_Instance;
