@@ -228,6 +228,9 @@ compile:
 clean: .executables_dir .clean_cov
 	@$(clean_command)
 
+clean_all: clean
+	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprclean -q -c -r -P{} \;
+
 test: build .run_test_program
 
 cov: .html_cov_report .html_cov_firefox
@@ -242,6 +245,8 @@ help:
 	@echo
 	@echo '  clean [P]                 - Cleanup project (keeps executables'
 	@echo '                              and HTML coverage report).'
+	@echo
+	@echo '  clean_all                 - Same as clean, but for all projects.'
 	@echo
 	@echo '  build [P] [B]             - Build project (creates executables'
 	@echo '                              in "$(bin_dir)" subdirectory).'
