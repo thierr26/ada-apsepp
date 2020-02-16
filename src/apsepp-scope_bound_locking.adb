@@ -69,7 +69,7 @@ package body Apsepp.Scope_Bound_Locking is
 
    begin
 
-      if not Controlled_Lock_Holder'Class (Obj).Holds then
+      if not Obj.Holds_Flag then
          -- We don't already hold the lock.
 
          declare
@@ -94,14 +94,15 @@ package body Apsepp.Scope_Bound_Locking is
 
          end;
 
-         if Controlled_Lock_Holder'Class (Obj).Holds then
+         if Obj.Holds_Flag then
             -- We are now holding the lock.
 
             Controlled_Lock_Holder'Class (Obj).On_Take;
+            Obj.L.On_Lock;
 
          end if;
 
-         Ret := Controlled_Lock_Holder'Class (Obj).Holds;
+         Ret := Obj.Holds_Flag;
 
       end if;
 
@@ -119,7 +120,7 @@ package body Apsepp.Scope_Bound_Locking is
 
    begin
 
-      if Controlled_Lock_Holder'Class (Obj).Holds then
+      if Obj.Holds_Flag then
          -- We are (still) holding the lock.
 
          Controlled_Lock_Holder'Class (Obj).On_Release;
@@ -143,6 +144,7 @@ package body Apsepp.Scope_Bound_Locking is
 
          -- We are not the lock holder any more.
          Obj.Holds_Flag := False;
+         Obj.L.On_Unlock;
 
          Ret := True;
 
