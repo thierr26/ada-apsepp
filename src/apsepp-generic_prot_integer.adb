@@ -7,7 +7,7 @@ package body Apsepp.Generic_Prot_Integer is
 
    function Create (V : Integer_Type; S : Boolean := False) return O_P_I_Type
      is (Value     => V,
-         Saturated => False);
+         Saturated => S);
 
    ----------------------------------------------------------------------------
 
