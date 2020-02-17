@@ -231,6 +231,9 @@ clean: .executables_dir .clean_cov
 clean_all: clean
 	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprclean -q -c -r -P{} \;
 
+compile_all: clean_all
+	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprbuild -p -U -P{} \;
+
 test: build .run_test_program
 
 cov: .html_cov_report .html_cov_firefox
@@ -247,6 +250,8 @@ help:
 	@echo '                              and HTML coverage report).'
 	@echo
 	@echo '  clean_all                 - Same as clean, but for all projects.'
+	@echo
+	@echo '  compile_all               - Compile all sources of all projects.'
 	@echo
 	@echo '  build [P] [B]             - Build project (creates executables'
 	@echo '                              in "$(bin_dir)" subdirectory).'
