@@ -4,7 +4,7 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Tags;       use Ada.Tags;
 
-limited with Apsepp.Test_Node_Class;
+limited with Apsepp.Test_Node_Class.Abstract_Test_Case;
 
 package Apsepp.Test_Reporter_Class is
 
@@ -96,21 +96,22 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Test_Routine_Start
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count) is null;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
    not overriding
    procedure Report_Test_Routines_Cancellation
      (Obj             : in out Test_Reporter_Interfa;
       Node_Tag        :        Tag;
-      First_K, Last_K :        Test_Node_Class.Test_Routine_Count) is null;
+      First_K, Last_K :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count)
+     is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Routine_Access
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
       E        :        Exception_Occurrence) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
@@ -118,7 +119,7 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Failed_Test_Routine_Setup
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
       E        :        Exception_Occurrence) is null;
 
    -- TODOC: Called by Test_Node_Class.Assert. <2019-03-02>
@@ -126,18 +127,19 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Passed_Test_Assert
      (Obj              : in out Test_Reporter_Interfa;
       Node_Tag         :        Tag;
-      K                :        Test_Node_Class.Test_Routine_Count;
+      K                :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
       Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Node_Class.Test_Assert_Count) is null;
+      Assert_Num       :        Test_Node_Class.Abstract_Test_Case.Test_Assert_Count)
+     is null;
 
    -- TODOC: Called by Test_Node_Class.Assert. <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Assert
      (Obj              : in out Test_Reporter_Interfa;
       Node_Tag         :        Tag;
-      K                :        Test_Node_Class.Test_Routine_Count;
+      K                :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
       Assert_Num_Avail :        Boolean;
-      Assert_Num       :        Test_Node_Class.Test_Assert_Count;
+      Assert_Num       :        Test_Node_Class.Abstract_Test_Case.Test_Assert_Count;
       E                :        Exception_Occurrence) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
@@ -145,7 +147,7 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Unexpected_Routine_Exception
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
       E        :        Exception_Occurrence) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
@@ -153,14 +155,14 @@ package Apsepp.Test_Reporter_Class is
    procedure Report_Passed_Test_Routine
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count) is null;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count) is null;
 
    -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Routine
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag;
-      K        :        Test_Node_Class.Test_Routine_Count) is null;
+      K        :        Test_Node_Class.Abstract_Test_Case.Test_Routine_Count) is null;
 
    -- TODOC: Called by Test_Node_Class.Generic_Case_And_Suite_Run_Body.
    -- <2019-03-02>

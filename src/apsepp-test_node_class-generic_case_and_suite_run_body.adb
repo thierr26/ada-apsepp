@@ -1,9 +1,10 @@
--- Copyright (C) 2019 Thierry Rascle <thierr26@free.fr>
+-- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Tags;
-with Ada.Assertions;
-with Apsepp.Test_Node_Class.Private_Test_Reporter;
+with Ada.Tags; use Ada.Tags;
+
+with Ada.Assertions,
+     Apsepp.Test_Node_Class.Private_Test_Reporter;
 
 procedure Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
   (Obj     :     Test_Node_Interfa'Class;

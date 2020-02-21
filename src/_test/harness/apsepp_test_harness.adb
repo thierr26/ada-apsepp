@@ -3,7 +3,7 @@
 
 with Apsepp.Output,
      Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc,
-     Apsepp.Test_Node_Class.Case_Root;
+     Apsepp.Test_Node_Class;
 
 package body Apsepp_Test_Harness is
 
@@ -27,8 +27,7 @@ package body Apsepp_Test_Harness is
          Lock_Holder_Type => Output_Shared_Instance.Holder,
          Lock_Holder      => Output_Lock_Holder);
 
-      Test_Case : Case_Root.Test_Case_Root;
-      Outcome   : Test_Outcome;
+      Outcome : Test_Outcome;
 
       pragma Unreferenced (Output_S_R);
 
@@ -36,11 +35,19 @@ package body Apsepp_Test_Harness is
 
       Output.Put_Line ("Hello world!");
 
-      Test_Case.Run (Outcome, Check_Cond);
+      Scope_Bound_Locking_Test_Case.Run (Outcome, Check_Cond);
       Output.Put_Line (Test_Outcome'Image (Outcome));
 
-      Test_Case.Run (Outcome, Assert_Cond_And_Run_Test);
-      Output.Put_Line (Test_Outcome'Image (Outcome));
+      case Outcome is
+
+         when Failed =>
+            null;
+
+         when Passed =>
+            Scope_Bound_Locking_Test_Case.Run (Outcome);
+            Output.Put_Line (Test_Outcome'Image (Outcome));
+
+      end case;
 
    end Apsepp_Test_Procedure;
 

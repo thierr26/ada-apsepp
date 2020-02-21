@@ -1,11 +1,31 @@
--- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
+-- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Assertions,
-     Apsepp.Test_Reporter_Class,
      Apsepp.Test_Node_Class.Private_Test_Reporter;
 
-package body Apsepp.Test_Node_Class is
+package body Apsepp.Test_Node_Class.Abstract_Test_Case is
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Child (Obj : Test_Case;
+                   K   : Test_Node_Index)
+     return not null access Test_Node_Interfa'Class is
+
+      pragma Unreferenced (Obj, K);
+
+   begin
+
+      pragma Warnings (Off, "null value not allowed here");
+
+      return null; -- A test case a no child. The function has to fail.
+
+      pragma Warnings (On, "null value not allowed here");
+
+   end Child;
+
+   ----------------------------------------------------------------------------
 
    use all type Safe_Test_Assert_Count_Operations.Safe_Integer;
 
@@ -250,8 +270,10 @@ package body Apsepp.Test_Node_Class is
 
       function Done return Boolean is
 
-         N   : constant Test_Routine_Count := Obj.Routine_Count;
-         Ret :          Boolean            := K >= N;
+         N   : constant Test_Routine_Count
+           := Test_Case'Class (Obj).Routine_Count;
+
+         Ret : Boolean := K >= N;
 
       begin
 
@@ -283,11 +305,11 @@ package body Apsepp.Test_Node_Class is
 
          begin
 
-            R := Obj.Routine (K);
+            R := Test_Case'Class (Obj).Routine (K);
 
             begin
 
-               Obj.Setup_Routine;
+               Test_Case'Class (Obj).Setup_Routine;
 
                declare
                   Assert_Outcome : Test_Outcome;
@@ -389,8 +411,29 @@ package body Apsepp.Test_Node_Class is
 
    ----------------------------------------------------------------------------
 
+   overriding
+   procedure Run (Obj     : in out Test_Case;
+                  Outcome :    out Test_Outcome;
+                  Kind    :        Run_Kind      := Assert_Cond_And_Run_Test)
+     is
+
+      -----------------------------------------------------
+
+      function Cond return Boolean
+        is (True);
+
+      -----------------------------------------------------
+
+   begin
+
+      Run_Body (Obj, Outcome, Kind, Cond'Access);
+
+   end Run;
+
+   ----------------------------------------------------------------------------
+
 begin
 
    Ada.Assertions.Assert (Case_Status_Map_Handler.Invariant);
 
-end Apsepp.Test_Node_Class;
+end Apsepp.Test_Node_Class.Abstract_Test_Case;
