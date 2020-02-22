@@ -148,7 +148,8 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       procedure Delete (Node_Tag : Tag) is
 
-         use Case_Status_Hashed_Maps;
+         use Ada.Containers,
+             Case_Status_Hashed_Maps;
 
       begin
 
@@ -183,24 +184,35 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       -----------------------------------------------------
 
-      function Invariant return Boolean
-        is (
-             (
-               T /= No_Tag
-                 or else
-               M.Length = 0
-             )
-               and then
-             not M.Contains (No_Tag)
-           );
+      function Invariant return Boolean is
+
+         use Ada.Containers;
+
+      begin
+
+         return (
+                  (
+                    T /= No_Tag
+                      or else
+                    M.Length = 0
+                  )
+                    and then
+                  not M.Contains (No_Tag)
+                );
+
+      end Invariant;
 
       -----------------------------------------------------
 
-      function Count return Count_Type
-        is (M.Length + (if T = No_Tag or else M.Contains (T) then
-                           0
-                        else
-                           1));
+      function Count return Test_Node_Count
+        is (
+             Test_Node_Count (M.Length)
+               +
+             (if T = No_Tag or else M.Contains (T) then
+                 0
+              else
+                 1)
+           );
 
       -----------------------------------------------------
 
@@ -208,7 +220,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
          use Case_Status_Hashed_Maps;
 
-         N : constant Count_Type := Count;
+         N : constant Test_Node_Count := Count;
          Ret : Case_Tag_Status_Array (1 .. N);
 
          procedure Populate_Current is
@@ -220,7 +232,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
          end Populate_Current;
 
          procedure Populate_Others is
-            K : Index_Type := 1;
+            K : Test_Node_Index := 1;
             procedure Process (C : Cursor) is
                Key_C : constant Tag := Key (C);
             begin

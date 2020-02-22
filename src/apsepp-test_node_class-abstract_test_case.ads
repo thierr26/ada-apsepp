@@ -7,7 +7,6 @@ with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body,
      Apsepp.Generic_Safe_Integer_Operations;
 
 private with Ada.Containers.Hashed_Maps,
-             Apsepp.Containers,
              Apsepp.Tags;
 
 package Apsepp.Test_Node_Class.Abstract_Test_Case is
@@ -117,14 +116,12 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
 private
 
-   use Ada.Containers,
-       Apsepp.Containers,
-       Apsepp.Tags;
+   use Apsepp.Tags;
 
    type Test_Case is abstract limited new Test_Node_Interfa with null record;
 
    type Case_Tag_Status_Array
-     is array (Index_Type range <>) of Case_Tag_Status;
+     is array (Test_Node_Index range <>) of Case_Tag_Status;
 
    package Case_Status_Hashed_Maps
      is new Ada.Containers.Hashed_Maps (Key_Type        => Tag,
@@ -167,7 +164,7 @@ private
       -- post-conditions. <2020-02-18>
       function Invariant return Boolean;
 
-      function Count return Count_Type;
+      function Count return Test_Node_Count;
 
       function To_Array return Case_Tag_Status_Array
         with Post => To_Array'Result'First = 1
