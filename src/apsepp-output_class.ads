@@ -8,6 +8,6 @@ package Apsepp.Output_Class is
    type Output_Interfa is limited interface;
 
    not overriding
-   procedure Put_Line (Obj : in out Output_Interfa; S : String) is null;
+   procedure Put_Line (Obj : in out Output_Interfa; Item : String) is null;
 
 end Apsepp.Output_Class;

@@ -11,11 +11,11 @@ package body Apsepp.Output_Class.Standard is
 
       -----------------------------------------------------
 
-      procedure Put_Line (S : String) is
+      procedure Put_Line (Item : String) is
 
       begin
 
-         Ada.Text_IO.Put_Line (S);
+         Ada.Text_IO.Put_Line (Item);
 
       end Put_Line;
 

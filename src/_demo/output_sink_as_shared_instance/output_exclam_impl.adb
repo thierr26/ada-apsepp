@@ -11,16 +11,17 @@ package body Output_Exclam_Impl is
 
       -----------------------------------------------------
 
-      procedure Put_Line (S : String) is
+      procedure Put_Line (Item : String) is
 
-         S_Exclam : constant String := (if S'Length = 0 then
-                                           S
-                                        else
-                                           S(S'First .. S'Last - 1) & '!');
+         Item_Exclam : constant String
+           := (if Item'Length = 0 then
+                  Item
+               else
+                  Item(Item'First .. Item'Last - 1) & '!');
 
       begin
 
-         Ada.Text_IO.Put_Line (S_Exclam);
+         Ada.Text_IO.Put_Line (Item_Exclam);
 
       end Put_Line;
 

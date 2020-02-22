@@ -10,7 +10,7 @@ package Output_Exclam_Impl is
    protected type Output_Exclam is new Apsepp.Output_Class.Output_Interfa with
 
       overriding
-      procedure Put_Line (S : String);
+      procedure Put_Line (Item : String);
 
    end Output_Exclam;
 
