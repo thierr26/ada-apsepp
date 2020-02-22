@@ -73,7 +73,12 @@ private
    procedure Parameterized_S
      (Kind        : S_R_Kind;
       Lock_Holder : Controlled_Lock_Holder'Class;
-      I_A         : access Instance_Ancestor_Type'Class);
+      I_A         : access Instance_Ancestor_Type'Class)
+     with Pre => (case Kind is
+                     when W_Deallocation =>
+                        not Lock_Holder.Holds or else I_A /= null,
+                     when Wo_Deallocation =>
+                        True);
 
    procedure Parameterized_R
      (Kind        : S_R_Kind;

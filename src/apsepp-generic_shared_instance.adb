@@ -1,8 +1,7 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Assertions,
-     Ada.Unchecked_Deallocation;
+with Ada.Unchecked_Deallocation;
 
 package body Apsepp.Generic_Shared_Instance is
 
@@ -130,24 +129,17 @@ package body Apsepp.Generic_Shared_Instance is
       Lock_Holder : Controlled_Lock_Holder'Class;
       I_A         : access Instance_Ancestor_Type'Class) is
 
-      use Ada.Assertions;
+      pragma Unreferenced (Kind);
 
    begin
 
+      -- Store the state of the instance lock (used in barrier of
+      -- 'Protected_Instance_Access.Get_W_Barrier').
       Protected_Instance_Access.Set_Instance_Lock_Locked_State
         (if Instance_Lock.Locked then
             Locked
          else
             Unlocked);
-
-      case Kind is
-         when W_Deallocation =>
-            Assert (not Lock_Holder.Holds or else I_A /= null,
-                    "A non-null 'I_A' was expected. (The lock holder "
-                    & "('Lock_Holder') actually holds the lock.)");
-         when Wo_Deallocation =>
-            null;
-      end case;
 
       -- The next statement fails if 'Lock_Holder.L /= Instance_Lock'Access'
       -- (see the pre-condition), and this is the wanted behaviour.
@@ -171,6 +163,8 @@ package body Apsepp.Generic_Shared_Instance is
 
    begin
 
+      -- Reset the stored value of the state of the instance lock (used in
+      -- barrier of 'Protected_Instance_Access.Get_W_Barrier').
       Protected_Instance_Access.Set_Instance_Lock_Locked_State (Unknown);
 
       case Kind is
