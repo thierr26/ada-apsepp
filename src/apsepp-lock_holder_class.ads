@@ -3,24 +3,24 @@
 
 package Apsepp.Lock_Holder_Class is
 
-   type Lock_Holder_Interface is limited interface;
+   type Lock_Holder_Interfa is limited interface;
 
    not overriding
-   function Holds (Obj : Lock_Holder_Interface) return Boolean is abstract;
+   function Holds (Obj : Lock_Holder_Interfa) return Boolean is abstract;
 
    not overriding
    function Take
-     (Obj : in out Lock_Holder_Interface) return Boolean is abstract;
+     (Obj : in out Lock_Holder_Interfa) return Boolean is abstract;
 
    not overriding
    function Release
-     (Obj : in out Lock_Holder_Interface) return Boolean is abstract
+     (Obj : in out Lock_Holder_Interfa) return Boolean is abstract
      with Post'Class => not Obj.Holds;
 
    not overriding
-   procedure On_Take (Obj : Lock_Holder_Interface) is null;
+   procedure On_Take (Obj : Lock_Holder_Interfa) is null;
 
    not overriding
-   procedure On_Release (Obj : Lock_Holder_Interface) is null;
+   procedure On_Release (Obj : Lock_Holder_Interfa) is null;
 
 end Apsepp.Lock_Holder_Class;

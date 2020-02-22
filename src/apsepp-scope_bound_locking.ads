@@ -17,7 +17,7 @@ package Apsepp.Scope_Bound_Locking is
    type Controlled_Lock_Holder
      (L : not null access Lock'Class) is limited new Limited_Controlled
                                                        and
-                                                     Lock_Holder_Interface
+                                                     Lock_Holder_Interfa
      with private;
 
    overriding
@@ -52,7 +52,7 @@ private
    type Controlled_Lock_Holder
      (L : not null access Lock'Class) is limited new Limited_Controlled
                                                        and
-                                                     Lock_Holder_Interface
+                                                     Lock_Holder_Interfa
      with record
 
       Holds_Flag : Boolean := False;
