@@ -1,22 +1,9 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+with Apsepp.Lock_Holder_Class;
+
 package body Apsepp_Scope_Bound_Locking_Test_Case is
-
-   use Apsepp.Scope_Bound_Locking,
-       Apsepp_Scope_Bound_Locking_Test_Fixture;
-
-   ----------------------------------------------------------------------------
-
-   Global_Lock_Holder_Access : access Controlled_Lock_Holder;
-
-   function SBL_TF return not null access Apsepp_Scope_Bound_Locking_T_F is
-
-   begin
-
-      return Fixture_Instance_Access (Global_Lock_Holder_Access.all);
-
-   end SBL_TF;
 
    ----------------------------------------------------------------------------
 
@@ -26,7 +13,7 @@ package body Apsepp_Scope_Bound_Locking_Test_Case is
 
       -- TODO: Implement real test routine for Apsepp.Scope_Bound_Locking.
       -- <2020-02-20>
-      Assert (SBL_TF.Lock_Count = 0);
+      Assert (SBL_T_F.I_A.Lock_Count = 0);
 
    end Scope_Bound_Locking_Test;
 
@@ -45,41 +32,27 @@ package body Apsepp_Scope_Bound_Locking_Test_Case is
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind := Assert_Cond_And_Run_Test) is
 
+      Check_Only : constant Boolean
+        := (case Kind is
+               when Check_Cond               => True,
+               when Assert_Cond_And_Run_Test => False);
+
+      SBL_L_H_C_H : Apsepp.Lock_Holder_Class.Lock_Holder_Controlled_Handler
+        (L_H      => L_H_A(SBL),
+         Disabled => Check_Only);
+
+      pragma Unreferenced (SBL_L_H_C_H);
+
+      -----------------------------------------------------
+
+      function Cond return Boolean
+        is (if Check_Only then None_Locked (L_H_A) else All_Holding (L_H_A));
+
+      -----------------------------------------------------
+
    begin
 
-      case Kind is
-
-         when Check_Cond =>
-
-            declare
-
-               function Cond return Boolean
-                 is (not SBL_TF_LA.Locked);
-
-            begin
-
-               Run_Body (Obj, Outcome, Kind, Cond'Access);
-
-            end;
-
-         when Assert_Cond_And_Run_Test =>
-
-            declare
-
-               SBL_TF_LH : aliased Controlled_Lock_Holder (SBL_TF_LA);
-
-               function Cond return Boolean
-                 is (SBL_TF_LH.Holds);
-
-            begin
-
-               Global_Lock_Holder_Access := SBL_TF_LH'Unchecked_Access;
-
-               Run_Body (Obj, Outcome, Kind, Cond'Access);
-
-            end;
-
-      end case;
+      Run_Body (Obj, Outcome, Kind, Cond'Access);
 
    end Run;
 

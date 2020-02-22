@@ -1,9 +1,10 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Finalization;         use Ada.Finalization;
-with Apsepp.Lock_Class;        use Apsepp.Lock_Class;
-with Apsepp.Lock_Holder_Class; use Apsepp.Lock_Holder_Class;
+with Apsepp.Lock_Class; use Apsepp.Lock_Class;
+
+with Apsepp.Lock_Holder_Class.Generic_Finalization_Mixin;
+  use Apsepp.Lock_Holder_Class;
 
 private with Apsepp.Protected_Barrier;
 
@@ -14,30 +15,46 @@ package Apsepp.Scope_Bound_Locking is
    overriding
    function Locked (Obj : Lock) return Boolean;
 
-   type Controlled_Lock_Holder
-     (L : not null access Lock'Class) is limited new Limited_Controlled
-                                                       and
-                                                     Lock_Holder_Interfa
-     with private;
+   package Lock_Holder_Package is
 
-   overriding
-   procedure Initialize (Obj : in out Controlled_Lock_Holder)
-     with Post'Class => Obj.L.Locked;
+      type Lock_Holder (L : not null access Lock'Class)
+        is limited new Lock_Holder_Interfa with private;
 
-   overriding
-   procedure Finalize (Obj : in out Controlled_Lock_Holder);
+      overriding
+      function Holds (Obj : Lock_Holder) return Boolean
+        with Post'Class => not Holds'Result or else Obj.L.Locked;
 
-   overriding
-   function Holds (Obj : Controlled_Lock_Holder) return Boolean
-     with Post'Class => not Holds'Result or else Obj.L.Locked;
+      overriding
+      function Take (Obj : in out Lock_Holder) return Boolean
+        with Post'Class => Obj.L.Locked;
 
-   overriding
-   function Take (Obj : in out Controlled_Lock_Holder) return Boolean
-     with Post'Class => Obj.L.Locked;
+      overriding
+      function Release (Obj : in out Lock_Holder) return Boolean
+        with Post'Class => not Obj.Holds;
 
-   overriding
-   function Release (Obj : in out Controlled_Lock_Holder) return Boolean
-     with Post'Class => not Obj.Holds;
+   private
+
+      type Lock_Holder (L : not null access Lock'Class)
+        is limited new Lock_Holder_Interfa with record
+
+         Holds_Flag : Boolean := False;
+
+      end record;
+
+   end Lock_Holder_Package;
+
+   -- TODOC: Subtyping used as renaming. <2020-02-22>
+   -- TODOC: Has discriminant 'L'. <2020-02-22>
+   subtype Lock_Holder is Lock_Holder_Package.Lock_Holder;
+
+   package Lock_Holder_Finalization_Mixin
+     is new Generic_Finalization_Mixin
+     (Parent => Lock_Holder_Package.Lock_Holder);
+
+   -- TODOC: Subtyping used as renaming. <2020-02-22>
+   -- TODOC: Has discriminant 'L'. <2020-02-22>
+   subtype Controlled_Lock_Holder
+     is Lock_Holder_Finalization_Mixin.Child_W_Finalization;
 
 private
 
@@ -46,16 +63,6 @@ private
    type Lock is limited new Lock_Interfa with record
 
       Locked_Flag : Boolean := False;
-
-   end record;
-
-   type Controlled_Lock_Holder
-     (L : not null access Lock'Class) is limited new Limited_Controlled
-                                                       and
-                                                     Lock_Holder_Interfa
-     with record
-
-      Holds_Flag : Boolean := False;
 
    end record;
 

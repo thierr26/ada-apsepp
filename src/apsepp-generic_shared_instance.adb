@@ -168,7 +168,7 @@ package body Apsepp.Generic_Shared_Instance is
 
       case Kind is
 
-         when W_Deallocation =>
+         when W_Deallocation  =>
 
             if L_H.Holds then
                -- The lock holder actually holds the lock.

@@ -5,7 +5,7 @@ with Apsepp.Test_Node_Class.Abstract_Test_Case;
   use Apsepp.Test_Node_Class.Abstract_Test_Case;
   use Apsepp.Test_Node_Class;
 
-private with Apsepp.Scope_Bound_Locking,
+private with Apsepp.Scope_Bound_Locking.Generic_Lock_Holder_Array,
              Apsepp.Test_Node_Class.Abstract_Test_Case.Generic_Assert,
              Apsepp_Scope_Bound_Locking_Test_Fixture.Restricted_Access;
 
@@ -27,14 +27,32 @@ package Apsepp_Scope_Bound_Locking_Test_Case is
 
 private
 
+   use Apsepp.Scope_Bound_Locking;
+
    procedure Assert
      is new Apsepp.Test_Node_Class.Abstract_Test_Case.Generic_Assert
      (Test_Case_Tag => Apsepp_Scope_Bound_Locking_T_C'Tag);
 
-   use Apsepp_Scope_Bound_Locking_Test_Fixture.Restricted_Access
-     .Apsepp_Scope_Bound_Locking_T_F_Restr;
+   type Lock_Identifier is (SBL);
 
-   SBL_TF_LA : not null access Fixture_Lock
-     := Fixture_Instance_Lock'Access;
+   package SBL_T_F is
+
+      use Apsepp_Scope_Bound_Locking_Test_Fixture,
+          Apsepp_Scope_Bound_Locking_Test_Fixture.Restricted_Access
+            .Apsepp_Scope_Bound_Locking_T_F_Restr;
+
+      L_H : aliased Lock_Holder (L => Fixture_Instance_Lock'Access);
+
+      function I_A return not null access Apsepp_Scope_Bound_Locking_T_F
+        is (Fixture_Instance_Access (L_H));
+
+   end SBL_T_F;
+
+   package Lock_Holder_Array_Package
+     is new Generic_Lock_Holder_Array (Index_Type => Lock_Identifier);
+
+   use Lock_Holder_Array_Package;
+
+   L_H_A : Lock_Holder_Array := (SBL => SBL_T_F.L_H'Access);
 
 end Apsepp_Scope_Bound_Locking_Test_Case;

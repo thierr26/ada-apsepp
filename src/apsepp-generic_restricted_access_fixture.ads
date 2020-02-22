@@ -27,7 +27,7 @@ package Apsepp.Generic_Restricted_Access_Fixture is
    Fixture_Instance_Lock : aliased Fixture_Lock;
 
    function Fixture_Instance_Access
-     (L_H : Apsepp.Scope_Bound_Locking.Controlled_Lock_Holder'Class)
+     (L_H : Apsepp.Scope_Bound_Locking.Lock_Holder'Class)
      return not null access Fixture_Type
      with Pre => L_H.L = Fixture_Instance_Lock'Access
                    and then

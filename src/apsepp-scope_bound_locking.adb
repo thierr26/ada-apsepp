@@ -25,134 +25,112 @@ package body Apsepp.Scope_Bound_Locking is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure Initialize (Obj : in out Controlled_Lock_Holder) is
+   package body Lock_Holder_Package is
 
-      Unreferenced_Return_Value : Boolean;
-      pragma Unreferenced (Unreferenced_Return_Value);
+      -----------------------------------------------------
 
-   begin
+      overriding
+      function Holds (Obj : Lock_Holder) return Boolean
+        is (Obj.Holds_Flag);
 
-      -- Attempt to take the lock.
-      Unreferenced_Return_Value := Controlled_Lock_Holder'Class (Obj).Take;
+      -----------------------------------------------------
 
-   end Initialize;
+      overriding
+      function Take (Obj : in out Lock_Holder) return Boolean is
 
-   ----------------------------------------------------------------------------
+         Ret : Boolean := False; -- Return value (returned as is if we already
+                                 -- hold the lock).
 
-   overriding
-   procedure Finalize (Obj : in out Controlled_Lock_Holder) is
+      begin
 
-      Unreferenced_Return_Value : Boolean;
-      pragma Unreferenced (Unreferenced_Return_Value);
+         if not Obj.Holds_Flag then
+            -- We don't already hold the lock.
 
-   begin
+            declare
 
-      -- Release the lock if we hold it.
-      Unreferenced_Return_Value := Controlled_Lock_Holder'Class (Obj).Release;
+               -- Instantiate a controlled barrier handler to protect access to
+               -- the lock ('Obj.L').
+               use Apsepp.Barrier_Class.Finalized_Handler;
+               H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
 
-   end Finalize;
+               pragma Unreferenced (H);
 
-   ----------------------------------------------------------------------------
+            begin
+               -- Here we access the lock ('Obj.L'). Calling Obj.L.Locked in
+               -- this block would cause a deadlock.
 
-   overriding
-   function Holds (Obj : Controlled_Lock_Holder) return Boolean
-     is (Obj.Holds_Flag);
+               -- We are the new holder of the lock if it was not already held.
+               Obj.Holds_Flag := not Obj.L.Locked_Flag;
 
-   ----------------------------------------------------------------------------
+               -- 'Obj.L.Locked_Flag' has to be true because we take the lock
+               -- or because we don't take it (because it's already held).
+               Obj.L.Locked_Flag := True;
 
-   overriding
-   function Take (Obj : in out Controlled_Lock_Holder) return Boolean is
+            end;
 
-      Ret : Boolean := False; -- Return value (returned as is if we already
-                              -- hold the lock).
+            if Obj.Holds_Flag then
+               -- We are now holding the lock.
 
-   begin
+               Lock_Holder'Class (Obj).On_Take;
+               Obj.L.On_Lock;
 
-      if not Obj.Holds_Flag then
-         -- We don't already hold the lock.
+            end if;
 
-         declare
-
-            -- Instantiate a controlled barrier handler to protect access to
-            -- the lock ('Obj.L').
-            use Apsepp.Barrier_Class.Finalized_Handler;
-            H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
-
-            pragma Unreferenced (H);
-
-         begin
-            -- Here we access the lock ('Obj.L'). Calling Obj.L.Locked in this
-            -- block would cause a deadlock.
-
-            -- We are the new holder of the lock if it was not already held.
-            Obj.Holds_Flag := not Obj.L.Locked_Flag;
-
-            -- 'Obj.L.Locked_Flag' has to be true because we take the lock or
-            -- because we don't take it (because it's already held).
-            Obj.L.Locked_Flag := True;
-
-         end;
-
-         if Obj.Holds_Flag then
-            -- We are now holding the lock.
-
-            Controlled_Lock_Holder'Class (Obj).On_Take;
-            Obj.L.On_Lock;
+            Ret := Obj.Holds_Flag;
 
          end if;
 
-         Ret := Obj.Holds_Flag;
+         return Ret;
 
-      end if;
+      end Take;
 
-      return Ret;
+      -----------------------------------------------------
 
-   end Take;
+      overriding
+      function Release (Obj : in out Lock_Holder) return Boolean is
 
-   ----------------------------------------------------------------------------
+         Ret : Boolean := False; -- Return value (returned as is if we were not
+                                 -- holding the lock).
 
-   overriding
-   function Release (Obj : in out Controlled_Lock_Holder) return Boolean is
+      begin
 
-      Ret : Boolean := False; -- Return value (returned as is if we were not
-                              -- holding the lock).
+         if Obj.Holds_Flag then
+            -- We are (still) holding the lock.
 
-   begin
+            Lock_Holder'Class (Obj).On_Release;
 
-      if Obj.Holds_Flag then
-         -- We are (still) holding the lock.
+            declare
 
-         Controlled_Lock_Holder'Class (Obj).On_Release;
+               -- Instantiate a controlled barrier handler to protect access to
+               -- the lock ('Obj.L').
+               use Apsepp.Barrier_Class.Finalized_Handler;
+               H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
 
-         declare
+               pragma Unreferenced (H);
 
-            -- Instantiate a controlled barrier handler to protect access to
-            -- the lock ('Obj.L').
-            use Apsepp.Barrier_Class.Finalized_Handler;
-            H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
+            begin
+               -- Here we access the lock ('Obj.L'). Calling Obj.L.Locked in
+               -- this block would cause a deadlock.
 
-            pragma Unreferenced (H);
+               Obj.L.Locked_Flag := False;
 
-         begin
-            -- Here we access the lock ('Obj.L'). Calling Obj.L.Locked in this
-            -- block would cause a deadlock.
+            end;
 
-            Obj.L.Locked_Flag := False;
+            -- We are not the lock holder any more.
+            Obj.Holds_Flag := False;
+            Obj.L.On_Unlock;
 
-         end;
+            Ret := True;
 
-         -- We are not the lock holder any more.
-         Obj.Holds_Flag := False;
-         Obj.L.On_Unlock;
+         end if;
 
-         Ret := True;
+         return Ret;
 
-      end if;
+      end Release;
 
-      return Ret;
+      -----------------------------------------------------
 
-   end Release;
+   end Lock_Holder_Package;
 
    ----------------------------------------------------------------------------
 

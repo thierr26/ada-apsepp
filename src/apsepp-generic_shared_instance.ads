@@ -75,7 +75,7 @@ private
       L_H  : Controlled_Lock_Holder'Class;
       I_A  : access Instance_Ancestor_Type'Class)
      with Pre => (case Kind is
-                     when W_Deallocation =>
+                     when W_Deallocation  =>
                         not L_H.Holds or else I_A /= null,
                      when Wo_Deallocation =>
                         True);
