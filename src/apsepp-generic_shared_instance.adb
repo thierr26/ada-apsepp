@@ -98,12 +98,12 @@ package body Apsepp.Generic_Shared_Instance is
    ----------------------------------------------------------------------------
 
    procedure Set
-     (Lock_Holder : Controlled_Lock_Holder'Class;
-      I_A         : access Instance_Ancestor_Type'Class) is
+     (L_H : Controlled_Lock_Holder'Class;
+      I_A : access Instance_Ancestor_Type'Class) is
 
    begin
 
-      if Lock_Holder.Holds then
+      if L_H.Holds then
          -- The lock holder actually holds the lock.
 
          Protected_Instance_Access.Set (Instance_Ancestor_Access (I_A));
@@ -114,20 +114,20 @@ package body Apsepp.Generic_Shared_Instance is
 
    ----------------------------------------------------------------------------
 
-   procedure Reset (Lock_Holder : Controlled_Lock_Holder'Class) is
+   procedure Reset (L_H : Controlled_Lock_Holder'Class) is
 
    begin
 
-      Set (Lock_Holder, null);
+      Set (L_H, null);
 
    end Reset;
 
    ----------------------------------------------------------------------------
 
    procedure Parameterized_S
-     (Kind        : S_R_Kind;
-      Lock_Holder : Controlled_Lock_Holder'Class;
-      I_A         : access Instance_Ancestor_Type'Class) is
+     (Kind : S_R_Kind;
+      L_H  : Controlled_Lock_Holder'Class;
+      I_A  : access Instance_Ancestor_Type'Class) is
 
       pragma Unreferenced (Kind);
 
@@ -141,24 +141,23 @@ package body Apsepp.Generic_Shared_Instance is
          else
             Unlocked);
 
-      -- The next statement fails if 'Lock_Holder.L /= Instance_Lock'Access'
-      -- (see the pre-condition), and this is the wanted behaviour.
-      Set (Lock_Holder, I_A);
+      -- The next statement fails if 'L_H.L /= Instance_Lock'Access' (see the
+      -- pre-condition), and this is the wanted behaviour.
+      Set (L_H, I_A);
 
    end Parameterized_S;
 
    ----------------------------------------------------------------------------
 
    procedure Parameterized_R
-     (Kind        : S_R_Kind;
-      Lock_Holder : Controlled_Lock_Holder'Class) is
+     (Kind : S_R_Kind;
+      L_H  : Controlled_Lock_Holder'Class) is
 
       procedure Call_Reset is
       begin
-         -- The next statement fails if
-         -- 'Lock_Holder.L /= Instance_Lock'Access' (see the pre-condition),
-         -- and this is the wanted behaviour.
-         Reset (Lock_Holder);
+         -- The next statement fails if 'L_H.L /= Instance_Lock'Access' (see
+         -- the pre-condition), and this is the wanted behaviour.
+         Reset (L_H);
       end Call_Reset;
 
    begin
@@ -171,7 +170,7 @@ package body Apsepp.Generic_Shared_Instance is
 
          when W_Deallocation =>
 
-            if Lock_Holder.Holds then
+            if L_H.Holds then
                -- The lock holder actually holds the lock.
 
                declare

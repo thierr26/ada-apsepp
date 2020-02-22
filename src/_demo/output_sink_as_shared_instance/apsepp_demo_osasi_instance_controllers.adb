@@ -161,9 +161,9 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
       -- 'Ada.Unchecked_Deallocation' call in
       -- 'Apsepp.Generic_Shared_Instance.Parameterized_R').
       package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
-        (Instance_Access  => Output_Instance_Access,
-         Lock_Holder_Type => Output_Shared_Instance.Holder,
-         Lock_Holder      => Output_Lock_Holder);
+        (Instance_Access      => Output_Instance_Access,
+         Lock_Holder_Type     => Output_Shared_Instance.Holder,
+         Lock_Holder_Instance => Output_Lock_Holder);
 
       pragma Unreferenced (Output_S_R);
 
@@ -199,9 +199,9 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
                null);
 
       package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
-        (Instance_Access  => Output_Instance_Access,
-         Lock_Holder_Type => Output_Shared_Instance.Holder,
-         Lock_Holder      => Output_Lock_Holder);
+        (Instance_Access      => Output_Instance_Access,
+         Lock_Holder_Type     => Output_Shared_Instance.Holder,
+         Lock_Holder_Instance => Output_Lock_Holder);
 
       pragma Unreferenced (Output_S_R);
 
@@ -241,9 +241,9 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
       Output_Lock_Holder : Output_Shared_Instance.Holder;
 
       package Output_S_R is new Output_Shared_Instance.Finalized_S_R
-        (Instance_Access  => Output_Exclam_Instance'Access,
-         Lock_Holder_Type => Output_Shared_Instance.Holder,
-         Lock_Holder      => Output_Lock_Holder);
+        (Instance_Access      => Output_Exclam_Instance'Access,
+         Lock_Holder_Type     => Output_Shared_Instance.Holder,
+         Lock_Holder_Instance => Output_Lock_Holder);
 
       pragma Unreferenced (Output_S_R);
 

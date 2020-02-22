@@ -37,12 +37,12 @@ package Apsepp.Generic_Shared_Instance is
      with null record;
 
    procedure Set
-     (Lock_Holder : Controlled_Lock_Holder'Class;
-      I_A         : access Instance_Ancestor_Type'Class)
-     with Pre  => Lock_Holder.L = Instance_Lock'Access;
+     (L_H : Controlled_Lock_Holder'Class;
+      I_A : access Instance_Ancestor_Type'Class)
+     with Pre  => L_H.L = Instance_Lock'Access;
 
-   procedure Reset (Lock_Holder : Controlled_Lock_Holder'Class)
-     with Pre  => Lock_Holder.L = Instance_Lock'Access;
+   procedure Reset (L_H : Controlled_Lock_Holder'Class)
+     with Pre  => L_H.L = Instance_Lock'Access;
 
 private
 
@@ -71,17 +71,17 @@ private
    type S_R_Kind is (W_Deallocation, Wo_Deallocation);
 
    procedure Parameterized_S
-     (Kind        : S_R_Kind;
-      Lock_Holder : Controlled_Lock_Holder'Class;
-      I_A         : access Instance_Ancestor_Type'Class)
+     (Kind : S_R_Kind;
+      L_H  : Controlled_Lock_Holder'Class;
+      I_A  : access Instance_Ancestor_Type'Class)
      with Pre => (case Kind is
                      when W_Deallocation =>
-                        not Lock_Holder.Holds or else I_A /= null,
+                        not L_H.Holds or else I_A /= null,
                      when Wo_Deallocation =>
                         True);
 
    procedure Parameterized_R
-     (Kind        : S_R_Kind;
-      Lock_Holder : Controlled_Lock_Holder'Class);
+     (Kind : S_R_Kind;
+      L_H  : Controlled_Lock_Holder'Class);
 
 end Apsepp.Generic_Shared_Instance;

@@ -12,7 +12,7 @@ package body Apsepp.Generic_Shared_Instance.Finalized_S_R is
 
    begin
 
-      Parameterized_S (S_R_Kind_Value, Lock_Holder, Instance_Access);
+      Parameterized_S (S_R_Kind_Value, Lock_Holder_Instance, Instance_Access);
 
    end Initialize;
 
@@ -25,7 +25,7 @@ package body Apsepp.Generic_Shared_Instance.Finalized_S_R is
 
    begin
 
-      Parameterized_R (S_R_Kind_Value, Lock_Holder);
+      Parameterized_R (S_R_Kind_Value, Lock_Holder_Instance);
 
    end Finalize;
 

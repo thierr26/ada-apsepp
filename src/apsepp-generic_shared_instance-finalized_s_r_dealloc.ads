@@ -10,7 +10,7 @@ generic
    type Lock_Holder_Type (<>)
      is limited new Controlled_Lock_Holder with private;
 
-   Lock_Holder : in out Lock_Holder_Type;
+   Lock_Holder_Instance : in out Lock_Holder_Type;
 
 package Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc is
 

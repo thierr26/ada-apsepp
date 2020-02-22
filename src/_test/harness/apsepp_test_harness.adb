@@ -23,9 +23,9 @@ package body Apsepp_Test_Harness is
                null);
 
       package Output_S_R is new Output_Shared_Instance.Finalized_S_R_Dealloc
-        (Instance_Access  => Output_Instance_Access,
-         Lock_Holder_Type => Output_Shared_Instance.Holder,
-         Lock_Holder      => Output_Lock_Holder);
+        (Instance_Access      => Output_Instance_Access,
+         Lock_Holder_Type     => Output_Shared_Instance.Holder,
+         Lock_Holder_Instance => Output_Lock_Holder);
 
       Outcome : Test_Outcome;
 

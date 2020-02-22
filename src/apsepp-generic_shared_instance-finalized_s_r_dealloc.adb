@@ -12,7 +12,7 @@ package body Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc is
 
    begin
 
-      Parameterized_S (W_Deallocation, Lock_Holder, Instance_Access);
+      Parameterized_S (W_Deallocation, Lock_Holder_Instance, Instance_Access);
 
    end Initialize;
 
@@ -25,7 +25,7 @@ package body Apsepp.Generic_Shared_Instance.Finalized_S_R_Dealloc is
 
    begin
 
-      Parameterized_R (W_Deallocation, Lock_Holder);
+      Parameterized_R (W_Deallocation, Lock_Holder_Instance);
 
    end Finalize;
 
