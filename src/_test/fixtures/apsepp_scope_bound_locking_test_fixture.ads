@@ -22,10 +22,10 @@ package Apsepp_Scope_Bound_Locking_Test_Fixture is
    overriding
    procedure On_Lock (Obj : Test_Lock);
 
+private
+
    package Apsepp_Scope_Bound_Locking_T_F_Singleton
      is new Apsepp.Generic_Singleton;
-
-private
 
    type Apsepp_Scope_Bound_Locking_T_F
      is limited new Fixture_Interfa with record
