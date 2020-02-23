@@ -9,7 +9,7 @@ package Apsepp.Generic_Safe_Integer_Operations is
 
    pragma Pure (Apsepp.Generic_Safe_Integer_Operations);
 
-   -- Force pre-conditions evaluation in this package.
+   -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
 
    type Safe_Integer is private

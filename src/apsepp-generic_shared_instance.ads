@@ -13,7 +13,7 @@ generic
 
 package Apsepp.Generic_Shared_Instance is
 
-   -- Force pre-conditions evaluation in this package.
+   -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
 
    Instance_Lock : aliased Lock_Type;

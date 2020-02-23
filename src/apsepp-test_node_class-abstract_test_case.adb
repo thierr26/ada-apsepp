@@ -19,7 +19,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       pragma Warnings (Off, "null value not allowed here");
 
-      return null; -- A test case a no child. The function has to fail.
+      return null; -- A test case has no child. The function has to fail.
 
       pragma Warnings (On, "null value not allowed here");
 
@@ -31,8 +31,8 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   function Initial_Case_Status
-     (Routine_Index : Test_Routine_Index := 1) return Case_Status
+   function Pre_Test_Routine_Case_Status
+     (Routine_Index : Test_Routine_Index) return Case_Status
      is (Routine_Index  => Routine_Index,
          Assert_Count   => Create (0),
          Assert_Outcome => Passed);
@@ -47,37 +47,51 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
          use Case_Status_Hashed_Maps;
 
-         procedure Update_Map_With_Work_Data is
-            C : constant Cursor := M.Find (T);
-         begin
-            if C = No_Element then
-               M.Insert (Key      => T,
-                         New_Item => S);
-            else
-               M.Replace_Element (Position => C,
-                                  New_Item => S);
-            end if;
-         end Update_Map_With_Work_Data;
-
-         procedure Extract_Work_Data is
-            C : constant Cursor := M.Find (Node_Tag);
-         begin
-            T := Node_Tag;
-            S := (if C = No_Element then
-                     Initial_Case_Status
-                  else
-                     Element (C));
-         end Extract_Work_Data;
-
       begin
 
          if T /= Node_Tag then
+            -- T is not the wanted tag.
 
             if T /= No_Tag then
-               Update_Map_With_Work_Data;
+               -- 'T' is a "real" test node tag and not the default tag value
+               -- 'No_Tag'. This means that there is valuable information in
+               -- 'S'.
+
+               -- Create an entry in map 'M' with key 'T' and data 'S' if there
+               -- is not already an entry with such key, or replace the entry.
+               declare
+                  C : constant Cursor := M.Find (T);
+               begin
+                  if C = No_Element then
+                     M.Insert (Key      => T,
+                               New_Item => S);
+                  else
+                     M.Replace_Element (Position => C,
+                                        New_Item => S);
+                  end if;
+               end;
+
             end if;
 
-            Extract_Work_Data;
+            -- Extract from map 'M' the data associated with key 'Node_Tag' and
+            -- assign to S (and set 'T' to 'Node_Tag'). If there is no
+            -- 'Node_Tag' key in the map, than S is set to an appropriate
+            -- initial value.
+            declare
+               C : constant Cursor := M.Find (Node_Tag);
+            begin
+               T := Node_Tag;
+               S := (if C = No_Element then
+                        Pre_Test_Routine_Case_Status (Routine_Index => 1)
+                     else
+                        Element (C));
+            end;
+
+         else
+            -- 'T' is already the wanted tag (and 'S' is the associated
+            -- status). Nothing more to do.
+
+            null;
 
          end if;
 
@@ -85,15 +99,15 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       -----------------------------------------------------
 
-      procedure Reset_Routine_State (Node_Tag      : Tag;
-                                     Routine_Index : Test_Routine_Index) is
+      procedure Reset_Case_Status (Node_Tag      : Tag;
+                                   Routine_Index : Test_Routine_Index) is
 
       begin
 
          Switch_Key_If_Needed (Node_Tag);
-         S := Initial_Case_Status (Routine_Index);
+         S := Pre_Test_Routine_Case_Status (Routine_Index);
 
-      end Reset_Routine_State;
+      end Reset_Case_Status;
 
       -----------------------------------------------------
 
@@ -128,7 +142,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
          Switch_Key_If_Needed (Node_Tag);
          Routine_Index := S.Routine_Index;
-         Count := S.Assert_Count;
+         Count         := S.Assert_Count;
 
       end Get_Assert_Count;
 
@@ -154,26 +168,47 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       begin
 
          if M.Length = 0 then
+            -- Tag 'Node_Tag' has no matching entry in the map (map is empty).
+
+            -- Just reset 'T'.
             T := No_Tag;
+
          else
+            -- Tag 'Node_Tag' may have a matching entry in the map (map is not
+            -- empty).
 
             declare
                C : Cursor := M.Find (Node_Tag);
             begin
 
                if C /= No_Element then
+                  -- Tag 'Node_Tag' has a matching entry in the map.
+
+                  -- Delete the entry.
                   M.Delete (C);
+
                end if;
 
                if T = Node_Tag and then M.Length > 0 then
+                  -- 'Node_Tag' is the current value of 'T' and the map is not
+                  -- empty.
+
+                  -- Extract the first entry of the map and assign it to 'T'
+                  -- and 'S'.
                   declare
                      C_First : constant Cursor := M.First;
                   begin
                      T := Key (C_First);
                      S := Element (C_First);
                   end;
+
                elsif T = Node_Tag then
+                  -- 'Node_Tag' is the current value of 'T' but the map is
+                  -- empty.
+
+                  -- Just reset 'T'.
                   T := No_Tag;
+
                end if;
 
             end;
@@ -194,10 +229,10 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                   (
                     T /= No_Tag
                       or else
-                    M.Length = 0
+                    M.Length = 0          -- 'T = No_Tag' implies empty map.
                   )
                     and then
-                  not M.Contains (No_Tag)
+                  not M.Contains (No_Tag) -- No 'No_Tag' entry in the map.
                 );
 
       end Invariant;
@@ -206,12 +241,12 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       function Count return Test_Node_Count
         is (
-             Test_Node_Count (M.Length)
+             Test_Node_Count (M.Length) -- Number of entries in the map...
                +
              (if T = No_Tag or else M.Contains (T) then
                  0
-              else
-                 1)
+              else                      -- ... plus 1 for 'T' value (unless 'T'
+                 1)                     -- is 'No_Tag' or already in the map).
            );
 
       -----------------------------------------------------
@@ -220,39 +255,53 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
          use Case_Status_Hashed_Maps;
 
-         N : constant Test_Node_Count := Count;
-         Ret : Case_Tag_Status_Array (1 .. N);
+         N   : constant Test_Node_Count := Count;
+         K   :          Test_Node_Count := 0;
 
-         procedure Populate_Current is
-         begin
-            if N /= 0 then
-               Ret(1).T := T;
-               Ret(1).S := S;
-            end if;
-         end Populate_Current;
+         -- Intializing the 'T' components of the elements of the returned
+         -- array to 'No_Tag' ensures that the post-condition is violated if
+         -- the function fails to assign any of the array components.
+         Ret : Case_Tag_Status_Array (1 .. N)
+           := (others => (T => No_Tag,
+                          S => Pre_Test_Routine_Case_Status (1)));
 
-         procedure Populate_Others is
-            K : Test_Node_Index := 1;
-            procedure Process (C : Cursor) is
-               Key_C : constant Tag := Key (C);
-            begin
-               if Key_C /= T then
-                  K := K + 1;
-                  Ret(K).T := Key_C;
-                  Ret(K).S := Element (C);
-               end if;
-            end Process;
+         procedure Assign (T : Tag; S : Case_Status) is
          begin
-            M.Iterate (Process'Access);
-            Ada.Assertions.Assert ((N = 0 and then K = 1)
-                                     or else
-                                   (N > 0 and then K = N));
-         end Populate_Others;
+            K := K + 1;
+            Ret(K).T := T;
+            Ret(K).S := S;
+         end Assign;
 
       begin
 
-         Populate_Current;
-         Populate_Others;
+         if N /= 0 then
+
+            -- Assign 'T' and 'S' values to the first element of the returned
+            -- array.
+            Assign (T, S);
+
+            -- Assign map elements to other elements of the array (making sure
+            -- not to assign T (already processed above)).
+            declare
+               procedure Process (C : Cursor) is
+                  Key_C : constant Tag := Key (C);
+               begin
+                  if Key_C /= T then
+                     Assign (Key_C, Element (C));
+                  end if;
+               end Process;
+            begin
+               M.Iterate (Process'Access);
+            end;
+
+         else
+            -- No data available.
+
+            -- Nothing more to do.
+            null;
+
+         end if;
+
          return Ret;
 
       end To_Array;
@@ -292,9 +341,10 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
          if Err and then not Ret then
             Ret     := True;
             Outcome := Failed;
-            Test_Reporter.Report_Test_Routines_Cancellation (Obj'Tag,
-                                                             K + 1,
-                                                             N);
+            Test_Reporter.Report_Test_Routines_Cancellation
+              (Node_Tag            => Obj'Tag,
+               First_Routine_Index => K + 1,
+               Last_Routine_Index  => N);
          end if;
 
          return Ret;
@@ -312,8 +362,9 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
          K   := K + 1;
          Err := True;
 
-         Case_Status_Map_Handler.Reset_Routine_State (T, K);
-         Test_Reporter.Report_Test_Routine_Start (T, K);
+         Case_Status_Map_Handler.Reset_Case_Status (T, K);
+         Test_Reporter.Report_Test_Routine_Start (Node_Tag      => T,
+                                                  Routine_Index => K);
 
          begin
 
@@ -341,7 +392,9 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                      when Passed =>
                         null;
                   end case;
-                  Test_Reporter.Report_Passed_Test_Routine (T, K);
+                  Test_Reporter.Report_Passed_Test_Routine
+                    (Node_Tag      => T,
+                     Routine_Index => K);
                exception
                   when Run_E : Assertion_Error =>
                      Case_Status_Map_Handler.Get_Assert_Outcome
@@ -352,29 +405,39 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                         when Failed => -- Exception very likely originates in
                                        -- a failed test assertion and not in
                                        -- an "unexpected error".
-                           Test_Reporter.Report_Failed_Test_Routine (T, K);
+                           Test_Reporter.Report_Failed_Test_Routine
+                             (Node_Tag      => T,
+                              Routine_Index => K);
                         when Passed => -- Exception may originates in a failed
                                        -- contract.
                            Test_Reporter.Report_Unexpected_Routine_Exception
-                             (T, K, Run_E);
+                             (Node_Tag      => T,
+                              Routine_Index => K,
+                              Error         => Run_E);
                      end case;
                   when Run_E : others => -- Exception originates in an
                                          -- unexpected error.
                      Test_Reporter.Report_Unexpected_Routine_Exception
-                       (T, K, Run_E);
+                       (Node_Tag      => T,
+                        Routine_Index => K,
+                        Error         => Run_E);
                end;
 
             exception
                when Setup_E : others =>
                   Test_Reporter.Report_Failed_Test_Routine_Setup
-                    (T, K, Setup_E);
+                    (Node_Tag      => T,
+                     Routine_Index => K,
+                     Error         => Setup_E);
             end;
 
          exception
 
             when Access_E : others =>
                Test_Reporter.Report_Failed_Test_Routine_Access
-                 (T, K, Access_E);
+                 (Node_Tag      => T,
+                  Routine_Index => K,
+                  Error         => Access_E);
 
          end;
 
@@ -402,7 +465,10 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       if Cond then
 
          Test_Reporter.Report_Passed_Test_Assert
-           (Node_Tag, K, not Sat (Count), Val (Count));
+           (Node_Tag         => Node_Tag,
+            Routine_Index    => K,
+            Assert_Num_Avail => not Sat (Count),
+            Assert_Num       => Val (Count));
 
       else
 
@@ -413,7 +479,11 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
          exception
             when E : others =>
                Test_Reporter.Report_Failed_Test_Assert
-                 (Node_Tag, K, not Sat (Count), Val (Count), E);
+                 (Node_Tag         => Node_Tag,
+                  Routine_Index    => K,
+                  Assert_Num_Avail => not Sat (Count),
+                  Assert_Num       => Val (Count),
+                  Error            => E);
                raise;
          end;
 
@@ -426,8 +496,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
    overriding
    procedure Run (Obj     : in out Test_Case;
                   Outcome :    out Test_Outcome;
-                  Kind    :        Run_Kind      := Assert_Cond_And_Run_Test)
-     is
+                  Kind    :        Run_Kind     := Assert_Cond_And_Run_Test) is
 
       -----------------------------------------------------
 
@@ -446,6 +515,8 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
 begin
 
+   -- Do a check of the invariant of 'Case_Status_Map_Handler' before any
+   -- operation.
    Ada.Assertions.Assert (Case_Status_Map_Handler.Invariant);
 
 end Apsepp.Test_Node_Class.Abstract_Test_Case;

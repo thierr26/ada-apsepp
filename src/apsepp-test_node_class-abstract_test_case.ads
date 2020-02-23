@@ -80,7 +80,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    procedure Run
      (Obj     : in out Test_Case;
       Outcome :    out Test_Outcome;
-      Kind    :        Run_Kind      := Assert_Cond_And_Run_Test);
+      Kind    :        Run_Kind     := Assert_Cond_And_Run_Test);
 
    procedure Run_Body
      is new Generic_Case_And_Suite_Run_Body (Work => Run_Test_Routines);
@@ -93,6 +93,14 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    subtype Safe_Test_Assert_Count
      is Safe_Test_Assert_Count_Operations.Safe_Integer;
+
+   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "");
+
+private
+
+   use Apsepp.Tags;
+
+   type Test_Case is abstract limited new Test_Node_Interfa with null record;
 
    type Case_Status is record
 
@@ -112,14 +120,6 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    end record;
 
-   procedure Assert (Node_Tag : Tag; Cond : Boolean; Message : String := "");
-
-private
-
-   use Apsepp.Tags;
-
-   type Test_Case is abstract limited new Test_Node_Interfa with null record;
-
    type Case_Tag_Status_Array
      is array (Test_Node_Index range <>) of Case_Tag_Status;
 
@@ -131,8 +131,8 @@ private
 
    protected Case_Status_Map_Handler is
 
-      procedure Reset_Routine_State (Node_Tag      : Tag;
-                                     Routine_Index : Test_Routine_Index)
+      procedure Reset_Case_Status (Node_Tag      : Tag;
+                                   Routine_Index : Test_Routine_Index)
         with Pre  => Node_Tag /= No_Tag,
              Post => Invariant;
 
@@ -166,12 +166,19 @@ private
 
       function Count return Test_Node_Count;
 
+      -- TODOC: For testing purposes. <2020-02-23>
       function To_Array return Case_Tag_Status_Array
         with Post => To_Array'Result'First = 1
                        and then
                      To_Array'Result'Length = Count
                        and then
-                     (for all R of To_Array'Result => R.T /= No_Tag);
+                     (for all E of To_Array'Result => E.T /= No_Tag)
+                       and then
+                     (for all K_1 in To_Array'Result'Range =>
+                       (for all K_2 in To_Array'Result'Range =>
+                         K_1 = K_2 or else To_Array'Result(K_1).T
+                                             /=
+                                           To_Array'Result(K_2).T));
 
    private
 

@@ -3,8 +3,7 @@
 
 package Apsepp.Test_Node_Class is
 
-   -- Evaluate the pre-conditions and class-wide pre-conditions in this
-   -- package.
+   -- Force run-time class-wide pre-condition check in this package.
    pragma Assertion_Policy (Pre'Class => Check);
 
    type Test_Outcome is (Failed, Passed);

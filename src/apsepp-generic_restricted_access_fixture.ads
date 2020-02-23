@@ -12,7 +12,7 @@ generic
 
 package Apsepp.Generic_Restricted_Access_Fixture is
 
-   -- Force pre-conditions evaluation in this package.
+   -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
 
    type Fixture_Lock
