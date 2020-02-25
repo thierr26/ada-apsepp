@@ -18,24 +18,15 @@ package Apsepp.Test_Node_Class is
    -- <2019-03-02>
    -- TODOC: A runner must make sure that only one test node with a given tag
    -- is running at a given time. <2019-03-02>
-   type Test_Node_Interfa is limited interface;
-
-   -- PORT: Type_Invariant'Class aspect causes compiler error.
-   -- 8.3.0 (x86_64-linux-gnu) GCC error:
-   -- in gnat_to_gnu_entity, at ada/gcc-interface/decl.c:425
-   -- <2019-06-10>
-   --   with Type_Invariant'Class
-   --          => (for all K_1 in 1 .. Test_Node_Interfa.Child_Count
-   --               => (for all K_2 in 1 .. Test_Node_Interfa.Child_Count
-   --                    => K_2 = K_1 or else Test_Node_Interfa.Child (K_1)'Tag
-   --                                           /=
-   --                                         Test_Node_Interfa.Child (K_2)'Tag))
-   --               and then
-   --             (
-   --               Test_Node_Interfa.Has_Early_Test
-   --                 or else
-   --               Test_Node_Interfa.Early_Run_Done
-   --             );
+   type Test_Node_Interfa is limited interface
+     with Type_Invariant'Class
+            => Has_No_Children_W_Same_Tags (Test_Node_Interfa)
+                 and then
+               (
+                 Test_Node_Interfa.Has_Early_Test
+                   or else
+                 Test_Node_Interfa.Early_Run_Done
+               );
 
    type Test_Node_Array is array (Test_Node_Index range <>)
      of not null access Test_Node_Interfa'Class;
@@ -77,5 +68,8 @@ package Apsepp.Test_Node_Class is
                                True,
                             when Assert_Cond_And_Run_Test =>
                                Obj.Has_Early_Test xor Obj.Early_Run_Done);
+
+   function Has_No_Children_W_Same_Tags
+     (Obj : Test_Node_Interfa'Class) return Boolean;
 
 end Apsepp.Test_Node_Class;

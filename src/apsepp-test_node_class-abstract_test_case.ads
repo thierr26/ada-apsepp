@@ -11,13 +11,16 @@ private with Ada.Containers.Hashed_Maps,
 
 package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
-   type Test_Case is abstract limited new Test_Node_Interfa with private;
+   type Test_Case is abstract limited new Test_Node_Interfa with private
+     with Type_Invariant'Class => Test_Case.Routine_Array'Length > 0
+                                    and then
+                                  Test_Case.Child_Count = 0;
 
    overriding
    function Child_Count (Obj : Test_Case) return Test_Node_Count
      is (0);
 
-   -- TODOC: Always fails because a tets case has no child.
+   -- TODOC: Always fails because a test case has no child.
    overriding
    function Child (Obj : Test_Case;
                    K   : Test_Node_Index)
@@ -53,8 +56,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    -- <2020-02-18>
    not overriding
    function Routine_Array (Obj : Test_Case) return Test_Routine_Array
-     is abstract
-     with Post'Class => Routine_Array'Result'Length > 0;
+     is abstract;
 
    not overriding
    function Routine_Count (Obj : Test_Case) return Test_Routine_Index
