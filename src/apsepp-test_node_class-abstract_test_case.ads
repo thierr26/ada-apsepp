@@ -14,6 +14,8 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    type Test_Case is abstract limited new Test_Node_Interfa with private
      with Type_Invariant'Class => Test_Case.Routine_Array'Length > 0
                                     and then
+                                  Test_Case.Routine_Array_Equiv_To_Routine
+                                    and then
                                   Test_Case.Child_Count = 0;
 
    overriding
@@ -63,9 +65,9 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
      is (Test_Case'Class (Obj).Routine_Array'Length);
 
    not overriding
-   function Routine (Obj : Test_Case;
-                     K   : Test_Routine_Index) return not null access procedure
-     is (Test_Case'Class (Obj).Routine_Array (K));
+   function Routine
+     (Obj : Test_Case;
+      K   : Test_Routine_Index) return not null access procedure;
 
    not overriding
    procedure Setup_Routine (Obj : Test_Case) is null;
@@ -81,6 +83,9 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
      (Obj     : in out Test_Case;
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind     := Assert_Cond_And_Run_Test);
+
+   not overriding
+   function Routine_Array_Equiv_To_Routine (Obj : Test_Case) return Boolean;
 
    type Test_Assert_Count is new Natural;
 

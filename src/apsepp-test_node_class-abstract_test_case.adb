@@ -2,6 +2,7 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Assertions,
+     Apsepp.Generic_Discrete_Operations,
      Apsepp.Test_Node_Class.Private_Test_Reporter;
 
 package body Apsepp.Test_Node_Class.Abstract_Test_Case is
@@ -299,48 +300,21 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       use Ada.Assertions,
           Private_Test_Reporter;
 
-      T : constant Tag := Obj'Tag;
+      T : constant Tag                := Obj'Tag;
+      N : constant Test_Routine_Count := Test_Case'Class (Obj).Routine_Count;
 
-      K   : Test_Routine_Count := 0;
       R   : access procedure   := Null_Test_Routine'Access;
       Err : Boolean            := False; -- "Unexpected error" flag.
-
-      -----------------------------------------------------
-
-      function Done return Boolean is
-
-         N   : constant Test_Routine_Count
-           := Test_Case'Class (Obj).Routine_Count;
-
-         Ret : Boolean := K >= N;
-
-      begin
-
-         if Err and then not Ret then
-            Ret     := True;
-            Outcome := Failed;
-            Test_Reporter.Report_Test_Routines_Cancellation
-              (Node_Tag            => Obj'Tag,
-               First_Routine_Index => K + 1,
-               Last_Routine_Index  => N);
-         end if;
-
-         return Ret;
-
-      end Done;
-
-      -----------------------------------------------------
 
    begin
 
       Outcome := Passed;
 
-      -- Loop over test case test routines. 'K' is the test routine index. Loop
-      -- is exited prematurely if 'Err' is true (that is after a test routine
-      -- run has failed with an "unexpected error").
-      while not Done loop
+      -- Loop over test case test routines.Loop is exited prematurely if 'Err'
+      -- is true (that is after a test routine run has failed with an
+      -- "unexpected error"), see the exit statement at the bottom of the loop.
+      for K in 1 .. N loop
 
-         K   := K + 1;
          Err := True;
 
          Case_Status_Map_Handler.Reset_Case_Status (T, K);
@@ -422,6 +396,19 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                   Error         => Access_E);
 
          end;
+
+         if Err then
+
+            Outcome := Failed;
+
+            Test_Reporter.Report_Test_Routines_Cancellation
+              (Node_Tag            => Obj'Tag,
+               First_Routine_Index => K + 1,
+               Last_Routine_Index  => N);
+
+            exit;
+
+         end if;
 
       end loop;
 
@@ -511,6 +498,67 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       Run_Body (Obj, Outcome, Kind, Cond'Access);
 
    end Run;
+
+   ----------------------------------------------------------------------------
+
+   package Test_Routine_Count_Operations
+     is new Generic_Discrete_Operations (Discrete_Type => Test_Routine_Index,
+                                         Diff_Type     => Test_Routine_Count);
+
+   use Test_Routine_Count_Operations;
+
+   ----------------------------------------------------------------------------
+
+   not overriding
+   function Routine
+     (Obj : Test_Case;
+      K   : Test_Routine_Index) return not null access procedure is
+
+      Routine_Array_First : constant Test_Routine_Index
+        := Test_Case'Class (Obj).Routine_Array'First;
+
+      function Routine_Array return Test_Routine_Array
+        renames Test_Case'Class (Obj).Routine_Array;
+
+   begin
+
+      return Routine_Array (Val (K, Routine_Array_First));
+
+   end Routine;
+
+   ----------------------------------------------------------------------------
+
+   not overriding
+   function Routine_Array_Equiv_To_Routine (Obj : Test_Case) return Boolean is
+
+      Routine_Array_Length : constant Test_Routine_Count
+        := Test_Case'Class (Obj).Routine_Array'Length;
+
+      Routine_Array_First : constant Test_Routine_Index
+        := Test_Case'Class (Obj).Routine_Array'First;
+
+      function Routine_Array return Test_Routine_Array
+        renames Test_Case'Class (Obj).Routine_Array;
+
+      Routine_Count : constant Test_Routine_Count
+        := Test_Case'Class (Obj).Routine_Count;
+
+      function Routine
+        (K : Test_Routine_Index) return not null access procedure
+        renames Test_Case'Class (Obj).Routine;
+
+   begin
+
+      return (
+               Routine_Count = Routine_Array_Length
+                 and then
+               (
+                 for all K in Test_Case'Class (Obj).Routine_Array'Range =>
+                   Routine (Rank (K, Routine_Array_First)) = Routine_Array(K)
+               )
+             );
+
+   end Routine_Array_Equiv_To_Routine;
 
    ----------------------------------------------------------------------------
 
