@@ -19,17 +19,14 @@ package Apsepp.Test_Node_Class is
    -- TODOC: A runner must make sure that only one test node with a given tag
    -- is running at a given time. <2019-03-02>
    type Test_Node_Interfa is limited interface
-     with Type_Invariant'Class
-            => Has_No_Children_W_Same_Tags (Test_Node_Interfa)
-                 and then
-               (
-                 Test_Node_Interfa.Has_Early_Test
-                   or else
-                 Test_Node_Interfa.Early_Run_Done
-               );
-
-   type Test_Node_Array is array (Test_Node_Index range <>)
-     of not null access Test_Node_Interfa'Class;
+     with Type_Invariant'Class =>
+            Has_No_Children_W_Same_Tags (Test_Node_Interfa)
+              and then
+            (
+              Test_Node_Interfa.Has_Early_Test
+                or else
+              Test_Node_Interfa.Early_Run_Done
+            );
 
    not overriding
    function Child_Count (Obj : Test_Node_Interfa)
@@ -63,7 +60,8 @@ package Apsepp.Test_Node_Class is
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind          := Assert_Cond_And_Run_Test)
      is abstract
-     with Post'Class => (case Kind is
+     with Pre'Class  => Obj.Early_Run_Done,
+          Post'Class => (case Kind is
                             when Check_Cond =>
                                True,
                             when Assert_Cond_And_Run_Test =>

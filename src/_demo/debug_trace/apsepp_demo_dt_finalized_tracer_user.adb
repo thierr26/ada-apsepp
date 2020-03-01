@@ -42,8 +42,8 @@ package body Apsepp_Demo_DT_Finalized_Tracer_User is
       -- - 'N' (stands for "none"): None of the entry and exit traces is
       -- output.
       package C_D_T is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-        (Entity_Name
-           => "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_1");
+        (Entity_Name =>
+           "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_1");
 
    begin
       -- An "Entry" trace is displayed by the controlled debug tracer
@@ -64,8 +64,8 @@ package body Apsepp_Demo_DT_Finalized_Tracer_User is
    procedure Finalized_Tracer_User_2 is
 
       package C_D_T is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-        (Entity_Name
-           => "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_2");
+        (Entity_Name =>
+           "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_2");
 
       pragma Unreferenced (C_D_T);
 

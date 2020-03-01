@@ -67,7 +67,7 @@ begin
          end if;
 
          begin
-            Work (Obj, Outcome, Assert_Cond_And_Run_Test);
+            Work (Obj, Outcome);
          exception
             when Run_E : others =>
                Outcome := Failed;

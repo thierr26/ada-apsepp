@@ -8,25 +8,6 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   function Child (Obj : Test_Case;
-                   K   : Test_Node_Index)
-     return not null access Test_Node_Interfa'Class is
-
-      pragma Unreferenced (Obj, K);
-
-   begin
-
-      pragma Warnings (Off, "null value not allowed here");
-
-      return null; -- A test case has no child. The function has to fail.
-
-      pragma Warnings (On, "null value not allowed here");
-
-   end Child;
-
-   ----------------------------------------------------------------------------
-
    use all type Safe_Test_Assert_Count_Operations.Safe_Integer;
 
    ----------------------------------------------------------------------------
@@ -313,13 +294,10 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
    ----------------------------------------------------------------------------
 
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
-                                Outcome : out Test_Outcome;
-                                Kind    :     Run_Kind) is
+                                Outcome : out Test_Outcome) is
 
       use Ada.Assertions,
           Private_Test_Reporter;
-
-      pragma Unreferenced (Kind);
 
       T : constant Tag := Obj'Tag;
 
@@ -357,6 +335,9 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       Outcome := Passed;
 
+      -- Loop over test case test routines. 'K' is the test routine index. Loop
+      -- is exited prematurely if 'Err' is true (that is after a test routine
+      -- run has failed with an "unexpected error").
       while not Done loop
 
          K   := K + 1;
@@ -416,11 +397,12 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                               Error         => Run_E);
                      end case;
                   when Run_E : others => -- Exception originates in an
-                                         -- unexpected error.
+                                         -- "unexpected error".
                      Test_Reporter.Report_Unexpected_Routine_Exception
                        (Node_Tag      => T,
                         Routine_Index => K,
                         Error         => Run_E);
+                     -- 'Err' is true here.
                end;
 
             exception
@@ -490,6 +472,25 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       end if;
 
    end Assert;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Child (Obj : Test_Case;
+                   K   : Test_Node_Index)
+     return not null access Test_Node_Interfa'Class is
+
+      pragma Unreferenced (Obj, K);
+
+   begin
+
+      pragma Warnings (Off, "null value not allowed here");
+
+      return null; -- A test case has no child. The function has to fail.
+
+      pragma Warnings (On, "null value not allowed here");
+
+   end Child;
 
    ----------------------------------------------------------------------------
 

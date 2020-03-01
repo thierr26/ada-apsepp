@@ -70,22 +70,17 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    not overriding
    procedure Setup_Routine (Obj : Test_Case) is null;
 
-   -- TODOC: Parameter 'Kind' useless but needed to make the procedure suitable
-   -- as an actual for formal parameter 'Work' of
-   -- 'Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body'. <2020-02-17>
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
-                                Outcome : out Test_Outcome;
-                                Kind    :     Run_Kind)
-     with Pre => Kind = Assert_Cond_And_Run_Test;
+                                Outcome : out Test_Outcome);
+
+   procedure Run_Body
+     is new Generic_Case_And_Suite_Run_Body (Work => Run_Test_Routines);
 
    overriding
    procedure Run
      (Obj     : in out Test_Case;
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind     := Assert_Cond_And_Run_Test);
-
-   procedure Run_Body
-     is new Generic_Case_And_Suite_Run_Body (Work => Run_Test_Routines);
 
    type Test_Assert_Count is new Natural;
 
