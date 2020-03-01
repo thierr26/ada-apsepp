@@ -4,8 +4,6 @@
 with Apsepp.Test_Node_Class.Abstract_Children_Early_Test_Handler;
   use Apsepp.Test_Node_Class.Abstract_Children_Early_Test_Handler;
 
-with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body;
-
 package Apsepp.Test_Node_Class.Abstract_Test_Suite is
 
    type Test_Node_Array is array (Test_Node_Index range <>)
@@ -37,12 +35,6 @@ package Apsepp.Test_Node_Class.Abstract_Test_Suite is
    overriding
    function No_Subtasking (Obj : Test_Suite) return Boolean
      is (False);
-
-   procedure Run_Children (Obj     :     Test_Node_Interfa'Class;
-                           Outcome : out Test_Outcome);
-
-   procedure Run_Body
-     is new Generic_Case_And_Suite_Run_Body (Work => Run_Children);
 
    overriding
    procedure Run (Obj     : in out Test_Suite;

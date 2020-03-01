@@ -2,6 +2,7 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Apsepp.Test_Node_Class.Private_Test_Reporter,
+     Apsepp.Test_Node_Class.Private_Suite_Run_Body,
      Apsepp.Test_Node_Class.Abstract_Test_Suite,
      Apsepp.Generic_Shared_Instance.Finalized_S_R;
 
@@ -53,6 +54,10 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
       -----------------------------------------------------
 
+      -- Make Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body.Run_Body
+      -- visible.
+      use Apsepp.Test_Node_Class.Private_Suite_Run_Body;
+
    begin
 
       case Kind is
@@ -62,11 +67,10 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
             -- so that we know it's been done when doing the subsequent "real"
             -- run.
 
-            Apsepp.Test_Node_Class.Abstract_Test_Suite.Run_Body
-              (Obj,
-               Outcome,
-               Kind,        -- 'Kind' is 'Check_Cond'.
-               Cond'Access);
+            Run_Body (Obj,
+                      Outcome,
+                      Kind,        -- 'Kind' is 'Check_Cond'.
+                      Cond'Access);
 
             Obj.Check_Cond_Run_Done := True;
 
@@ -77,19 +81,17 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
             if not Obj.Check_Cond_Run_Done then
 
-               Apsepp.Test_Node_Class.Abstract_Test_Suite.Run_Body
-                 (Obj,
-                  Outcome,
-                  Check_Cond,
-                  Cond'Access);
+               Run_Body (Obj,
+                         Outcome,
+                         Check_Cond,
+                         Cond'Access);
 
             end if;
 
-            Apsepp.Test_Node_Class.Abstract_Test_Suite.Run_Body
-              (Obj,
-               Outcome,
-               Kind,        -- 'Kind' is 'Assert_Cond_And_Run_Test'.
-               Cond'Access);
+            Run_Body (Obj,
+                      Outcome,
+                      Kind,        -- 'Kind' is 'Assert_Cond_And_Run_Test'.
+                      Cond'Access);
 
             Obj.Check_Cond_Run_Done := False;
 
