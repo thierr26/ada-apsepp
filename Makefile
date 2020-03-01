@@ -232,7 +232,9 @@ clean_all: clean
 	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprclean -q -c -r -P{} \;
 
 compile_all: clean_all
-	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprbuild -p -U -P{} \;
+	@find . -maxdepth 1 -type f -name "*.gpr" \
+	  -not -path "./apsepp_build_setup.gpr" \
+	  -exec gprbuild -p -U -P{} \; | grep -v "^Compile"
 
 test: build .run_test_program
 
