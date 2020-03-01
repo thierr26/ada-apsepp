@@ -26,8 +26,20 @@ package body Apsepp.Generic_Shared_Instance is
       begin
 
          Instance_Access := I_A;
+         Set_Done := True;
 
       end Set;
+
+      -----------------------------------------------------
+
+      procedure Reset is
+
+      begin
+
+         Set_Done := False;
+         Instance_Access := null;
+
+      end Reset;
 
       -----------------------------------------------------
 
@@ -45,7 +57,7 @@ package body Apsepp.Generic_Shared_Instance is
         (I_A : out Instance_Ancestor_Access)
         when Instance_Lock_Locked_State /= Locked
                or else
-             Instance_Access /= null is
+             Set_Done is
 
       begin
 
@@ -118,7 +130,12 @@ package body Apsepp.Generic_Shared_Instance is
 
    begin
 
-      Set (L_H, null);
+      if L_H.Holds then
+         -- The lock holder actually holds the lock.
+
+         Protected_Instance_Access.Reset;
+
+      end if;
 
    end Reset;
 

@@ -56,6 +56,8 @@ private
 
       procedure Set (I_A : Instance_Ancestor_Access);
 
+      procedure Reset;
+
       procedure Get (I_A : out Instance_Ancestor_Access);
 
       entry Get_W_Barrier (I_A : out Instance_Ancestor_Access);
@@ -65,6 +67,8 @@ private
       Instance_Access : Instance_Ancestor_Access;
 
       Instance_Lock_Locked_State : Locked_State := Unknown;
+
+      Set_Done : Boolean := False;
 
    end Protected_Instance_Access;
 

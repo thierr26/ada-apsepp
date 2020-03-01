@@ -93,9 +93,9 @@ package body Apsepp_Demo_OSASI_Instance_Controllers is
       --
       -- 'Instance_Access' is similar to 'Unguarded_Instance_Access', but it
       -- has a barrier. The barrier is closed if the shared instance is locked
-      -- and the "raw" access to the shared instance is null. This prevents a
-      -- client accessing the instance after locking but before instance access
-      -- assignment from getting a null access.
+      -- and the "raw" access to the shared instance is still not actually set.
+      -- This prevents a client accessing the instance after locking but before
+      -- instance access assignment from getting a null access.
 
       Ada.Text_IO.Put_Line (B
                             & "Output sink instance tag: "

@@ -5,7 +5,7 @@ private with Ada.Finalization;
 
 generic
 
-   Instance_Access : not null access Instance_Ancestor_Type'Class;
+   Instance_Access : access Instance_Ancestor_Type'Class;
 
    type Lock_Holder_Type (<>)
      is limited new Controlled_Lock_Holder with private;
