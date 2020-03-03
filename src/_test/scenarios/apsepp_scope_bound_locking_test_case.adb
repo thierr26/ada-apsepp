@@ -11,7 +11,7 @@ package body Apsepp_Scope_Bound_Locking_Test_Case is
 
    begin
 
-      -- TODO: Implement real test routine for Apsepp.Scope_Bound_Locking.
+      -- TODO: Implement real test routine for 'Apsepp.Scope_Bound_Locking'.
       -- <2020-02-20>
       Assert (SBL_T_F.I_A.Lock_Count = 0);
 

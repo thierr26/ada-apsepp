@@ -16,7 +16,9 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
                                     and then
                                   Test_Case.Routine_Array_Equiv_To_Routine
                                     and then
-                                  Test_Case.Child_Count = 0;
+                                  Test_Case.Child_Count = 0
+                                    and then
+                                  not Test_Case.Has_Early_Test;
 
    overriding
    function Child_Count (Obj : Test_Case) return Test_Node_Count

@@ -12,8 +12,7 @@ private with Apsepp.Scope_Bound_Locking.Generic_Lock_Holder_Array,
 package Apsepp_Scope_Bound_Locking_Test_Case is
 
    type Apsepp_Scope_Bound_Locking_T_C
-     is limited new Test_Case
-     with null record;
+     is limited new Test_Case with null record;
 
    overriding
    function Routine_Array

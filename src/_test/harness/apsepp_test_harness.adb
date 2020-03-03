@@ -15,7 +15,8 @@ package body Apsepp_Test_Harness is
 
       use all type Apsepp.Test_Node_Class.Test_Outcome;
 
-      Test_Runner : Test_Runner_Sequential := Create (Test_Suite'Access);
+      Test_Runner : Test_Runner_Sequential := Create (Test_Suite'Access,
+                                                      Test_Reporter'Access);
 
       Outcome : Apsepp.Test_Node_Class.Test_Outcome;
 
