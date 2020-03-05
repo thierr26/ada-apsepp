@@ -6,6 +6,9 @@ with Ada.Unchecked_Deallocation,
      Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body,
      Apsepp.Test_Node_Class.Private_Test_Reporter;
 
+with Apsepp.Test_Node_Class.Abstract_Test_Case;
+  use Apsepp.Test_Node_Class.Abstract_Test_Case;
+
 package body Apsepp.Test_Node_Class.Abstract_Early_Test_Case is
 
    ----------------------------------------------------------------------------
@@ -30,17 +33,18 @@ package body Apsepp.Test_Node_Class.Abstract_Early_Test_Case is
    ----------------------------------------------------------------------------
 
    overriding
-   function Early_Run_Done (Obj : Early_Test_Case) return Boolean
-     is (Obj.Early_Run_Done_Flag);
-
-   ----------------------------------------------------------------------------
-
-   overriding
    procedure Early_Run (Obj : in out Early_Test_Case) is
 
    begin
 
-      Obj.Early_Run_Body;
+      Children_Early_Test_Handler (Obj).Early_Run; -- Inherited procedure
+                                                   -- call.
+
+      Early_Test_Case'Class (Obj).Early_Routine.all;
+
+   exception
+
+      when E : others => Obj.Error := Save_Occurrence (E);
 
    end Early_Run;
 
@@ -118,7 +122,7 @@ package body Apsepp.Test_Node_Class.Abstract_Early_Test_Case is
       -----------------------------------------------------
 
       function Cond return Boolean
-        is (Obj.Early_Run_Done_Flag);
+        is (Early_Test_Case'Class (Obj).Early_Run_Done);
 
       -----------------------------------------------------
 
@@ -128,26 +132,17 @@ package body Apsepp.Test_Node_Class.Abstract_Early_Test_Case is
 
       case Kind is
          when Check_Cond               => null;
-         when Assert_Cond_And_Run_Test => Obj.Early_Run_Done_Flag := False;
-                                          Free_Exception (Obj.Error);
+         when Assert_Cond_And_Run_Test => Free_Exception (Obj.Error);
       end case;
 
+      declare
+         Outc : Test_Outcome;
+      begin
+         Children_Early_Test_Handler (Obj).Run (Outc, Kind); -- Inherited
+                                                             -- procedure call.
+      end;
+
    end Run;
-
-   ----------------------------------------------------------------------------
-
-   procedure Early_Run_Body (Obj : in out Early_Test_Case'Class) is
-
-   begin
-
-      Obj.Early_Run_Done_Flag := True;
-      Obj.Early_Routine.all;
-
-   exception
-
-      when E : others => Obj.Error := Save_Occurrence (E);
-
-   end Early_Run_Body;
 
    ----------------------------------------------------------------------------
 

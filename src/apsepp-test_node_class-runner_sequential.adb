@@ -40,11 +40,18 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
       function Cond return Boolean is
 
-         Outcome : Test_Outcome;
+         Outcome : Test_Outcome := Passed;
 
       begin
 
-         Obj.Child_Access.Run (Outcome, Check_Cond);
+         case Kind is
+            when Check_Cond               =>
+               -- Check run condition for the child test node.
+               Obj.Child_Access.Run (Outcome, Kind);
+            when Assert_Cond_And_Run_Test =>
+               -- Don't re-check run condition for the child test node.
+               null;
+         end case;
 
          return (case Outcome is
                     when Failed => False,
@@ -54,7 +61,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
       -----------------------------------------------------
 
-      -- Make Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body.Run_Body
+      -- Make Apsepp.Test_Node_Class.Private_Suite_Run_Body.Run_Body
       -- visible.
       use Apsepp.Test_Node_Class.Private_Suite_Run_Body;
 
@@ -81,10 +88,9 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
             if not Obj.Check_Cond_Run_Done then
 
-               Run_Body (Obj,
-                         Outcome,
-                         Check_Cond,
-                         Cond'Access);
+               Test_Runner_Sequential (Obj).Run
+                 (Outcome,
+                  Check_Cond); -- Recursive call.
 
             end if;
 

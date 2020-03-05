@@ -30,10 +30,20 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Suite is
 
       begin
 
-         return (
-                  for all Child_Node of Test_Suite'Class (Obj).Child_Array =>
-                    Cond_OK (Child_Node)
-                );
+         return
+           (
+             case Kind is
+                when Check_Cond               =>
+                   -- Check run condition for every child test node.
+                   (for all Child_Node of Test_Suite'Class (Obj).Child_Array =>
+                     Cond_OK (Child_Node)),
+                when Assert_Cond_And_Run_Test =>
+                   -- Don't check run condition for child nodes. It's up to the
+                   -- runner test node to do a run condition check if needed
+                   -- with a call to this 'Run' primitive with parameter 'Kind'
+                   -- set to 'Check_Cond'.
+                   True
+           );
 
       end Cond;
 
