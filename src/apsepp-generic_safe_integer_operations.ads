@@ -19,7 +19,7 @@ package Apsepp.Generic_Safe_Integer_Operations is
      with Dynamic_Predicate => Val (Natural_Safe_Integer) >= 0;
 
    function Create (Value     : Integer_Type;
-                    Saturated : Boolean       := False) return Safe_Integer
+                    Saturated : Boolean      := False) return Safe_Integer
      with Pre  => not Saturated or else (Value = Integer_Type'First
                                            or else
                                          Value = Integer_Type'Last),

@@ -247,29 +247,30 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
            := (others => (T => No_Tag,
                           S => Pre_Test_Routine_Case_Status (1)));
 
-         procedure Assign (T : Tag; S : Case_Status) is
+         procedure Push_To_Array (Status : Case_Tag_Status) is
          begin
-            K := K + 1;
-            Ret(K).T := T;
-            Ret(K).S := S;
-         end Assign;
+            K      := K + 1;
+            Ret(K) := Status;
+         end Push_To_Array;
 
       begin
 
          if N /= 0 then
 
-            -- Assign 'T' and 'S' values to the first element of the returned
+            -- Copy 'T' and 'S' values to the first element of the returned
             -- array.
-            Assign (T, S);
+            Push_To_Array ((T => T,
+                            S => S));
 
-            -- Assign map elements to other elements of the array (making sure
-            -- not to assign T (already processed above)).
+            -- Copy map elements to other elements of the array (making sure to
+            -- skip 'T' (already processed above)).
             declare
                procedure Process (C : Cursor) is
                   Key_C : constant Tag := Key (C);
                begin
                   if Key_C /= T then
-                     Assign (Key_C, Element (C));
+                     Push_To_Array ((T => Key_C,
+                                     S => Element (C)));
                   end if;
                end Process;
             begin
@@ -339,7 +340,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                   case Assert_Outcome is
                      when Failed =>
                         raise Assertion_Error; -- Causes a jump to
-                                               -- Assertion_Error handler
+                                               -- 'Assertion_Error handler'
                                                -- below. Happens when a test
                                                -- assertion has failed but has
                                                -- been handled in the test

@@ -6,7 +6,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
    ----------------------------------------------------------------------------
 
    function Create (Value     : Integer_Type;
-                    Saturated : Boolean       := False) return Safe_Integer
+                    Saturated : Boolean      := False) return Safe_Integer
      is (V => Value,
          S => Saturated);
 

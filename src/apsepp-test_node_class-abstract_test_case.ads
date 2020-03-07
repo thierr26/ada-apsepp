@@ -102,7 +102,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
 private
 
-   use Apsepp.Tags;
+   use Tags;
 
    type Test_Case is abstract limited new Test_Node_Interfa with null record;
 

@@ -26,7 +26,7 @@ package Apsepp.Debug_Trace_Class.Quiet is
    overriding
    function Clock_String
      (Obj           : Debug_Trace_Quiet;
-      Reset_Elapsed : Boolean          := False) return String;
+      Reset_Elapsed : Boolean           := False) return String;
 
    overriding
    procedure Trace_E (Obj         : in out Debug_Trace_Quiet;

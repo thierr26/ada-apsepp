@@ -24,7 +24,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind               := Assert_Cond_And_Run_Test) is
 
-      use Apsepp.Test_Node_Class.Private_Test_Reporter;
+      use Private_Test_Reporter;
 
       Test_Reporter_Lock_Holder : Test_Reporter_Shared_Instance.Holder;
 

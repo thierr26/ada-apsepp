@@ -91,7 +91,8 @@ package Apsepp.Test_Reporter_Class is
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag) is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Test_Routine_Start
      (Obj           : in out Test_Reporter_Interfa;
@@ -100,7 +101,8 @@ package Apsepp.Test_Reporter_Class is
                                .Test_Routine_Count)
      is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Test_Routines_Cancellation
      (Obj                                     : in out Test_Reporter_Interfa;
@@ -110,7 +112,8 @@ package Apsepp.Test_Reporter_Class is
                                                          .Test_Routine_Count)
      is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Routine_Access
      (Obj           : in out Test_Reporter_Interfa;
@@ -119,7 +122,8 @@ package Apsepp.Test_Reporter_Class is
                                .Test_Routine_Count;
       Error         :        Exception_Occurrence) is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Routine_Setup
      (Obj           : in out Test_Reporter_Interfa;
@@ -152,7 +156,8 @@ package Apsepp.Test_Reporter_Class is
                                   .Test_Assert_Count;
       Error            :        Exception_Occurrence) is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Unexpected_Routine_Exception
      (Obj           : in out Test_Reporter_Interfa;
@@ -161,7 +166,8 @@ package Apsepp.Test_Reporter_Class is
                                .Test_Routine_Count;
       Error         :        Exception_Occurrence) is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by Test_Node_Class.Abstract_Test_Case.Run_Test_Routines.
+   -- <2019-03-02>
    not overriding
    procedure Report_Passed_Test_Routine
      (Obj           : in out Test_Reporter_Interfa;
@@ -169,7 +175,8 @@ package Apsepp.Test_Reporter_Class is
       Routine_Index :        Test_Node_Class.Abstract_Test_Case
                                .Test_Routine_Count) is null;
 
-   -- TODOC: Called by Test_Node_Class.Run_Test_Routines. <2019-03-02>
+   -- TODOC: Called by 'Test_Node_Class.Abstract_Test_Case.Run_Test_Routines'.
+   -- <2019-03-02>
    not overriding
    procedure Report_Failed_Test_Routine
      (Obj           : in out Test_Reporter_Interfa;
@@ -177,21 +184,21 @@ package Apsepp.Test_Reporter_Class is
       Routine_Index :        Test_Node_Class.Abstract_Test_Case
                                .Test_Routine_Count) is null;
 
-   -- TODOC: Called by Test_Node_Class.Generic_Case_And_Suite_Run_Body.
+   -- TODOC: Called by 'Test_Node_Class.Generic_Case_And_Suite_Run_Body'.
    -- <2019-03-02>
    not overriding
    procedure Report_Passed_Node_Run
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag) is null;
 
-   -- TODOC: Called by Test_Node_Class.Generic_Case_And_Suite_Run_Body.
+   -- TODOC: Called by 'Test_Node_Class.Generic_Case_And_Suite_Run_Body'.
    -- <2019-03-02>
    not overriding
    procedure Report_Failed_Node_Run
      (Obj      : in out Test_Reporter_Interfa;
       Node_Tag :        Tag) is null;
 
-   -- TODOC: Called by Test_Node_Class.Runner_Sequential.Run. <2019-03-03>
+   -- TODOC: Called by 'Test_Node_Class.Runner_Sequential.Run'. <2019-03-03>
    not overriding
    procedure Process (Obj : in out Test_Reporter_Interfa) is null;
 

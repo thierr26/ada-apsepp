@@ -25,7 +25,7 @@ package body Apsepp.Debug_Trace_Class.Private_Protected_Clock is
                      Reset        :     Boolean) is
 
          use type Ada.Calendar.Time;
-         use Apsepp.Calendar;
+         use Calendar;
 
          Elasped_Time_Reset_Needed : constant Boolean
            := Reset                    -- True if caller requires reset.

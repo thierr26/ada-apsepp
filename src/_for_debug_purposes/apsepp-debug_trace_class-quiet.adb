@@ -13,11 +13,11 @@ package body Apsepp.Debug_Trace_Class.Quiet is
    overriding
    function Clock_String
      (Obj           : Debug_Trace_Quiet;
-      Reset_Elapsed : Boolean          := False) return String is
+      Reset_Elapsed : Boolean           := False) return String is
 
       use Ada.Strings.Fixed,
-          Apsepp.Calendar,
-          Apsepp.Debug_Trace_Class.Private_Protected_Clock;
+          Calendar,
+          Private_Protected_Clock;
 
       Date         : Ada.Calendar.Time;
       Time_Zone    : Time_Offset;
