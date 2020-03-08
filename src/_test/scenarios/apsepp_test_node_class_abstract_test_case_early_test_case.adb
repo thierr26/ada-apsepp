@@ -3,8 +3,7 @@
 
 with Ada.Assertions;
 
-package body
-  Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case_Test_Case is
+package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
    ----------------------------------------------------------------------------
 
@@ -23,10 +22,10 @@ package body
 
    overriding
    function Early_Routine
-     (Obj : Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case_T_C)
+     (Obj : Apsepp_Test_Node_Class_Abstract_Test_Case_E_T_C)
      return not null access procedure
      is (TNCATCETC_Early_Test'Access);
 
    ----------------------------------------------------------------------------
 
-end Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case_Test_Case;
+end Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case;
