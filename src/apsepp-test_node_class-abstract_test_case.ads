@@ -12,9 +12,7 @@ private with Ada.Containers.Hashed_Maps,
 package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    type Test_Case is abstract limited new Test_Node_Interfa with private
-     with Type_Invariant'Class => Test_Case.Routine_Array'Length > 0
-                                    and then
-                                  Test_Case.Routine_Array_Equiv_To_Routine
+     with Type_Invariant'Class => Test_Case.Routine_Array_Equiv_To_Routine
                                     and then
                                   Test_Case.Child_Count = 0
                                     and then
