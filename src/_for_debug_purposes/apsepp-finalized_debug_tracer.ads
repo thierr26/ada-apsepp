@@ -8,24 +8,10 @@ package Apsepp.Finalized_Debug_Tracer is
 
    type Controlled_Debug_Tracer_Kind is (A, I, F, N);
 
-   function Entry_Trace_Required
-     (X : Controlled_Debug_Tracer_Kind) return Boolean
-     is (case X is
-            when A | I => True,
-            when F | N => False);
-
-   function Exit_Trace_Required
-     (X : Controlled_Debug_Tracer_Kind) return Boolean
-     is (case X is
-            when A | F => True,
-            when I | N => False);
-
-private
-
    type Controlled_Debug_Tracer
      (Entity_Name_Access : access constant String;
       Kind               : Controlled_Debug_Tracer_Kind)
-     is limited new Limited_Controlled with null record;
+     is limited new Limited_Controlled with private;
 
    overriding
    procedure Initialize (Obj : in out Controlled_Debug_Tracer);
@@ -52,5 +38,24 @@ private
             ""
          else
             Obj.Entity_Name_Access.all);
+
+private
+
+   type Controlled_Debug_Tracer
+     (Entity_Name_Access : access constant String;
+      Kind               : Controlled_Debug_Tracer_Kind)
+     is limited new Limited_Controlled with null record;
+
+   function Entry_Trace_Required
+     (X : Controlled_Debug_Tracer_Kind) return Boolean
+     is (case X is
+            when A | I => True,
+            when F | N => False);
+
+   function Exit_Trace_Required
+     (X : Controlled_Debug_Tracer_Kind) return Boolean
+     is (case X is
+            when A | F => True,
+            when I | N => False);
 
 end Apsepp.Finalized_Debug_Tracer;
