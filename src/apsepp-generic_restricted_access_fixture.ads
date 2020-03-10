@@ -15,16 +15,25 @@ package Apsepp.Generic_Restricted_Access_Fixture is
    -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
 
-   type Fixture_Lock
-     is limited new Apsepp.Scope_Bound_Locking.Lock with null record;
+   package Fixture_Lock is
 
-   overriding
-   procedure On_Lock (Obj : Fixture_Lock);
+      type Lock
+        is limited new Apsepp.Scope_Bound_Locking.Lock with private;
 
-   overriding
-   procedure On_Unlock (Obj : Fixture_Lock);
+      overriding
+      procedure On_Lock (Obj : Lock);
 
-   Fixture_Instance_Lock : aliased Fixture_Lock;
+      overriding
+      procedure On_Unlock (Obj : Lock);
+
+   private
+
+      type Lock
+        is limited new Apsepp.Scope_Bound_Locking.Lock with null record;
+
+   end Fixture_Lock;
+
+   Fixture_Instance_Lock : aliased Fixture_Lock.Lock;
 
    function Fixture_Instance_Access
      (L_H : Apsepp.Scope_Bound_Locking.Lock_Holder'Class)

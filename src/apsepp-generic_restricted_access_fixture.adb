@@ -7,57 +7,65 @@ package body Apsepp.Generic_Restricted_Access_Fixture is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   procedure On_Lock (Obj : Fixture_Lock) is
+   package body Fixture_Lock is
 
-      pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      overriding
+      procedure On_Lock (Obj : Lock) is
 
-      if I_A = null then
+         pragma Unreferenced (Obj);
 
-         I_A := new Fixture_Type;
+      begin
 
-         -- The allocated storage is reclaimed by the 'On_Unlock' primitive if
-         -- 'Deallocate_On_Unlock' is true. In the opposite case, it is
-         -- reclaimed when the package instance goes out of scope (because the
-         -- access type ('Fixture_Access') has the 'Storage_Size' aspect).
-         -- REF: ARM13.11(18.4). <2020-02-17>
+         if I_A = null then
 
-      end if;
+            I_A := new Fixture_Type;
 
-      I_A.Setup;
+            -- The allocated storage is reclaimed by the 'On_Unlock' primitive
+            -- if 'Deallocate_On_Unlock' is true. In the opposite case, it is
+            -- reclaimed when the package instance goes out of scope (because
+            -- the access type ('Fixture_Access') has the 'Storage_Size'
+            -- aspect). REF: ARM13.11(18.4). <2020-02-17>
 
-   end On_Lock;
+         end if;
 
-   ----------------------------------------------------------------------------
+         I_A.Setup;
 
-   overriding
-   procedure On_Unlock (Obj : Fixture_Lock) is
+      end On_Lock;
 
-            pragma Unreferenced (Obj);
+      -----------------------------------------------------
 
-   begin
+      overriding
+      procedure On_Unlock (Obj : Lock) is
 
-      I_A.Clean_Up;
+               pragma Unreferenced (Obj);
 
-      if Deallocate_On_Unlock then
+      begin
 
-         declare
+         I_A.Clean_Up;
 
-            procedure Free is new Ada.Unchecked_Deallocation
-              (Object => Fixture_Type,
-               Name   => Fixture_Access);
+         if Deallocate_On_Unlock then
 
-         begin
+            declare
 
-            Free (I_A);
+               procedure Free is new Ada.Unchecked_Deallocation
+                 (Object => Fixture_Type,
+                  Name   => Fixture_Access);
 
-         end;
+            begin
 
-      end if;
+               Free (I_A);
 
-   end On_Unlock;
+            end;
+
+         end if;
+
+      end On_Unlock;
+
+      -----------------------------------------------------
+
+   end Fixture_Lock;
 
    ----------------------------------------------------------------------------
 
