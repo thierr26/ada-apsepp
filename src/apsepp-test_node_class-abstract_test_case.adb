@@ -5,6 +5,12 @@ with Ada.Assertions,
      Apsepp.Generic_Discrete_Operations,
      Apsepp.Test_Node_Class.Private_Test_Reporter;
 
+-- This package references type 'Simu_Test_Case' declared in package
+-- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case'. That's why
+-- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case' could not be moved to
+-- project Apsepp_Test and had to be kept in Apsepp.
+with Apsepp.Test_Node_Class.Abstract_Simu_Test_Case;
+
 package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    ----------------------------------------------------------------------------
@@ -299,10 +305,52 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                                 Outcome : out Test_Outcome) is
 
       use Ada.Assertions,
-          Private_Test_Reporter;
+          Private_Test_Reporter,
+          Abstract_Simu_Test_Case;
+
+      -----------------------------------------------------
+
+      -- TODO: Create common ancestor for 'Test_Case' and
+      -- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case.Simu_Test_Case' (and
+      -- possibly
+      -- 'Apsepp.Test_Node_Class.Abstract_Early_Test_Case.Early_Test_Case') to
+      -- avoid the downward conversions. <2020-03-09>
+      function Is_Simu_Test_Case return Boolean
+        is (Is_Descendant_At_Same_Level (Descendant => Obj'Tag,
+                                         Ancestor   => Simu_Test_Case'Tag));
+
+      -----------------------------------------------------
+
+      function Routine_Count return Test_Routine_Index
+        is (if Is_Simu_Test_Case then
+               Simu_Test_Case'Class (Obj).Routine_Count
+            else
+               Test_Case'Class (Obj).Routine_Count);
+
+      -----------------------------------------------------
+
+      function Routine (K : Test_Routine_Index)
+        return not null access procedure
+        is (if Is_Simu_Test_Case then
+               Simu_Test_Case'Class (Obj).Routine (K)
+            else
+               Test_Case'Class (Obj).Routine (K));
+
+      -----------------------------------------------------
+
+      procedure Setup_Routine is
+      begin
+         if Is_Simu_Test_Case then
+            Simu_Test_Case'Class (Obj).Setup_Routine;
+         else
+            Test_Case'Class (Obj).Setup_Routine;
+         end if;
+      end Setup_Routine;
+
+      -----------------------------------------------------
 
       T : constant Tag                := Obj'Tag;
-      N : constant Test_Routine_Count := Test_Case'Class (Obj).Routine_Count;
+      N : constant Test_Routine_Count := Routine_Count;
 
       R   : access procedure   := Null_Test_Routine'Access;
       Err : Boolean            := False; -- "Unexpected error" flag.
@@ -324,11 +372,11 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
          begin
 
-            R := Test_Case'Class (Obj).Routine (K);
+            R := Routine (K);
 
             begin
 
-               Test_Case'Class (Obj).Setup_Routine;
+               Setup_Routine;
 
                declare
                   Assert_Outcome : Test_Outcome;
@@ -538,10 +586,12 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       Routine_Array_First : constant Test_Routine_Index
         := Test_Case'Class (Obj).Routine_Array'First;
 
+      -- The following renaming cannot be used in the definitions above.
+      -- ("Cannot call 'Routine_Array' before body seen.")
       function Routine_Array return Test_Routine_Array
         renames Test_Case'Class (Obj).Routine_Array;
 
-      Routine_Count : constant Test_Routine_Count
+      Routine_Count : constant Test_Routine_Index
         := Test_Case'Class (Obj).Routine_Count;
 
       function Routine
@@ -554,7 +604,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                Routine_Count = Routine_Array_Length
                  and then
                (
-                 for all K in Test_Case'Class (Obj).Routine_Array'Range =>
+                 for all K in Routine_Array'Range =>
                    Routine (Rank (K, Routine_Array_First)) = Routine_Array(K)
                )
              );

@@ -49,64 +49,56 @@ package Apsepp.Test_Reporter_Class.Instant_Standard is
       overriding
       procedure Report_Test_Routine_Start
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case
-                           .Test_Routine_Count);
+         Routine_Index : Test_Routine_Index);
 
       overriding
       procedure Report_Test_Routines_Cancellation
-        (Node_Tag                                : Tag;
-         First_Routine_Index, Last_Routine_Index : Test_Node_Class
-                                                     .Abstract_Test_Case
-                                                     .Test_Routine_Count);
+        (Node_Tag            : Tag;
+         First_Routine_Index,
+         Last_Routine_Index  : Test_Routine_Index);
 
       overriding
       procedure Report_Failed_Test_Routine_Access
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence);
 
       overriding
       procedure Report_Failed_Test_Routine_Setup
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence);
 
       overriding
       procedure Report_Passed_Test_Assert
         (Node_Tag         : Tag;
-         Routine_Index    : Test_Node_Class.Abstract_Test_Case
-                              .Test_Routine_Count;
+         Routine_Index    : Test_Routine_Index;
          Assert_Num_Avail : Boolean;
-         Assert_Num       : Test_Node_Class.Abstract_Test_Case
-                              .Test_Assert_Count);
+         Assert_Num       : Test_Assert_Index);
 
       overriding
       procedure Report_Failed_Test_Assert
         (Node_Tag         : Tag;
-         Routine_Index    : Test_Node_Class.Abstract_Test_Case
-                              .Test_Routine_Count;
+         Routine_Index    : Test_Routine_Index;
          Assert_Num_Avail : Boolean;
-         Assert_Num       : Test_Node_Class.Abstract_Test_Case
-                              .Test_Assert_Count;
+         Assert_Num       : Test_Assert_Index;
          Error            : Exception_Occurrence);
 
       overriding
       procedure Report_Unexpected_Routine_Exception
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence);
 
       overriding
       procedure Report_Passed_Test_Routine
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case
-                           .Test_Routine_Count);
+         Routine_Index : Test_Routine_Index);
 
       overriding
       procedure Report_Failed_Test_Routine
         (Node_Tag      : Tag;
-         Routine_Index : Test_Node_Class.Abstract_Test_Case
-                           .Test_Routine_Count);
+         Routine_Index : Test_Routine_Index);
 
       overriding
       procedure Report_Passed_Node_Run (Node_Tag : Tag);

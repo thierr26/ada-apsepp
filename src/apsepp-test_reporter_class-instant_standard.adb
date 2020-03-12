@@ -2,13 +2,11 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Text_IO,
-     Apsepp.Test_Node_Class.Abstract_Early_Test_Case,
-     Apsepp.Test_Node_Class.Abstract_Test_Case;
+     Apsepp.Test_Node_Class.Abstract_Early_Test_Case;
 
 package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
    use Test_Node_Class;
-   use type Abstract_Test_Case.Test_Routine_Count;
 
    ----------------------------------------------------------------------------
 
@@ -65,45 +63,45 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    function Kth_Routine_Access is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Routine_Count,
+     (Integer_Type => Test_Routine_Index,
       Designation  => "access to test routine");
 
    ----------------------------------------------------------------------------
 
    function Kth_Routine_Setup is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Routine_Count,
+     (Integer_Type => Test_Routine_Index,
       Designation  => "setup of test routine");
 
    ----------------------------------------------------------------------------
 
    function Kth_Routine is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Routine_Count,
+     (Integer_Type => Test_Routine_Index,
       Designation  => "test routine");
 
    ----------------------------------------------------------------------------
 
    function From_Kth_Routine is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Routine_Count,
+     (Integer_Type => Test_Routine_Index,
       Designation  => "test routines");
 
    ----------------------------------------------------------------------------
 
    function To_Kth_Routine is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Routine_Count,
+     (Integer_Type => Test_Routine_Index,
       Designation  => " to");
 
    ----------------------------------------------------------------------------
 
    function Kth_Test_Assert is new Kth
-     (Integer_Type => Abstract_Test_Case.Test_Assert_Count,
+     (Integer_Type => Test_Assert_Index,
       Designation  => Test_Assert);
 
    ----------------------------------------------------------------------------
 
    function Kth_Kth
      (K_A_Avail : Boolean;
-      K_A       : Abstract_Test_Case.Test_Assert_Count;
-      K_R       : Abstract_Test_Case.Test_Routine_Count) return String
+      K_A       : Test_Assert_Index;
+      K_R       : Test_Routine_Index) return String
      is (Kth_Test_Assert (K_A, K_A_Avail) & " for " & Kth_Routine (K_R));
 
    ----------------------------------------------------------------------------
@@ -173,9 +171,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    procedure Report_Test_Assert_Outcome
      (Node_Tag         : Tag;
       Outcome          : Test_Outcome;
-      Routine_Index    : Abstract_Test_Case.Test_Routine_Count;
+      Routine_Index    : Test_Routine_Index;
       Assert_Num_Avail : Boolean;
-      Assert_Num       : Abstract_Test_Case.Test_Assert_Count) is
+      Assert_Num       : Test_Assert_Index) is
 
    begin
 
@@ -346,7 +344,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Test_Routine_Start
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count) is
+         Routine_Index : Test_Routine_Index) is
 
       begin
 
@@ -362,7 +360,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
       procedure Report_Test_Routines_Cancellation
         (Node_Tag            : Tag;
          First_Routine_Index,
-         Last_Routine_Index  : Abstract_Test_Case.Test_Routine_Count) is
+         Last_Routine_Index  : Test_Routine_Index) is
 
       begin
 
@@ -381,7 +379,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Failed_Test_Routine_Access
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence) is
 
       begin
@@ -399,7 +397,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Failed_Test_Routine_Setup
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence) is
 
       begin
@@ -417,9 +415,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Passed_Test_Assert
         (Node_Tag         : Tag;
-         Routine_Index    : Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index    : Test_Routine_Index;
          Assert_Num_Avail : Boolean;
-         Assert_Num       : Abstract_Test_Case.Test_Assert_Count) is
+         Assert_Num       : Test_Assert_Index) is
 
       begin
 
@@ -435,9 +433,9 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Failed_Test_Assert
         (Node_Tag         : Tag;
-         Routine_Index    : Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index    : Test_Routine_Index;
          Assert_Num_Avail : Boolean;
-         Assert_Num       : Abstract_Test_Case.Test_Assert_Count;
+         Assert_Num       : Test_Assert_Index;
          Error            : Exception_Occurrence) is
 
       begin
@@ -461,7 +459,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Unexpected_Routine_Exception
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count;
+         Routine_Index : Test_Routine_Index;
          Error         : Exception_Occurrence) is
 
       begin
@@ -480,7 +478,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Passed_Test_Routine
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count) is
+         Routine_Index : Test_Routine_Index) is
 
       begin
 
@@ -497,7 +495,7 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
 
       procedure Report_Failed_Test_Routine
         (Node_Tag      : Tag;
-         Routine_Index : Abstract_Test_Case.Test_Routine_Count) is
+         Routine_Index : Test_Routine_Index) is
 
       begin
 

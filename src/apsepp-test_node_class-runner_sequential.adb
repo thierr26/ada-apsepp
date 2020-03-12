@@ -114,4 +114,15 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
    ----------------------------------------------------------------------------
 
+   not overriding
+   function Runner_Sequential_Invariant
+     (Obj : Test_Runner_Sequential) return Boolean
+     is (Test_Runner_Sequential'Class (Obj).Child_Count = 1
+           and then
+         Test_Runner_Sequential'Class (Obj).No_Subtasking
+           and then
+         Test_Runner_Sequential'Class (Obj).Has_Early_Test);
+
+   ----------------------------------------------------------------------------
+
 end Apsepp.Test_Node_Class.Runner_Sequential;

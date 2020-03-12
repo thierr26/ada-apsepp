@@ -1,13 +1,15 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Tags; use Ada.Tags;
+with Ada.Tags;                     use Ada.Tags;
+with Apsepp.Test_Case_Count_Types; use Apsepp.Test_Case_Count_Types;
 
 with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body,
      Apsepp.Generic_Safe_Integer_Operations;
 
 private with Ada.Containers.Hashed_Maps,
-             Apsepp.Tags;
+             Apsepp.Tags,
+             Apsepp.Generic_Array_Operations.W_F_Elem;
 
 package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
@@ -22,7 +24,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    function Child_Count (Obj : Test_Case) return Test_Node_Count
      is (0);
 
-   -- TODOC: Always fails because a test case has no child.
+   -- TODOC: Always fails because a test case has no child. <2020-03-08>
    overriding
    function Child (Obj : Test_Case;
                    K   : Test_Node_Index)
@@ -42,11 +44,6 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    overriding
    procedure Early_Run (Obj : in out Test_Case) is null;
-
-   type Test_Routine_Count is new Natural;
-
-   subtype Test_Routine_Index
-     is Test_Routine_Count range 1 .. Test_Routine_Count'Last;
 
    type Test_Routine_Array
      is array (Test_Routine_Index range <>) of not null access procedure;
@@ -72,6 +69,9 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    not overriding
    procedure Setup_Routine (Obj : Test_Case) is null;
 
+   -- TODOC: 'Obj' must be a descendant of 'Test_Case' or of
+   -- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case.Simu_Test_Case'.
+   -- <2020-03-08>
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome);
 
@@ -86,8 +86,6 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    not overriding
    function Routine_Array_Equiv_To_Routine (Obj : Test_Case) return Boolean;
-
-   type Test_Assert_Count is new Natural;
 
    package Safe_Test_Assert_Count_Operations
      is new Generic_Safe_Integer_Operations
@@ -130,6 +128,17 @@ private
                                         Element_Type    => Case_Status,
                                         Hash            => Tag_Hash,
                                         Equivalent_Keys => "=");
+
+   package Case_Tag_Status_Array_Operations
+     is new Generic_Array_Operations (Index_Type   => Test_Node_Index,
+                                      Element_Type => Case_Tag_Status,
+                                      Array_Type   => Case_Tag_Status_Array);
+   package Case_Tag_Status_Array_W_F_Elem
+     is new Case_Tag_Status_Array_Operations.W_F_Elem (Return_Type => Tag);
+   use Case_Tag_Status_Array_W_F_Elem;
+
+   function Tag_Value (X : Case_Tag_Status) return Tag
+     is (X.T);
 
    protected Case_Status_Map_Handler is
 
@@ -174,13 +183,7 @@ private
                        and then
                      To_Array'Result'Length = Count
                        and then
-                     (for all E of To_Array'Result => E.T /= No_Tag)
-                       and then
-                     (for all K_1 in To_Array'Result'Range =>
-                       (for all K_2 in To_Array'Result'Range =>
-                         K_1 = K_2 or else To_Array'Result(K_1).T
-                                             /=
-                                           To_Array'Result(K_2).T));
+                     No_Duplicates (Tag_Value'Access, To_Array'Result);
 
    private
 

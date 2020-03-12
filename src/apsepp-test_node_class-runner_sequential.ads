@@ -10,11 +10,8 @@ package Apsepp.Test_Node_Class.Runner_Sequential is
 
    type Test_Runner_Sequential
      is limited new Children_Early_Test_Handler with private
-     with Type_Invariant'Class => Test_Runner_Sequential.Child_Count = 1
-                                    and then
-                                  Test_Runner_Sequential.No_Subtasking
-                                    and then
-                                  Test_Runner_Sequential.Has_Early_Test;
+     with Type_Invariant'Class =>
+            Test_Runner_Sequential.Runner_Sequential_Invariant;
 
    overriding
    function Child_Count (Obj : Test_Runner_Sequential) return Test_Node_Count
@@ -34,6 +31,10 @@ package Apsepp.Test_Node_Class.Runner_Sequential is
      (Obj     : in out Test_Runner_Sequential;
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind               := Assert_Cond_And_Run_Test);
+
+   not overriding
+   function Runner_Sequential_Invariant
+     (Obj : Test_Runner_Sequential) return Boolean;
 
 private
 
