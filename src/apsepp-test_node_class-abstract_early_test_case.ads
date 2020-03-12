@@ -18,7 +18,7 @@ package Apsepp.Test_Node_Class.Abstract_Early_Test_Case is
    function Child_Count (Obj : Early_Test_Case) return Test_Node_Count
      is (0);
 
-   -- TODOC: Always fails because a test case has no child.
+   -- TODOC: Always fails because a test case has no child. <2020-03-08>
    overriding
    function Child (Obj : Early_Test_Case;
                    K   : Test_Node_Index)

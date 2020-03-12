@@ -17,7 +17,7 @@ package body Apsepp.Finalized_Debug_Tracer.Generic_Instantiator is
 
    begin
 
-      Controlled_Debug_Tracer (Obj).Finalize; --Inherited procedure call.
+      Controlled_Debug_Tracer (Obj).Finalize; -- Inherited procedure call.
 
       Free (Entity_Name_Access);
 
