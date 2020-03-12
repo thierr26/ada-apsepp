@@ -22,15 +22,8 @@ package body Apsepp.Barrier_Class.Finalized_Handler is
    begin
 
       Obj.B.Open;
-      Obj.Finalized_Flag := True;
 
    end Finalize;
-
-   ----------------------------------------------------------------------------
-
-   not overriding
-   function Finalized (Obj : Controlled_Barrier_Handler) return Boolean
-     is (Obj.Finalized_Flag);
 
    ----------------------------------------------------------------------------
 
