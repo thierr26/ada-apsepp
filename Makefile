@@ -234,7 +234,7 @@ clean_all: clean
 compile_all: clean_all
 	@find . -maxdepth 1 -type f -name "*.gpr" \
 	  -not -path "./apsepp_build_setup.gpr" \
-	  -exec gprbuild -p -U -P{} \; | grep -v "^Compile"
+	  -exec gprbuild $(xswi) -p -U -P{} \; | grep -v "^Compile"
 
 test: build .run_test_program
 
@@ -253,7 +253,7 @@ help:
 	@echo
 	@echo '  clean_all                 - Same as clean, but for all projects.'
 	@echo
-	@echo '  compile_all               - Compile all sources of all projects.'
+	@echo '  compile_all [B]           - Compile all sources of all projects.'
 	@echo
 	@echo '  build [P] [B]             - Build project (creates executables'
 	@echo '                              in "$(bin_dir)" subdirectory).'
