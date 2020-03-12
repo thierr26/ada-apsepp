@@ -25,9 +25,9 @@ package Apsepp.Test_Event_Class is
    -- TODO: Try to get rid of this invariant. <2020-03-07>
    type Test_Event_Base is abstract tagged private
      with Type_Invariant'Class =>
-            not (Test_Event_Base.Has_R_Index
+            not (Test_Event_Base.Has_Routine_Index
                    and then
-                 Test_Event_Base.Has_Last_Cancelled_R_Index);
+                 Test_Event_Base.Has_Last_Cancelled_Routine_Index);
 
    not overriding
    procedure Set (Obj  : in out Test_Event_Base;
@@ -72,24 +72,26 @@ package Apsepp.Test_Event_Class is
      with Pre'Class => Test_Event_Base'Class (Obj).Has_Previous_Child_Tag;
 
    not overriding
-   function Has_R_Index (Obj : Test_Event_Base) return Boolean
+   function Has_Routine_Index (Obj : Test_Event_Base) return Boolean
      is (False);
 
    not overriding
-   function R_Index
+   function Routine_Index
      (Obj : Test_Event_Base) return Test_Routine_Index
      is (Test_Routine_Index'First)
-     with Pre'Class => Test_Event_Base'Class (Obj).Has_R_Index;
+     with Pre'Class => Test_Event_Base'Class (Obj).Has_Routine_Index;
 
    not overriding
-   function Has_Last_Cancelled_R_Index (Obj : Test_Event_Base) return Boolean
+   function Has_Last_Cancelled_Routine_Index
+     (Obj : Test_Event_Base) return Boolean
      is (False);
 
    not overriding
-   function Last_Cancelled_R_Index
+   function Last_Cancelled_Routine_Index
      (Obj : Test_Event_Base) return Test_Routine_Index
      is (Test_Routine_Index'First)
-     with Pre'Class => Test_Event_Base'Class (Obj).Has_Last_Cancelled_R_Index;
+     with Pre'Class =>
+            Test_Event_Base'Class (Obj).Has_Last_Cancelled_Routine_Index;
 
    not overriding
    function Has_Assert_Num (Obj : Test_Event_Base) return Boolean

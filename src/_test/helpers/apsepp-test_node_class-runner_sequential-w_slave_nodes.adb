@@ -17,7 +17,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes is
    task type Slave_Node_Task is
       entry Start_Run (Node : Test_Node_Access);
       entry Get_Outcome_And_E (Outcome : out Test_Outcome;
-                               E       : out Exception_Occurrence_Access);
+                               Error   : out Exception_Occurrence_Access);
    end Slave_Node_Task;
 
    type Slave_Node_Task_Array
@@ -43,13 +43,13 @@ package body Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes is
          end if;
          Nod.Run (Outc);
       exception
-         when E : others => Ex := Save_Occurrence (E);
+         when Error : others => Ex := Save_Occurrence (Error);
       end;
 
       accept Get_Outcome_And_E (Outcome : out Test_Outcome;
-                                E       : out Exception_Occurrence_Access) do
+                                Error   : out Exception_Occurrence_Access) do
          Outcome := Outc;
-         E       := Ex;
+         Error   := Ex;
       end Get_Outcome_And_E;
 
    end Slave_Node_Task;
@@ -121,31 +121,32 @@ package body Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes is
 
             declare
 
-               Outc : Test_Outcome;
-               E    : Exception_Occurrence_Access;
+               Outc  : Test_Outcome;
+               Error : Exception_Occurrence_Access;
 
             begin
 
                -- The rendezvous with 'Node_Task(K).Get_Outcome_And_E' takes
                -- place when the run of 'Obj.Slaves.A(K).all' is done.
-               Node_Task(K).Get_Outcome_And_E (Outc, E);
+               Node_Task(K).Get_Outcome_And_E (Outc, Error);
 
                if Ex = null -- Initial value.
                     and then
-                  E /= null then
-                  -- 'E' points to the first exception raised by a node pointed
-                  -- to by an element of 'Obj.Slaves.A'.
+                  Error /= null then
+                  -- 'Error' points to the first exception raised by a node
+                  -- pointed to by an element of 'Obj.Slaves.A'.
 
                   -- Store this exception in 'Ex'.
-                  Ex := E;
+                  Ex := Error;
 
-               elsif E /= null then
+               elsif Error /= null then
 
-                  -- 'E' points to an exception raised by a node pointed to by
-                  -- an element of 'Obj.Slaves.A' but it's not the first one.
+                  -- 'Error' points to an exception raised by a node pointed to
+                  -- by an element of 'Obj.Slaves.A' but it's not the first
+                  -- one.
 
                   -- Free this exception.
-                  Free (E);
+                  Free (Error);
 
                end if;
 

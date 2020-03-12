@@ -19,10 +19,11 @@ package Apsepp.Debug_Trace_Class.Quiet is
      is (Exception_Name (Error) & " (" & Exception_Message (Error) & ")");
 
    -- TODOC: On first call, reset of elapsed time is done regardless of
-   -- 'Reset_Elapsed' parameter. The reset actually affects protected object
-   -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock', so the reset applies to all
-   -- 'Debug_Trace_Interfa'Class' objects with an implementation relying on
-   -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'. <2020-02-24>
+     -- 'Reset_Elapsed' parameter. The reset actually affects protected object
+     -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock', so the reset
+     -- applies to all 'Debug_Trace_Interfa'Class' objects with an
+     -- implementation relying on
+     -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'. <2020-02-24>
    overriding
    function Clock_String
      (Obj           : Debug_Trace_Quiet;

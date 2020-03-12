@@ -465,7 +465,8 @@ package body Apsepp_Testing_System_Test_Fixture is
                      Expected_Tags_Array_Access => Expected_Tags_Array_Access);
       declare
 
-         Time_Out_Trigger : Test_Node_Barrier_Time_Out_Trigger (Barrier'Access);
+         Time_Out_Trigger
+           : Test_Node_Barrier_Time_Out_Trigger (Barrier'Access);
 
          Runner_A : Test_Runner_Sequential_W_Slave_Nodes
            := Create (Root_Test_Node_Access         => Simu_Case('A'),
