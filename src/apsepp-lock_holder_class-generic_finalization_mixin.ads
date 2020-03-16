@@ -14,7 +14,7 @@ private
    -- TODOC: The 'L_H' discriminant of the 'Inner' component "points" to the
    -- instance of 'Child_W_Finalization'. <2020-02-22>
    -- REF: "Programming in Ada 2012" by John Barnes, section 18.7. <2020-02-22>
-   -- REF: ARM8.6(17/3). <2020-02-22>
+   -- REF: ARM 8.6(17/3). <2020-02-22>
    -- REF: https://en.wikibooks.org/wiki/Ada_Programming/Object_Orientation#Multiple_Inheritance_via_Mix-in. <2020-02-22>
    type Child_W_Finalization is limited new Parent with record
 

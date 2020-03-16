@@ -34,7 +34,7 @@ package Apsepp.Calendar is
    --   (20 characters long)).
    --
    -- The time fraction is always 3 characters long.
-   -- REF: ARM9.6.1 86/2. <2020-02-25>
+   -- REF: ARM 9.6.1(86/2). <2020-02-25>
    function To_ISO_8601
      (Date                  : Time;
       Time_Zone             : Time_Offset := Default_Time_Offset;

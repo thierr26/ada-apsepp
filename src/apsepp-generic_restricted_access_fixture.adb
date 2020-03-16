@@ -26,7 +26,7 @@ package body Apsepp.Generic_Restricted_Access_Fixture is
             -- if 'Deallocate_On_Unlock' is true. In the opposite case, it is
             -- reclaimed when the package instance goes out of scope (because
             -- the access type ('Fixture_Access') has the 'Storage_Size'
-            -- aspect). REF: ARM13.11(18.4). <2020-02-17>
+            -- aspect). REF: ARM 13.11(18.4). <2020-02-17>
 
          end if;
 
