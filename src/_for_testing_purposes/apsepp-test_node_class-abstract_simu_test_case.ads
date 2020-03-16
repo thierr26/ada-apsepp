@@ -78,7 +78,7 @@ package Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
       K   : Test_Routine_Index) return not null access procedure;
 
    not overriding
-   procedure Setup_Routine (Obj : Simu_Test_Case);
+   procedure Set_Up_Routine (Obj : Simu_Test_Case);
 
    not overriding
    function Story_Equiv_To_Routine (Obj : Simu_Test_Case) return Boolean;

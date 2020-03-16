@@ -458,7 +458,7 @@ package body Apsepp_Testing_System_Test_Fixture is
 
       Assert_Node_Tags;
 
-      Barrier.Setup (Char_Name_Image_Function   => Char_Name_Image'Access,
+      Barrier.Set_Up (Char_Name_Image_Function   => Char_Name_Image'Access,
                      Tag_To_Char_Function       => Tag_To_Char'Access,
                      Char_To_Tag_Function       => Char_To_Tag'Access,
                      Validate_Procedure         => Validate_Procedure,
@@ -479,7 +479,7 @@ package body Apsepp_Testing_System_Test_Fixture is
 
       begin
 
-         Time_Out_Trigger.Setup;
+         Time_Out_Trigger.Set_Up;
          if not Runner_A.Early_Run_Done then
             Runner_A.Early_Run;
          end if;

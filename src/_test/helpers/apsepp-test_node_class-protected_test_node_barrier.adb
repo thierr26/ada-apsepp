@@ -30,10 +30,10 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
    begin
 
-      accept Setup (Period : Day_Duration := 0.7) do
+      accept Set_Up (Period : Day_Duration := 0.7) do
          Loop_Period      := Period;
          Cross_Call_Count := Barrier_Access.Cross_Call_Count;
-      end Setup;
+      end Set_Up;
 
       while not Barrier_Access.Completed loop
 
@@ -82,7 +82,7 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
       -----------------------------------------------------
 
-      procedure Setup
+      procedure Set_Up
         (Char_Name_Image_Function   : not null Char_Name_Image_Func;
          Tag_To_Char_Function       : not null Tag_To_Char_Func;
          Char_To_Tag_Function       : not null Char_To_Tag_Func;
@@ -101,7 +101,7 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
          Permanent_Opening_Cause := None;
          Failed_Validation_Flag  := False;
 
-      end Setup;
+      end Set_Up;
 
       -----------------------------------------------------
 

@@ -30,7 +30,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
    ----------------------------------------------------------------------------
 
    not overriding
-   procedure Setup
+   procedure Set_Up
      (Obj                      : in out Test_Reporter_W_Node_Barrier;
       Barrier_Access           :        not null access Test_Node_Barrier;
       Char_Name_Image_Function :        Char_Name_Image_Func;
@@ -42,7 +42,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Obj.Char_Name_Image := Char_Name_Image_Function;
       Obj.Tag_To_Char     := Tag_To_Char_Function;
 
-   end Setup;
+   end Set_Up;
 
    ----------------------------------------------------------------------------
 

@@ -12,7 +12,7 @@ package Apsepp_Scope_Bound_Locking_Test_Fixture is
      is limited new Fixture_Interfa with private;
 
    overriding
-   procedure Setup (Obj : Apsepp_Scope_Bound_Locking_T_F);
+   procedure Set_Up (Obj : Apsepp_Scope_Bound_Locking_T_F);
 
    not overriding
    function Lock_Count (Obj : Apsepp_Scope_Bound_Locking_T_F) return Natural;

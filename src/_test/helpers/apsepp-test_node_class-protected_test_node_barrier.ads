@@ -61,7 +61,7 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
    protected type Test_Node_Barrier is
 
-      procedure Setup
+      procedure Set_Up
         (Char_Name_Image_Function   : not null Char_Name_Image_Func;
          Tag_To_Char_Function       : not null Tag_To_Char_Func;
          Char_To_Tag_Function       : not null Char_To_Tag_Func;
@@ -126,7 +126,7 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
    task type Test_Node_Barrier_Time_Out_Trigger
      (Barrier_Access : not null access Test_Node_Barrier) is
 
-      entry Setup (Period : Day_Duration := 0.7); -- 0.7 seconds.
+      entry Set_Up (Period : Day_Duration := 0.7); -- 0.7 seconds.
 
    end Test_Node_Barrier_Time_Out_Trigger;
 

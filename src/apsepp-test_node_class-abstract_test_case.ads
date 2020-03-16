@@ -67,7 +67,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
       K   : Test_Routine_Index) return not null access procedure;
 
    not overriding
-   procedure Setup_Routine (Obj : Test_Case) is null;
+   procedure Set_Up_Routine (Obj : Test_Case) is null;
 
    -- TODOC: 'Obj' must be a descendant of 'Test_Case' or of
    -- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case.Simu_Test_Case'.

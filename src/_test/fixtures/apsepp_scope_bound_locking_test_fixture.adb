@@ -19,7 +19,7 @@ package body Apsepp_Scope_Bound_Locking_Test_Fixture is
    ----------------------------------------------------------------------------
 
    overriding
-   procedure Setup (Obj : Apsepp_Scope_Bound_Locking_T_F) is
+   procedure Set_Up (Obj : Apsepp_Scope_Bound_Locking_T_F) is
 
       pragma Unreferenced (Obj);
 
@@ -27,7 +27,7 @@ package body Apsepp_Scope_Bound_Locking_Test_Fixture is
 
       Lock_Count_Var := Create (0);
 
-   end Setup;
+   end Set_Up;
 
    ----------------------------------------------------------------------------
 

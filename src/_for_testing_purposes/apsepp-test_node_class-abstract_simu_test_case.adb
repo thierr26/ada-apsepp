@@ -88,7 +88,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
          when Setup_Failure =>
             null; -- Impossible case, has already
                   -- caused error and test routine
-                  -- abortion in Setup_Routine.
+                  -- abortion in Set_Up_Routine.
 
       end case;
 
@@ -182,7 +182,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
       -- Close protection barrier and assign global data.
       -- The 'Global_Data_Protection_Barrier.Close' entry call is blocking for
       -- other concurrent tasks as long as the protection barrier is not
-      -- re-opened by 'Setup_Routine' or 'Simu_Test_Routine'.
+      -- re-opened by 'Set_Up_Routine' or 'Simu_Test_Routine'.
       Global_Data_Protection_Barrier.Close;
       Global_Data.T := Simu_Test_Case'Class (Obj)'Tag;
       Global_Data.D := D;
@@ -194,7 +194,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
    ----------------------------------------------------------------------------
 
    not overriding
-   procedure Setup_Routine (Obj : Simu_Test_Case) is
+   procedure Set_Up_Routine (Obj : Simu_Test_Case) is
 
       Simu_Test_Routine_Setup_Error : exception;
 
@@ -233,7 +233,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
       end case;
 
-   end Setup_Routine;
+   end Set_Up_Routine;
 
    ----------------------------------------------------------------------------
 

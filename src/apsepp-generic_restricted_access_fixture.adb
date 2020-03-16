@@ -30,7 +30,7 @@ package body Apsepp.Generic_Restricted_Access_Fixture is
 
          end if;
 
-         I_A.Setup;
+         I_A.Set_Up;
 
       end On_Lock;
 

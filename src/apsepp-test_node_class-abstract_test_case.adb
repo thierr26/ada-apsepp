@@ -338,14 +338,14 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       -----------------------------------------------------
 
-      procedure Setup_Routine is
+      procedure Set_Up_Routine is
       begin
          if Is_Simu_Test_Case then
-            Simu_Test_Case'Class (Obj).Setup_Routine;
+            Simu_Test_Case'Class (Obj).Set_Up_Routine;
          else
-            Test_Case'Class (Obj).Setup_Routine;
+            Test_Case'Class (Obj).Set_Up_Routine;
          end if;
-      end Setup_Routine;
+      end Set_Up_Routine;
 
       -----------------------------------------------------
 
@@ -376,7 +376,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
             begin
 
-               Setup_Routine;
+               Set_Up_Routine;
 
                declare
                   Assert_Outcome : Test_Outcome;

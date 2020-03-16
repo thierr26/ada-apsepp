@@ -6,7 +6,7 @@ package Apsepp.Fixture_Class is
    type Fixture_Interfa is limited interface;
 
    not overriding
-   procedure Setup (Obj : Fixture_Interfa) is null;
+   procedure Set_Up (Obj : Fixture_Interfa) is null;
 
    not overriding
    procedure Clean_Up (Obj : Fixture_Interfa) is null;
