@@ -42,7 +42,7 @@ package body Apsepp.Test_Event_Class.Impl is
 
          Test_Event (Obj).Set (Data); -- Inherited procedure call.
 
-         Obj.Last_Cancelled_Routine_Index := Data.Routine_Index;
+         Obj.Last_Routine_Index := Data.Last_Routine_Index;
 
       end Set;
 
@@ -54,7 +54,7 @@ package body Apsepp.Test_Event_Class.Impl is
 
       begin
 
-         return Obj.Last_Cancelled_Routine_Index;
+         return Obj.Last_Routine_Index;
 
       end Last_Cancelled_Routine_Index;
 

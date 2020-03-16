@@ -91,11 +91,11 @@ package Apsepp.Test_Event_Class.Impl.Abbrev is
 
    ----------------------------------------------------------------------------
 
-   subtype Ev_TRC is Test_Event_TRC;
+   subtype Ev_TRC is TRC_R_Mixin.Child_W_Routine_Index;
 
       -----------------------------------------------------
 
-   subtype Ev_TRC_Ti is TRC_Ti_Mixin.Child_W_Timestamp;
+   subtype Ev_TRC_Ti is TRC_R_Ti_Mixin.Child_W_Timestamp;
 
    ----------------------------------------------------------------------------
 

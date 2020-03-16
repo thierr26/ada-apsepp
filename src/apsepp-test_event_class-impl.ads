@@ -131,7 +131,7 @@ package Apsepp.Test_Event_Class.Impl is
       type Test_Event_TRS is new Test_Event with null record;
 
       type Test_Event_TRC is new Test_Event with record
-         Last_Cancelled_Routine_Index : Test_Routine_Index;
+         Last_Routine_Index : Test_Routine_Index;
       end record;
 
       type Test_Event_FTRA is new Test_Event with null record;
@@ -160,6 +160,9 @@ package Apsepp.Test_Event_Class.Impl is
 
       package TRS_R_Mixin
         is new Generic_Routine_Index_Mixin (Derivation.Test_Event_TRS);
+
+      package TRC_R_Mixin
+        is new Generic_Routine_Index_Mixin (Derivation.Test_Event_TRC);
 
       package FTRA_R_Mixin
         is new Generic_Routine_Index_Mixin (Derivation.Test_Event_FTRA);
@@ -267,8 +270,8 @@ package Apsepp.Test_Event_Class.Impl is
       package TRS_R_Ti_Mixin is new Generic_Timestamp_Mixin
         (Routine_Index_Mixin.TRS_R_Mixin.Child_W_Routine_Index);
 
-      package TRC_Ti_Mixin
-        is new Generic_Timestamp_Mixin (Derivation.Test_Event_TRC);
+      package TRC_R_Ti_Mixin is new Generic_Timestamp_Mixin
+        (Routine_Index_Mixin.TRC_R_Mixin.Child_W_Routine_Index);
 
       package FTRA_R_Ex_Ti_Mixin
         is new Generic_Timestamp_Mixin

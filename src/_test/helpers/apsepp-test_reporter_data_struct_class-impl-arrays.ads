@@ -38,7 +38,8 @@ package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
       Has_E              : Boolean;
       Date               : Time;
       Previous_Child_Tag : Tag;
-      Routine_Index      : Test_Routine_Count;
+      Routine_Index,
+      Last_Routine_Index : Test_Routine_Count;
       Assert_Num         : Test_Assert_Count;
    end record;
 
@@ -72,9 +73,5 @@ package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
                  Node_Tag_Tree'Length = Tree_Node_Count (Obj)
                    and then
                  Event_Data'Length = Event_Vector_Length (Obj);
-
-   function Latest_Routine_Index (Obj      : Test_Reporter_Data;
-                                  Node_Tag : Tag) return Test_Routine_Index
-     with Pre => not Has_Duplicate_Node_Tag (Obj);
 
 end Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays;

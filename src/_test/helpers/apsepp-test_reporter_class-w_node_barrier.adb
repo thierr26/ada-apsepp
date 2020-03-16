@@ -354,8 +354,9 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Proc_Name  : constant String := Test_Reporter_Proc_Name (Event_Kind);
 
       Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
-        := (Routine_Index => Last_Routine_Index,
-            others        => <>);
+        := (Routine_Index      => First_Routine_Index,
+            Last_Routine_Index => Last_Routine_Index,
+            others             => <>);
 
       pragma Unreferenced (First_Routine_Index);
 

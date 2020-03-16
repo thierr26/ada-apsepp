@@ -195,12 +195,11 @@ package body Apsepp.Test_Reporter_Class.Struct_Builder is
 
          Ev : Ev_TRC;
 
-         pragma Unreferenced (First_K);
-
       begin
 
-         Ev.Set ((Routine_Index => Last_K,
-                  others        => <>));
+         Ev.Set ((Routine_Index      => First_K,
+                  Last_Routine_Index => Last_K,
+                  others             => <>));
 
          Data.Add_Event (Node_Tag, Ev);
 

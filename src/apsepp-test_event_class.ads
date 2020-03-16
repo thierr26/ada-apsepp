@@ -19,15 +19,11 @@ package Apsepp.Test_Event_Class is
       Date               : Time               := Time_First;
       Previous_Child_Tag : Tag                := No_Tag;
       Routine_Index      : Test_Routine_Index := Test_Routine_Index'First;
+      Last_Routine_Index : Test_Routine_Index := Test_Routine_Index'First;
       Assert_Num         : Test_Assert_Count  := Test_Assert_Count'First;
    end record;
 
-   -- TODO: Try to get rid of this invariant. <2020-03-07>
-   type Test_Event_Base is abstract tagged private
-     with Type_Invariant'Class =>
-            not (Test_Event_Base.Has_Routine_Index
-                   and then
-                 Test_Event_Base.Has_Last_Cancelled_Routine_Index);
+   type Test_Event_Base is abstract tagged private;
 
    not overriding
    procedure Set (Obj  : in out Test_Event_Base;

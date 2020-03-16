@@ -220,16 +220,19 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
       -----------------------------------------------------
 
       function Event_Data_As_Expected
-        (Data          : Node_Tag_Test_Event_Data;
-         Node_Tag      : Tag;
-         Has_E         : Boolean            := False;
-         Routine_Index : Test_Routine_Count := 0;
-         Assert_Num    : Test_Assert_Count  := 0) return Boolean
+        (Data               : Node_Tag_Test_Event_Data;
+         Node_Tag           : Tag;
+         Has_E              : Boolean            := False;
+         Routine_Index,
+         Last_Routine_Index : Test_Routine_Count := 0;
+         Assert_Num         : Test_Assert_Count  := 0) return Boolean
         is (Data.Node_Tag           = Node_Tag
               and then
             Data.Has_E              = Has_E
               and then
             Data.Routine_Index      = Routine_Index
+              and then
+            Data.Last_Routine_Index = Last_Routine_Index
               and then
             Data.Assert_Num         = Assert_Num
               and then
@@ -315,11 +318,8 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
          when Test_Routines_Cancellation =>
             TRSB.Report_Test_Routines_Cancellation
               (Node_Tag,
-               Latest_Routine_Index (Data_Bef.all, Node_Tag) + 1,
-               Event_Data.Routine_Index); -- Here we're doing as if
-                                          -- 'Event_Data.Routine_Index' was the
-                                          -- index of the last test routine of
-                                          -- the test case.
+               Event_Data.Routine_Index,
+               Event_Data.Last_Routine_Index);
          when Failed_Test_Routine_Access =>
             TRSB.Report_Failed_Test_Routine_Access (Node_Tag,
                                                     Event_Data.Routine_Index,
@@ -453,38 +453,43 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
                                                   Routine_Index => C_R_I + 1);
             when Test_Routines_Cancellation =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
-               E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
-                                                  Node_Tag);
+               E_D_A_E := Event_Data_As_Expected
+                 (Ev_A(Ev_A'Last),
+                  Node_Tag,
+                  Routine_Index      => C_R_I + 1,  -- Here we assume that the
+                  Last_Routine_Index => C_R_I + 1); -- first cancelled routine
+                                                    -- is also the last one in
+                                                    -- the test case.
             when Failed_Test_Routine_Access =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
                E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
                                                   Node_Tag,
-                                                  Has_E   => True,
+                                                  Has_E         => True,
                                                   Routine_Index => C_R_I);
             when Failed_Test_Routine_Setup =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
                E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
                                                   Node_Tag,
-                                                  Has_E   => True,
+                                                  Has_E         => True,
                                                   Routine_Index => C_R_I);
             when Passed_Test_Assert =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
                E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
                                                   Node_Tag,
-                                                  Routine_Index    => C_R_I,
-                                                  Assert_Num => C_A_N + 1);
+                                                  Routine_Index => C_R_I,
+                                                  Assert_Num    => C_A_N + 1);
             when Failed_Test_Assert =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
                E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
                                                   Node_Tag,
-                                                  Has_E      => True,
-                                                  Routine_Index    => C_R_I,
-                                                  Assert_Num => C_A_N + 1);
+                                                  Has_E         => True,
+                                                  Routine_Index => C_R_I,
+                                                  Assert_Num    => C_A_N + 1);
             when Unexpected_Routine_Exception =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);
                E_D_A_E := Event_Data_As_Expected (Ev_A(Ev_A'Last),
                                                   Node_Tag,
-                                                  Has_E   => True,
+                                                  Has_E         => True,
                                                   Routine_Index => C_R_I);
             when Passed_Test_Routine =>
                N_D_T_C_OK := Node_Data_Tree_Change_OK (T_B, T_A);

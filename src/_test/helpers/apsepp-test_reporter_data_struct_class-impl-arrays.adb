@@ -230,6 +230,10 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
                                         E.Routine_Index
                                      else
                                         0);
+            A.Last_Routine_Index := (if E.Has_Last_Cancelled_Routine_Index then
+                                        E.Last_Cancelled_Routine_Index
+                                     else
+                                        0);
             A.Assert_Num         := (if E.Has_Assert_Num then
                                         E.Assert_Num
                                      else
@@ -250,59 +254,6 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
       Obj.Event_Vector.Iterate (Process_Event_Data'Access);
 
    end To_Arrays;
-
-   ----------------------------------------------------------------------------
-
-   function Latest_Routine
-     (Obj                : Test_Reporter_Data;
-      Event_Index_Vector : Event_Index_Vectors.Vector)
-     return Test_Routine_Index is
-
-   begin
-
-      for K of reverse Event_Index_Vector loop
-
-         declare
-            Ev : constant Test_Event_Access
-              := Obj.Event_Vector.Element (K).Event;
-         begin
-            if Ev.Has_Routine_Index then
-               return Ev.Routine_Index; -- Early return.
-            end if;
-         end;
-
-      end loop;
-
-      pragma Warnings (Off, "value not in range");
-
-      return 0;
-
-      pragma Warnings (On, "value not in range");
-
-   end Latest_Routine;
-
-   ----------------------------------------------------------------------------
-
-   function Latest_Routine_Index (Obj      : Test_Reporter_Data;
-                                  Node_Tag : Tag) return Test_Routine_Index is
-
-   begin
-
-      for E of Obj.Node_Data_Tree loop
-
-         if E.T = Node_Tag then
-            return Latest_Routine (Obj, E.Event_Index_Vector); -- Early return.
-         end if;
-
-      end loop;
-
-      pragma Warnings (Off, "value not in range");
-
-      return 0;
-
-      pragma Warnings (On, "value not in range");
-
-   end Latest_Routine_Index;
 
    ----------------------------------------------------------------------------
 
