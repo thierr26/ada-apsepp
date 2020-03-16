@@ -50,15 +50,12 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
    procedure Null_Test_Routine is null;
 
-   -- TODO: Check if a zero length 'Routine_Array' would be valid (this would
-   -- at least imply a change of the output type of 'Routine_Count').
-   -- <2020-02-18>
    not overriding
    function Routine_Array (Obj : Test_Case) return Test_Routine_Array
      is abstract;
 
    not overriding
-   function Routine_Count (Obj : Test_Case) return Test_Routine_Index
+   function Routine_Count (Obj : Test_Case) return Test_Routine_Count
      is (Test_Case'Class (Obj).Routine_Array'Length);
 
    not overriding

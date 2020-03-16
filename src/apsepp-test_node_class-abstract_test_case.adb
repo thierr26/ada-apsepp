@@ -321,7 +321,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       -----------------------------------------------------
 
-      function Routine_Count return Test_Routine_Index
+      function Routine_Count return Test_Routine_Count
         is (if Is_Simu_Test_Case then
                Simu_Test_Case'Class (Obj).Routine_Count
             else
@@ -359,7 +359,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
       Outcome := Passed;
 
-      -- Loop over test case test routines.Loop is exited prematurely if 'Err'
+      -- Loop over test case test routines. Loop is exited prematurely if 'Err'
       -- is true (that is after a test routine run has failed with an
       -- "unexpected error"), see the exit statement at the bottom of the loop.
       for K in 1 .. N loop
@@ -591,7 +591,7 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
       function Routine_Array return Test_Routine_Array
         renames Test_Case'Class (Obj).Routine_Array;
 
-      Routine_Count : constant Test_Routine_Index
+      Routine_Count : constant Test_Routine_Count
         := Test_Case'Class (Obj).Routine_Count;
 
       function Routine
