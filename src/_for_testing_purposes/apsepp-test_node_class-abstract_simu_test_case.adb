@@ -30,7 +30,6 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
          "Attempt to get global data while protection barrier is opened.");
       return Global_Data;
    end Get_Global_Data;
-   -- TODO: Check whether this protection is appropriate. <2020-03-08>
 
    ----------------------------------------------------------------------------
 
@@ -45,7 +44,9 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
    begin
 
-      -- Re-open protection barrier.
+      -- Global data have been retrieved (see calls to 'Data.D' and 'Data.T'
+      -- above), so we can re-open the protection barrier to unblock the
+      -- concurrent tasks.
       Global_Data_Protection_Barrier.Open;
 
       for K in 1 .. D.Successful_Test_Assert_Count loop
@@ -179,6 +180,9 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
       end case;
 
       -- Close protection barrier and assign global data.
+      -- The 'Global_Data_Protection_Barrier.Close' entry call is blocking for
+      -- other concurrent tasks as long as the protection barrier is not
+      -- re-opened by 'Setup_Routine' or 'Simu_Test_Routine'.
       Global_Data_Protection_Barrier.Close;
       Global_Data.T := Simu_Test_Case'Class (Obj)'Tag;
       Global_Data.D := D;
@@ -212,7 +216,11 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
          when Setup_Failure  =>
 
-            -- Re-open protection barrier.
+            -- Re-open protection barrier. (In the usual case, the protection
+            -- barrier is re-opened in 'Simu_Test_Routine ', but in the
+            -- particular case where a setup failure occurs,
+            -- 'Simu_Test_Routine' is not run, so the protection barrier must
+            -- be re-opened here.)
             Global_Data_Protection_Barrier.Open;
 
             raise Simu_Test_Routine_Setup_Error
