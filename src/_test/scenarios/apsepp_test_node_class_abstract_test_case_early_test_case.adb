@@ -4,11 +4,9 @@
 with Ada.Unchecked_Deallocation,
      Ada.Assertions,
      Ada.Characters.Handling,
-     Ada.Tags,
      Ada.Strings.Fixed,
      Apsepp.Tags,
      Apsepp.Lock_Holder_Class,
-     Apsepp.Test_Node_Class.Abstract_Test_Case.Case_Status_Array,
      Apsepp.Test_Node_Class.Protected_Test_Node_Barrier,
      Apsepp.Test_Event_Class,
      Apsepp.Finalized_Debug_Tracer.Generic_Instantiator,
@@ -17,9 +15,6 @@ with Ada.Unchecked_Deallocation,
 package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
    use Ada.Characters.Handling,
-       Ada.Tags,
-       Apsepp.Test_Node_Class.Abstract_Test_Case.Case_Status_Array,
-       Apsepp_Testing_System_Test_Fixture,
        Apsepp.Test_Node_Class.Protected_Test_Node_Barrier,
        Apsepp.Test_Event_Class,
        Apsepp.Finalized_Debug_Tracer;
@@ -31,7 +26,9 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   function Expected_Case_Status_Array return Flat_Tag_Case_Status_Array
+   function Expected_Case_Status_Array
+     (T_F : not null access Apsepp_Testing_System_T_F)
+     return Flat_Tag_Case_Status_Array
      is ((T => T_F.A_R, Routine_I => 0, Assert_C => 0, Assert_O => Passed),
          (T => T_F.A,   Routine_I => 0, Assert_C => 0, Assert_O => Passed),
          (T => T_F.A,   Routine_I => 0, Assert_C => 0, Assert_O => Passed),
@@ -150,7 +147,6 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
    ----------------------------------------------------------------------------
 
-   -- Extract tag values from a 'Flat_Tag_Case_Status_Array' array.
    function Flat_Tag_Case_Status_Array_To_Tag_Array
      (A : Flat_Tag_Case_Status_Array) return Tag_Array is
 
@@ -182,6 +178,7 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
       -----------------------------------------------------
 
       -- Output a debug trace of a 'Flat_Tag_Case_Status_Array' array.
+      -- 'Msg_Pref' is used as a prefix for the output messages.
       procedure Put_Array (A        : Flat_Tag_Case_Status_Array;
                            Msg_Pref : String) is
 
@@ -276,7 +273,9 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
       Is_Runner : constant Boolean := Ada.Characters.Handling.Is_Lower (Char);
 
-      Exp     : constant Flat_Tag_Case_Status := Expected_Case_Status_Array(K);
+      Exp : constant Flat_Tag_Case_Status
+        := Expected_Case_Status_Array (T_F)(K);
+
       Exp_R_I : constant Test_Routine_Count   := Exp.Routine_I;
       Exp_A_C : constant Test_Assert_Count    := Exp.Assert_C;
       Exp_A_O : constant Test_Outcome         := Exp.Assert_O;
@@ -467,7 +466,7 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
                              "Test fixture already locked.");
 
       Expected_Tag := new Tag_Array'(Flat_Tag_Case_Status_Array_To_Tag_Array
-                                       (Expected_Case_Status_Array));
+                                       (Expected_Case_Status_Array (T_F)));
 
       T_F.Run_Test (Expected_Tag, Validate'Access);
 

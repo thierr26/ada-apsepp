@@ -1,10 +1,10 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Exceptions;         use Ada.Exceptions;
-with Ada.Calendar;           use Ada.Calendar;
-with Ada.Tags;               use Ada.Tags;
-with Apsepp.Calendar;        use Apsepp.Calendar;
+with Ada.Exceptions;  use Ada.Exceptions;
+with Ada.Calendar;    use Ada.Calendar;
+with Ada.Tags;        use Ada.Tags;
+with Apsepp.Calendar; use Apsepp.Calendar;
 
 with Apsepp.Test_Case_Count_Types;
   use Apsepp.Test_Case_Count_Types;
@@ -17,7 +17,7 @@ package Apsepp.Test_Event_Class is
    type Test_Event_Data is record
       Error              : Exception_Occurrence_Access;
       Date               : Time               := Time_First;
-      Previous_Child_Tag : Tag;
+      Previous_Child_Tag : Tag                := No_Tag;
       Routine_Index      : Test_Routine_Index := Test_Routine_Index'First;
       Assert_Num         : Test_Assert_Count  := Test_Assert_Count'First;
    end record;
@@ -38,7 +38,7 @@ package Apsepp.Test_Event_Class is
 
    not overriding
    function Is_Node_Run_Final_Event (Obj : Test_Event_Base) return Boolean
-     is (False);
+     is abstract;
 
    not overriding
    function Exception_Access
@@ -104,7 +104,7 @@ package Apsepp.Test_Event_Class is
 
    ----------------------------------------------------------------------------
 
-   type Test_Event is abstract new Test_Event_Base with private;
+   type Test_Event is new Test_Event_Base with private;
 
    overriding
    function Is_Node_Run_Final_Event (Obj : Test_Event) return Boolean
@@ -113,7 +113,7 @@ package Apsepp.Test_Event_Class is
 
    ----------------------------------------------------------------------------
 
-   type Test_Event_Final is abstract new Test_Event_Base with private;
+   type Test_Event_Final is new Test_Event_Base with private;
 
    overriding
    function Is_Node_Run_Final_Event (Obj : Test_Event_Final) return Boolean
@@ -126,8 +126,8 @@ private
 
    type Test_Event_Base is abstract tagged null record;
 
-   type Test_Event is abstract new Test_Event_Base with null record;
+   type Test_Event is new Test_Event_Base with null record;
 
-   type Test_Event_Final is abstract new Test_Event_Base with null record;
+   type Test_Event_Final is new Test_Event_Base with null record;
 
 end Apsepp.Test_Event_Class;

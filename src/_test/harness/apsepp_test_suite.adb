@@ -8,7 +8,8 @@ package body Apsepp_Test_Suite is
    overriding
    function Child_Array (Obj : Apsepp_T_S) return Test_Node_Array
      is (Scope_Bound_Locking_T_C'Access,
-         Test_Node_Class_Abstract_Test_Case_E_T_C'Access);
+         Test_Node_Class_Abstract_Test_Case_E_T_C'Access,
+         Test_Reporter_Class_Struct_Builder_Impl_E_T_C'Access);
 
    ----------------------------------------------------------------------------
 

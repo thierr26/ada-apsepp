@@ -3,8 +3,12 @@
 
 with Apsepp.Test_Node_Class.Abstract_Test_Suite;
   use Apsepp.Test_Node_Class.Abstract_Test_Suite;
+
 with Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case;
   use Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case;
+
+with Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case ;
+  use Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case ;
 
 private with Apsepp_Scope_Bound_Locking_Test_Case;
 
@@ -20,7 +24,11 @@ private
    use Apsepp_Scope_Bound_Locking_Test_Case;
 
    Scope_Bound_Locking_T_C : aliased Apsepp_Scope_Bound_Locking_T_C;
+
    Test_Node_Class_Abstract_Test_Case_E_T_C :
      aliased Apsepp_Test_Node_Class_Abstract_Test_Case_E_T_C;
+
+   Test_Reporter_Class_Struct_Builder_Impl_E_T_C :
+     aliased Apsepp_Test_Reporter_Class_Struct_Builder_Impl_E_T_C;
 
 end Apsepp_Test_Suite;

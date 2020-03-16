@@ -189,6 +189,6 @@ package Apsepp.Test_Reporter_Class is
 
    -- TODOC: Called by 'Test_Node_Class.Runner_Sequential.Run'. <2019-03-03>
    not overriding
-   procedure Process (Obj : in out Test_Reporter_Interfa) is null;
+   procedure Render (Obj : in out Test_Reporter_Interfa) is null;
 
 end Apsepp.Test_Reporter_Class;
