@@ -9,12 +9,9 @@ package Apsepp.Test_Node_Class.Abstract_Test_Suite is
    type Test_Node_Array is array (Test_Node_Index range <>)
      of not null access Test_Node_Interfa'Class;
 
-   -- TODO: Check if zero child would be valid. <2020-02-26>
    type Test_Suite
      is abstract limited new Children_Early_Test_Handler with private
      with Type_Invariant'Class =>
-            Test_Suite.Child_Count >= 1
-              and then
             Test_Suite.Child_Array_Equiv_To_Child
               and then
             Test_Suite.Has_Early_Test;
