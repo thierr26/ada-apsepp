@@ -248,19 +248,21 @@ help:
 	@echo Targets:
 	@echo
 	@echo
-	@echo '  clean [P]                 - Cleanup project (keeps executables'
+	@echo '  clean [P]                 - Clean up project (keep executables'
 	@echo '                              and HTML coverage report).'
 	@echo
-	@echo '  clean_all                 - Same as clean, but for all projects.'
+	@echo '  compile [P] [B] [F]       - Recompile specific file(s) or all'
+	@echo '                              sources in the project if [F] is not'
+	@echo '                              provided. No binding or linking.'
 	@echo
-	@echo '  compile_all [B]           - Compile all sources of all projects.'
+	@echo '  clean_all                 - Same as "clean", but for all'
+	@echo '                              projects.'
+	@echo
+	@echo '  compile_all [B]           - Do "clean_all" and compile all'
+	@echo '                              sources of all projects.'
 	@echo
 	@echo '  build [P] [B]             - Build project (creates executables'
 	@echo '                              in "$(bin_dir)" subdirectory).'
-	@echo
-	@echo '  compile [P] [B] [F]       - Compile specific file(s) or all'
-	@echo '                              sources if [F] is not provided. No'
-	@echo '                              binding or linking.'
 	@echo
 	@echo '  test [B] [PROFILER] [PRG] - Build $(default_proj) and run test'
 	@echo '                              program.'
