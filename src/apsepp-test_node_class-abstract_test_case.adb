@@ -308,16 +308,9 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
           Private_Test_Reporter,
           Abstract_Simu_Test_Case;
 
-      -----------------------------------------------------
-
-      -- TODO: Create common ancestor for 'Test_Case' and
-      -- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case.Simu_Test_Case' (and
-      -- possibly
-      -- 'Apsepp.Test_Node_Class.Abstract_Early_Test_Case.Early_Test_Case') to
-      -- avoid the downward conversions. <2020-03-09>
-      function Is_Simu_Test_Case return Boolean
-        is (Is_Descendant_At_Same_Level (Descendant => Obj'Tag,
-                                         Ancestor   => Simu_Test_Case'Tag));
+      Is_Simu_Test_Case : constant Boolean
+        := Is_Descendant_At_Same_Level (Descendant => Obj'Tag,
+                                        Ancestor   => Simu_Test_Case'Tag);
 
       -----------------------------------------------------
 
