@@ -11,8 +11,6 @@ with Apsepp.Generic_Safe_Integer_Operations;
 
 package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
-   -- IDEA: Use tags from objects of 'Test_Event_Base'Class' instead?
-   -- <2020-03-07>
    type Test_Event_Kind is (Failed_Child_Test_Node_Access,
                             Unexpected_Node_Cond_Check_Error,
                             Unexpected_Node_Run_Error,
