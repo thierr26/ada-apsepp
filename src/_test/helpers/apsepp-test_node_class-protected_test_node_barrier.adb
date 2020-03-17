@@ -86,7 +86,7 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
          Tag_To_Char_Function       : not null Tag_To_Char_Func;
          Char_To_Tag_Function       : not null Char_To_Tag_Func;
          Validate_Procedure         : not null Validate_Proc;
-         Expected_Tags_Array_Access : not null access Tag_Array) is
+         Expected_Tags_Array_Access : not null access constant Tag_Array) is
 
       begin
 

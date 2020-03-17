@@ -64,7 +64,7 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
          Tag_To_Char_Function       : not null Tag_To_Char_Func;
          Char_To_Tag_Function       : not null Char_To_Tag_Func;
          Validate_Procedure         : not null Validate_Proc;
-         Expected_Tags_Array_Access : not null access Tag_Array);
+         Expected_Tags_Array_Access : not null access constant Tag_Array);
 
       entry Cross(ISO_646) (Event_Kind : Test_Event_Kind;
                             Event_Data : Test_Event_Data);
@@ -91,7 +91,7 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
    private
 
-      Expected_Tags_Array : access Tag_Array;
+      Expected_Tags_Array : access constant Tag_Array;
 
       Crossing_Count : Safe_Natural_Operations.Safe_Integer;
 
