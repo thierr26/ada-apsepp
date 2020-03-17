@@ -26,7 +26,7 @@ package body Apsepp_Demo_DT_Finalized_Tracer_User is
       -- Parameters of 'Apsepp.Finalized_Debug_Tracer.Generic_Instantiator'
       -- are:
       --
-      -- 'Entity_Name' : A string that designates the scope. Can be an empty
+      -- 'Scope_Name' : A string that designates the scope. Can be an empty
       -- string (and in this case the string is not used in the traces).
       --
       -- 'Kind' : A value of enumeration type 'Controlled_Debug_Tracer_Kind'.
@@ -42,7 +42,7 @@ package body Apsepp_Demo_DT_Finalized_Tracer_User is
       -- - 'N' (stands for "none"): None of the entry and exit traces is
       -- output.
       package C_D_T is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-        (Entity_Name =>
+        (Scope_Name =>
            "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_1");
 
    begin
@@ -64,7 +64,7 @@ package body Apsepp_Demo_DT_Finalized_Tracer_User is
    procedure Finalized_Tracer_User_2 is
 
       package C_D_T is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-        (Entity_Name =>
+        (Scope_Name =>
            "Apsepp_Demo_DT_Finalized_Tracer_User.Finalized_Tracer_User_2");
 
       pragma Unreferenced (C_D_T);

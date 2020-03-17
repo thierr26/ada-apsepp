@@ -9,7 +9,7 @@ package body Apsepp.Finalized_Debug_Tracer.Generic_Instantiator is
 
    overriding
    procedure Finalize
-     (Obj : in out Controlled_Debug_Tracer_W_Entity_Name_Dealloc) is
+     (Obj : in out Controlled_Debug_Tracer_W_Scope_Name_Dealloc) is
 
       procedure Free is new Ada.Unchecked_Deallocation
         (Object => String,
@@ -19,7 +19,7 @@ package body Apsepp.Finalized_Debug_Tracer.Generic_Instantiator is
 
       Controlled_Debug_Tracer (Obj).Finalize; -- Inherited procedure call.
 
-      Free (Entity_Name_Access);
+      Free (Scope_Name_Access);
 
    end Finalize;
 

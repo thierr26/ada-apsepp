@@ -15,8 +15,8 @@ package body Apsepp.Finalized_Debug_Tracer is
       if Entry_Trace_Required (Obj.Kind) then
 
          Debug_Trace.Debug_Trace.Trace
-           ("Entry",
-            Controlled_Debug_Tracer'Class (Obj).Entity_Name);
+           (Item        => "Entry",
+            Entity_Name => Controlled_Debug_Tracer'Class (Obj).Scope_Name);
 
       end if;
 
@@ -32,8 +32,8 @@ package body Apsepp.Finalized_Debug_Tracer is
       if Exit_Trace_Required (Obj.Kind) then
 
          Debug_Trace.Debug_Trace.Trace
-           ("Exit",
-            Controlled_Debug_Tracer'Class (Obj).Entity_Name);
+           (Item        => "Exit",
+            Entity_Name => Controlled_Debug_Tracer'Class (Obj).Scope_Name);
 
       end if;
 
@@ -48,8 +48,8 @@ package body Apsepp.Finalized_Debug_Tracer is
    begin
 
       Debug_Trace.Debug_Trace.Trace
-        (Item,
-         Controlled_Debug_Tracer'Class (Obj).Entity_Name);
+        (Item        => Item,
+         Entity_Name => Controlled_Debug_Tracer'Class (Obj).Scope_Name);
 
    end Trace;
 
@@ -62,8 +62,8 @@ package body Apsepp.Finalized_Debug_Tracer is
    begin
 
       Debug_Trace.Debug_Trace.Trace_E
-        (Error,
-         Controlled_Debug_Tracer'Class (Obj).Entity_Name);
+        (Error       => Error,
+         Entity_Name => Controlled_Debug_Tracer'Class (Obj).Scope_Name);
 
    end Trace_E;
 
@@ -77,8 +77,8 @@ package body Apsepp.Finalized_Debug_Tracer is
    begin
 
       Debug_Trace.Debug_Trace.Trace_Time
-        (Controlled_Debug_Tracer'Class (Obj).Entity_Name,
-         Reset_Elapsed);
+        (Entity_Name   => Controlled_Debug_Tracer'Class (Obj).Scope_Name,
+         Reset_Elapsed => Reset_Elapsed);
 
    end Trace_Time;
 

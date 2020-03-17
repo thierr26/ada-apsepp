@@ -186,7 +186,7 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
 
          package C_D_T
          is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-           (Entity_Name =>
+           (Scope_Name =>
               "Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case"
               & ".Validate.Put_Array",
             Kind        => N);

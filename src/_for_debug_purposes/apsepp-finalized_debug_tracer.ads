@@ -9,7 +9,7 @@ package Apsepp.Finalized_Debug_Tracer is
    type Controlled_Debug_Tracer_Kind is (A, I, F, N);
 
    type Controlled_Debug_Tracer
-     (Entity_Name_Access : access constant String;
+     (Scope_Name_Access : access constant String;
       Kind               : Controlled_Debug_Tracer_Kind)
      is limited new Limited_Controlled with private;
 
@@ -33,16 +33,16 @@ package Apsepp.Finalized_Debug_Tracer is
       Reset_Elapsed : Boolean                 := False);
 
    not overriding
-   function Entity_Name (Obj : Controlled_Debug_Tracer) return String
-     is (if Obj.Entity_Name_Access = null then
+   function Scope_Name (Obj : Controlled_Debug_Tracer) return String
+     is (if Obj.Scope_Name_Access = null then
             ""
          else
-            Obj.Entity_Name_Access.all);
+            Obj.Scope_Name_Access.all);
 
 private
 
    type Controlled_Debug_Tracer
-     (Entity_Name_Access : access constant String;
+     (Scope_Name_Access : access constant String;
       Kind               : Controlled_Debug_Tracer_Kind)
      is limited new Limited_Controlled with null record;
 

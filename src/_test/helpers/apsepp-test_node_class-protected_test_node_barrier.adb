@@ -11,14 +11,14 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
    -- TODO: Create a generic package for hierarchical name manipulation.
    -- <2020-03-07>
-   function Prefixed_Entity (Prefix, Entity_Name : String) return String
-     is (Prefix & "." & Entity_Name);
+   function Prefixed_Scope (Prefix, Scope_Name : String) return String
+     is (Prefix & "." & Scope_Name);
 
    ----------------------------------------------------------------------------
 
-   function Full_Local_Entity_Name (Local_Entity_Name : String) return String
-     is (Prefixed_Entity ("Apsepp.Test_Node_Class.Protected_Test_Node_Barrier",
-                          Local_Entity_Name));
+   function Full_Local_Scope_Name (Local_Scope_Name : String) return String
+     is (Prefixed_Scope ("Apsepp.Test_Node_Class.Protected_Test_Node_Barrier",
+                          Local_Scope_Name));
 
    ----------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
       function Protected_Subprogram_Name
         (Subprogram_Name : String) return String
-        is (Prefixed_Entity ("Test_Node_Barrier", Subprogram_Name));
+        is (Prefixed_Scope ("Test_Node_Barrier", Subprogram_Name));
 
       -----------------------------------------------------
 
@@ -205,15 +205,15 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
          -- PORT: Defining 'C_D_T' as an instance of generic package
          -- 'Apsepp.Finalized_Debug_Tracer.Generic_Instantiator' causes a
          -- compiler crash. <2020-03-08>
-         Entity_Name : aliased constant String
-           := Full_Local_Entity_Name (Protected_Subprogram_Name ("Cross"));
+         Scope_Name : aliased constant String
+           := Full_Local_Scope_Name (Protected_Subprogram_Name ("Cross"));
          C_D_T : Apsepp.Finalized_Debug_Tracer.Controlled_Debug_Tracer
-           (Entity_Name_Access => Entity_Name'Access,
+           (Scope_Name_Access => Scope_Name'Access,
             Kind               => N);
          -- package C_D_T
          --   is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-         --   (Entity_Name =>
-         --      Full_Local_Entity_Name (Protected_Subprogram_Name ("Cross")),
+         --   (Scope_Name =>
+         --      Full_Local_Scope_Name (Protected_Subprogram_Name ("Cross")),
          --    Kind        => N);
 
          function Msg_Pref return String is
@@ -265,9 +265,8 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
       exception
 
-         when E : others => -- Should be
-                            -- 'Ada.Assertions.Assertion_Error' raised by
-                            -- 'Validate'.
+         when E : others => -- Should be 'Ada.Assertions.Assertion_Error'
+                            -- raised by 'Validate'.
             C_D_T.Trace (Msg_Pref & Exception_Message (E));
             Failed_Validation_Flag := True;
 
@@ -282,8 +281,8 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
          package C_D_T
            is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
-           (Entity_Name =>
-              Full_Local_Entity_Name (Protected_Subprogram_Name ("Time_Out")),
+           (Scope_Name =>
+              Full_Local_Scope_Name (Protected_Subprogram_Name ("Time_Out")),
             Kind        => N);
 
       begin

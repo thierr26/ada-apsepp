@@ -3,7 +3,7 @@
 
 generic
 
-   Entity_Name : String := "";
+   Scope_Name : String := "";
 
    Kind : Controlled_Debug_Tracer_Kind := A;
 
@@ -19,17 +19,17 @@ private
 
    type String_Access is access String;
 
-   Entity_Name_Access : String_Access := new String'(Entity_Name);
+   Scope_Name_Access : String_Access := new String'(Scope_Name);
 
-   type Controlled_Debug_Tracer_W_Entity_Name_Dealloc
+   type Controlled_Debug_Tracer_W_Scope_Name_Dealloc
      is limited new Controlled_Debug_Tracer with null record;
 
    overriding
    procedure Finalize
-     (Obj : in out Controlled_Debug_Tracer_W_Entity_Name_Dealloc);
+     (Obj : in out Controlled_Debug_Tracer_W_Scope_Name_Dealloc);
 
-   C_D_T : Controlled_Debug_Tracer_W_Entity_Name_Dealloc
-     (Entity_Name_Access => Entity_Name_Access,
+   C_D_T : Controlled_Debug_Tracer_W_Scope_Name_Dealloc
+     (Scope_Name_Access => Scope_Name_Access,
       Kind               => Kind);
 
 end Apsepp.Finalized_Debug_Tracer.Generic_Instantiator;
