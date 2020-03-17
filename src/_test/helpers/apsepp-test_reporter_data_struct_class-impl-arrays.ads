@@ -46,8 +46,6 @@ package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
    type Node_Tag_Test_Event_Data_Array
      is array (Positive range <>) of Node_Tag_Test_Event_Data;
 
-   -- TODO: Check whether 'Test_Routine_Index' would be OK as return type.
-   -- <2020-03-16>
    function Current_Routine_Index (A : Node_Tag_Test_Event_Data_Array;
                                    K : Positive) return Test_Routine_Count
      with Pre => K in A'Range;
