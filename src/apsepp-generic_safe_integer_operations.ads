@@ -12,8 +12,7 @@ package Apsepp.Generic_Safe_Integer_Operations is
    -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
 
-   type Safe_Integer is private
-     with Type_Invariant => Safe_Integer_Invariant (Safe_Integer);
+   type Safe_Integer is private;
 
    subtype Natural_Safe_Integer is Safe_Integer
      with Dynamic_Predicate => Val (Natural_Safe_Integer) >= 0;
@@ -39,15 +38,6 @@ package Apsepp.Generic_Safe_Integer_Operations is
 
    procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1);
 
-   function Safe_Integer_Invariant (X : Safe_Integer) return Boolean
-     is (
-          Val (X) = Integer_Type'First
-            or else
-          Val (X) = Integer_Type'Last
-            or else
-          not Sat (X)
-        );
-
 private
 
    type Safe_Integer is record
@@ -56,6 +46,13 @@ private
 
       S : Boolean      := False;
 
-   end record;
+   end record
+     with Type_Invariant => (
+                              Val (Safe_Integer) = Integer_Type'First
+                                or else
+                              Val (Safe_Integer) = Integer_Type'Last
+                                or else
+                              not Sat (Safe_Integer)
+                            );
 
 end Apsepp.Generic_Safe_Integer_Operations;
