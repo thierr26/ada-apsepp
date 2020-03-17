@@ -66,12 +66,8 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
          Validate_Procedure         : not null Validate_Proc;
          Expected_Tags_Array_Access : not null access Tag_Array);
 
-      -- TODOC: 'Event_Data' is 'in out' because 'Cross' frees
-      -- 'Event_Data.Error'. <2020-03-07>
-      -- TODO: Check whether this is the best place for freeing
-      -- 'Event_Data.Error'. <2020-03-08>
-      entry Cross(ISO_646) (Event_Kind :        Test_Event_Kind;
-                            Event_Data : in out Test_Event_Data);
+      entry Cross(ISO_646) (Event_Kind : Test_Event_Kind;
+                            Event_Data : Test_Event_Data);
 
       procedure Time_Out;
 

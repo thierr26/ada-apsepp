@@ -1,8 +1,7 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Unchecked_Deallocation,
-     Ada.Exceptions,
+with Ada.Exceptions,
      Apsepp.Finalized_Debug_Tracer.Generic_Instantiator,
      Apsepp.Generic_Discrete_Operations;
 
@@ -196,8 +195,8 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
       -----------------------------------------------------
 
       entry Cross(for Char in ISO_646)
-        (Event_Kind :        Test_Event_Kind;
-         Event_Data : in out Test_Event_Data) when Cross_Condition (Char) is
+        (Event_Kind : Test_Event_Kind;
+         Event_Data : Test_Event_Data) when Cross_Condition (Char) is
 
          use Ada.Exceptions,
              Safe_Natural_Operations,
@@ -223,10 +222,6 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
             C_C_Str(1) := '#';
             return "Crossing " & C_C_Str & Char_Name_Image (Char);
          end Msg_Pref;
-
-         procedure Free is new Ada.Unchecked_Deallocation
-           (Object => Exception_Occurrence,
-            Name   => Exception_Occurrence_Access);
 
       begin
 
@@ -265,11 +260,6 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
                    Char,
                    Char_To_Tag,
                    Msg_Pref);
-
-         -- Free the exception allocated by 'Save_Occurrence' in the
-         -- 'Report_' primitives of
-         -- 'Apsepp.Test_Reporter_Class.W_Barrier.Test_Reporter_W_Barrier'.
-         Free (Event_Data.Error);
 
          C_D_T.Trace (Msg_Pref(Msg_Pref'First .. Msg_Pref'Last - 2));
 
