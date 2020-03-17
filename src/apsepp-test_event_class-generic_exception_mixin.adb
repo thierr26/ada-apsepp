@@ -35,12 +35,14 @@ package body Apsepp.Test_Event_Class.Generic_Exception_Mixin is
 
    ----------------------------------------------------------------------------
 
+   overriding
    function Exception_Access
      (Obj : Child_W_Exception) return Exception_Occurrence_Access
      is (Obj.Error);
 
    ----------------------------------------------------------------------------
 
+   overriding
    procedure Free_Exception (Obj : in out Child_W_Exception) is
 
       procedure Free is new Ada.Unchecked_Deallocation

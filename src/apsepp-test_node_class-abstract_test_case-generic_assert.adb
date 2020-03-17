@@ -9,4 +9,4 @@ begin
 
    Assert (Test_Case_Tag, Cond, Message);
 
-end;
+end Apsepp.Test_Node_Class.Abstract_Test_Case.Generic_Assert;

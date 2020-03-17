@@ -24,7 +24,6 @@ package body Apsepp_Testing_System_Test_Fixture is
        Apsepp.Debug_Trace,
        Apsepp.Test_Reporter_Class.W_Node_Barrier;
 
-
    ----------------------------------------------------------------------------
 
    -- Define simulated test case types.

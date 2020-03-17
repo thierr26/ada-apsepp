@@ -193,7 +193,7 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
                end loop;
 
                Ret := Deactivated_Node_Tag = No_Tag or else Deactivated_Found;
-               exit when not Ret;              -- Early exit.
+               exit Main_Loop when not Ret;    -- Early exit.
 
                if K_Added = 0 then
 
@@ -209,7 +209,7 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
 
                end if;
 
-               exit;                           -- Early exit.
+               exit Main_Loop;                 -- Early exit.
 
             end loop Main_Loop;
 

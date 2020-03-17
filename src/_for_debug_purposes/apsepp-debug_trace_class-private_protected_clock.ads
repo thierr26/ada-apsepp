@@ -26,4 +26,4 @@ private package Apsepp.Debug_Trace_Class.Private_Protected_Clock is
 
    ----------------------------------------------------------------------------
 
-end Apsepp.Debug_Trace_Class.Private_Protected_Clock ;
+end Apsepp.Debug_Trace_Class.Private_Protected_Clock;
