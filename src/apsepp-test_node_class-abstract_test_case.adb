@@ -443,12 +443,19 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
             Outcome := Failed;
 
-            Test_Reporter.Report_Test_Routines_Cancellation
-              (Node_Tag            => Obj'Tag,
-               First_Routine_Index => K + 1,
-               Last_Routine_Index  => N);
+            if K < N then
+               -- The current test routine is not the last one.
 
-            exit;
+               -- Report cancellation of remaining test routines and exit the
+               -- loop.
+               Test_Reporter.Report_Test_Routines_Cancellation
+                 (Node_Tag            => Obj'Tag,
+                  First_Routine_Index => K + 1,
+                  Last_Routine_Index  => N);
+
+               exit; -- Early exit.
+
+            end if;
 
          end if;
 
