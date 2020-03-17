@@ -558,6 +558,10 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
 
       T_F.Run_Test (Expected_Tag, Validate'Access);
 
+      -- The call to 'TRSB.Render' does not produce any output but is important
+      -- because it clears the data structure.
+      TRSB.Render;
+
       Free (Expected_Tag);
 
    exception
