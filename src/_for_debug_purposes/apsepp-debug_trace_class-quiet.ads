@@ -11,8 +11,6 @@ package Apsepp.Debug_Trace_Class.Quiet is
                            Entity_Name : String) return String
      is (Entity_Name & ": " & Item);
 
-   -- TODO: Commonize with 'Abstract_Early_Test_Case' and 'Instant_Standard'.
-   -- <2020-02-24>
    overriding
    function E_To_String (Obj   : Debug_Trace_Quiet;
                          Error : Exception_Occurrence) return String

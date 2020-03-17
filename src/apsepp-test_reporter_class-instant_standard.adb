@@ -120,8 +120,8 @@ package body Apsepp.Test_Reporter_Class.Instant_Standard is
    ----------------------------------------------------------------------------
 
    procedure Put_Exception_Message
-     (Name, Message                : String;
-      Quiet_If_Zero_Length_Message : Boolean := False) is
+     (Name,                         Message : String;
+      Quiet_If_Zero_Length_Message          : Boolean := False) is
 
       Zero_Length_Name    : constant Boolean := Name'Length = 0;
       Zero_Length_Message : constant Boolean := Message'Length = 0;
