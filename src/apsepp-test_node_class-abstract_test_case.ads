@@ -9,7 +9,7 @@ with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body,
 
 private with Ada.Containers.Hashed_Maps,
              Apsepp.Tags,
-             Apsepp.Generic_Array_Operations.W_F_Elem;
+             Apsepp.Generic_Discrete_Operations.Is_Lim_Array_Wo_Dup;
 
 package Apsepp.Test_Node_Class.Abstract_Test_Case is
 
@@ -126,16 +126,15 @@ private
                                         Hash            => Tag_Hash,
                                         Equivalent_Keys => "=");
 
-   package Case_Tag_Status_Array_Operations
-     is new Generic_Array_Operations (Index_Type   => Test_Node_Index,
-                                      Element_Type => Case_Tag_Status,
-                                      Array_Type   => Case_Tag_Status_Array);
-   package Case_Tag_Status_Array_W_F_Elem
-     is new Case_Tag_Status_Array_Operations.W_F_Elem (Return_Type => Tag);
-   use Case_Tag_Status_Array_W_F_Elem;
-
    function Tag_Value (X : Case_Tag_Status) return Tag
      is (X.T);
+
+   function No_Duplicates
+     is new Test_Node_Index_Operations.Is_Lim_Array_Wo_Dup
+     (Element_Type          => Case_Tag_Status,
+      Array_Type            => Case_Tag_Status_Array,
+      Element_Func_Ret_Type => Tag,
+      Element_Func          => Tag_Value);
 
    protected Case_Status_Map_Handler is
 
@@ -175,12 +174,14 @@ private
       function Count return Test_Node_Count;
 
       -- TODOC: For testing purposes. <2020-02-23>
+      -- TODOC: The first element (if any) of the returned array contains 'T'
+      -- and 'S'. <2020-03-18>
       function To_Array return Case_Tag_Status_Array
         with Post => To_Array'Result'First = 1
                        and then
                      To_Array'Result'Length = Count
                        and then
-                     No_Duplicates (Tag_Value'Access, To_Array'Result);
+                     No_Duplicates (To_Array'Result);
 
    private
 

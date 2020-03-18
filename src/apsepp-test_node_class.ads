@@ -1,6 +1,8 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+private with Apsepp.Generic_Discrete_Operations;
+
 package Apsepp.Test_Node_Class is
 
    -- Force run-time class-wide pre-condition check in this package.
@@ -69,5 +71,11 @@ package Apsepp.Test_Node_Class is
 
    function Has_No_Children_W_Same_Tags
      (Obj : Test_Node_Interfa'Class) return Boolean;
+
+private
+
+      package Test_Node_Index_Operations is new Generic_Discrete_Operations
+        (Discrete_Type => Test_Node_Index,
+         Diff_Type     => Test_Node_Count'Base);
 
 end Apsepp.Test_Node_Class;

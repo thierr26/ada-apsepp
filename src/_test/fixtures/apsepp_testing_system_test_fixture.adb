@@ -12,8 +12,7 @@ with Ada.Assertions,
      Apsepp.Debug_Trace,
      Apsepp.Debug_Trace_Class.Standard,
      Apsepp.Generic_Shared_Instance.Finalized_S_R,
-     Apsepp.Generic_Array_Operations.W_F_Elem,
-     Apsepp.Generic_Discrete_Operations;
+     Apsepp.Generic_Discrete_Operations.Is_Lim_Array_Wo_Dup;
 
 package body Apsepp_Testing_System_Test_Fixture is
 
@@ -236,17 +235,23 @@ package body Apsepp_Testing_System_Test_Fixture is
 
       Dup_Tag : constant String := "Duplicate tag in array ";
 
-      package Test_Node_Char_Array_Operations
-        is new Apsepp.Generic_Array_Operations
-          (Index_Type   => ISO_646_Upper_Letter,
-           Element_Type => Test_Node_Access,
-           Array_Type   => Test_Node_Char_Array);
-      package Test_Node_Char_Array_W_F_Elem
-        is new Test_Node_Char_Array_Operations.W_F_Elem (Return_Type => Tag);
-      use Test_Node_Char_Array_W_F_Elem;
+      -- 'Short_Short_Integer' would be more appropriate as the actual for
+      -- 'Diff_Type', but the compiler may not support it.
+      -- REF: ARM 3.5.4(25). <2020-03-18>
+      package ISO_646_Upper_Letter_Operations
+        is new Apsepp.Generic_Discrete_Operations
+        (Discrete_Type => ISO_646_Upper_Letter,
+         Diff_Type     => Integer);
 
       function Tag_Value (X : Test_Node_Access) return Tag
         is (X'Tag);
+
+      function No_Duplicates
+        is new ISO_646_Upper_Letter_Operations.Is_Lim_Array_Wo_Dup
+        (Element_Type          => Test_Node_Access,
+         Array_Type            => Test_Node_Char_Array,
+         Element_Func_Ret_Type => Tag,
+         Element_Func          => Tag_Value);
 
       use Apsepp.Test_Node_Class.Runner_Sequential;
 
@@ -257,8 +262,7 @@ package body Apsepp_Testing_System_Test_Fixture is
            Is_Descendant_At_Same_Level (E'Tag, Simu_Test_Case'Tag)),
          "Simu_Case" & Not_All_Desc & "Simu_Test_Case");
 
-      Ada.Assertions.Assert (No_Duplicates (Tag_Value'Access, Simu_Case),
-                             Dup_Tag & "Simu_Case");
+      Ada.Assertions.Assert (No_Duplicates (Simu_Case), Dup_Tag & "Simu_Case");
 
       Ada.Assertions.Assert
         ((for all E of Slave_Runner_Arr =>
@@ -271,9 +275,8 @@ package body Apsepp_Testing_System_Test_Fixture is
          "No element in Slave_Runner_Arr should have the tag of "
          & "Test_Runner_Sequential_W_Slave_Nodes");
 
-      Ada.Assertions.Assert
-        (No_Duplicates (Tag_Value'Access, Slave_Runner_Arr),
-         Dup_Tag & "Slave_Runner_Arr");
+      Ada.Assertions.Assert (No_Duplicates (Slave_Runner_Arr),
+                             Dup_Tag & "Slave_Runner_Arr");
 
    end Assert_Node_Tags;
 
