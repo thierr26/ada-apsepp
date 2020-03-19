@@ -32,9 +32,8 @@ package Apsepp.Test_Node_Class.Runner_Sequential is
       Outcome :    out Test_Outcome;
       Kind    :        Run_Kind               := Assert_Cond_And_Run_Test);
 
-   not overriding
    function Runner_Sequential_Invariant
-     (Obj : Test_Runner_Sequential) return Boolean;
+     (Obj : Test_Runner_Sequential'Class) return Boolean;
 
 private
 
