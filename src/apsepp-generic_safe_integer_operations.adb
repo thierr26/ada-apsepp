@@ -166,4 +166,19 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
+   function Inc (X  : Safe_Integer;
+                 By : Natural_Base := 1) return Safe_Integer is
+
+      Ret : Safe_Integer := X;
+
+   begin
+
+      Inc (Ret, By);
+
+      return Ret;
+
+   end Inc;
+
+   ----------------------------------------------------------------------------
+
 end Apsepp.Generic_Safe_Integer_Operations;

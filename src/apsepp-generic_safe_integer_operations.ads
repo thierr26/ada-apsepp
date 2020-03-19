@@ -38,6 +38,8 @@ package Apsepp.Generic_Safe_Integer_Operations is
 
    procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1);
 
+   function Inc (X : Safe_Integer; By : Natural_Base := 1) return Safe_Integer;
+
 private
 
    type Safe_Integer is record

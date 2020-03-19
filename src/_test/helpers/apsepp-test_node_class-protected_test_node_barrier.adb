@@ -156,13 +156,11 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
                                         Pre_Cross;
 
             -- Condition 2.
-            -- TODO: Write function 'Incremented' in
-            -- 'Generic_Safe_Integer_Operations'. <2020-03-07>
-            C_C : constant Safe_Integer
-              := Crossing_Count + (if Pre_Cross then
-                                      Create (1)
-                                   else
-                                      Create (0));
+            C_C : constant Safe_Integer := Inc (Crossing_Count,
+                                                (if Pre_Cross then
+                                                    1
+                                                 else
+                                                    0));
             Ret_2 : constant Boolean := Sat_Cause and then Sat (C_C);
 
             -- Condition 3.
