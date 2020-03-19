@@ -276,13 +276,14 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
       Exp : constant Flat_Tag_Case_Status
         := Expected_Case_Status_Array (T_F)(K);
 
-      Exp_R_I : constant Test_Routine_Count   := Exp.Routine_I;
-      Exp_A_C : constant Test_Assert_Count    := Exp.Assert_C;
-      Exp_A_O : constant Test_Outcome         := Exp.Assert_O;
+      Exp_R_I : constant Test_Routine_Count := Exp.Routine_I;
+      Exp_A_C : constant Test_Assert_Count  := Exp.Assert_C;
+      Exp_A_O : constant Test_Outcome       := Exp.Assert_O;
 
    begin
 
       if Is_Runner then
+
          -- Just check that Expected contains conventional values (0 / Passed).
 
          Assert_Test_Routine_Count_Var_Value (Exp_R_I, 0);
@@ -290,13 +291,13 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
          Assert_Test_Outcome_Var_Value (Exp_A_O, Passed);
 
       else
+
          -- Do a real validation.
 
          declare
 
-            A   : constant Flat_Tag_Case_Status_Array := Case_Status_Array;
-            K_T :          Positive                   := A'First;
-            T   : constant Tag                        := Char_To_Tag (Char);
+            A : constant Flat_Tag_Case_Status_Array := Case_Status_Array;
+            T : constant Tag                        := Char_To_Tag (Char);
 
             generic
 
@@ -365,9 +366,7 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
             begin
 
                Ada.Assertions.Assert
-                 ((A'Length = 0 or else A(K_T).T /= T)
-                    or else
-                   A_Component_Or_Fallback (K_T) = Expected,
+                 (A_Component_Or_Fallback (K_T) = Expected,
                   "A'Length ="
                   & Integer'Image (A'Length)
                   & ", "
@@ -418,20 +417,27 @@ package body Apsepp_Test_Node_Class_Abstract_Test_Case_Early_Test_Case is
                Assert_Test_Outcome_Var_Value (Exp_A_O, Passed, True);
             end if;
 
-            -- TODO: Write function Find or Find_First in
-            -- Generic_Array_Operations. <2020-03-12>
             if A'Length > 0 then
-               while A(K_T).T /= T and then K_T < A'Last loop
-                  K_T := K_T + 1;
-               end loop;
-            end if;
 
-            -- Validate the 'Case_Status_Map_Handler' private component S
-            -- (retrieved in A at index K_T) in the
-            -- "'Case_Status_Map_Handler' no more in initial state" case.
-            Validate_S_Routine_I (K_T, Exp_R_I);
-            Validate_S_Assert_C (K_T, Exp_A_C);
-            Validate_S_Assert_O (K_T, Exp_A_O);
+               for K_T in A'Range loop
+
+                  if A(K_T).T = T then
+
+                     -- Validate the 'Case_Status_Map_Handler' private
+                     -- component S (retrieved in A at index K_T) in the
+                     -- "'Case_Status_Map_Handler' no more in initial state"
+                     -- case.
+                     Validate_S_Routine_I (K_T, Exp_R_I);
+                     Validate_S_Assert_C (K_T, Exp_A_C);
+                     Validate_S_Assert_O (K_T, Exp_A_O);
+
+                     exit; -- Early exit.
+
+                  end if;
+
+               end loop;
+
+            end if;
 
          end;
 
