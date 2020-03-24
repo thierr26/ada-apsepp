@@ -22,18 +22,23 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
+   function Sat_U (X : Safe_Integer) return Boolean
+     is (Sat (X) and then Val (X) = Integer_Type'Last);
+
+   ----------------------------------------------------------------------------
+
    function "+" (X_1 : Safe_Integer;
                  X_2 : Natural_Safe_Integer) return Safe_Integer is
 
-      Ret : Safe_Integer := (if Sat (X_2) then
+      Ret : Safe_Integer := (if Sat_U (X_2) then
                                 X_2
                              else
                                 X_1);
 
    begin
 
-      if not Sat (Ret) then
-         -- 'not (Sat (X_1) or Sat (X_2))' is true.
+      if not Sat_U (Ret) then
+         -- 'not (Sat_U (X_1) or Sat_U (X_2))' is true.
 
          declare
             V_1 : constant Integer_Type := Val (X_1);
@@ -72,7 +77,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
          end;
 
       else
-         -- 'Sat (X_1) or Sat (X_2)' is true.
+         -- 'Sat_U (X_1) or Sat_U (X_2)' is true.
 
          -- Nothing more to do.
          null;
@@ -89,7 +94,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    begin
 
-      if not Sat (X) and then By /= 0 then
+      if not Sat_U (X) and then By /= 0 then
          -- 'X' has to be changed.
 
          declare
@@ -136,7 +141,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
                      D_L : constant Integer_Type'Base := Integer_Type'Last - V;
 
                      -- Compute the saturated state of the returned value.
-                     S   : constant Boolean := D_L < By;
+                     S : constant Boolean := D_L < By;
 
                   begin
 
