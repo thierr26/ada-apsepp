@@ -3,7 +3,8 @@
 
 with Ada.Exceptions,
      Apsepp.Finalized_Debug_Tracer.Generic_Instantiator,
-     Apsepp.Generic_Discrete_Operations;
+     Apsepp.Generic_Discrete_Operations,
+     Apsepp.Generic_Logical_Array;
 
 package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
@@ -170,19 +171,20 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
             Index_C_C : constant Natural
               := Positive_Operations.Val (Val_C_C, Expected_Tags_Array'First);
 
+            package Logical_Array
+              is new Generic_Logical_Array (Index_Type => Positive);
+
+            use Logical_Array;
+
          begin
 
-            Ret := Ret_1
-                     or else
-                   Ret_2
-                     or else
-                   Ret_3
-                     or else
-                   (
-                     Pre_Cross
-                       and then
-                     Tag_To_Char (Expected_Tags_Array (Index_C_C)) = Char
-                   );
+            Ret := Some_True ((Ret_1,
+                               Ret_2,
+                               Ret_3,
+                               Pre_Cross
+                                 and then
+                               Tag_To_Char
+                                 (Expected_Tags_Array (Index_C_C)) = Char));
 
          end;
 

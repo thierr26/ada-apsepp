@@ -4,6 +4,8 @@
 with Ada.Calendar;                 use Ada.Calendar;
 with Apsepp.Test_Case_Count_Types; use Apsepp.Test_Case_Count_Types;
 
+with Apsepp.Generic_Logical_Array.Assertions_W_Debug_Trace;
+
 package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
    type Node_Tag_W_Parent_Index is record
@@ -62,14 +64,19 @@ package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
    function Event_Vector_Length
      (Obj : Test_Reporter_Data) return Natural;
 
+   package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);
+
+   package Logical_Array_Assertions_W_Debug_Trace
+     is new Logical_Array.Assertions_W_Debug_Trace;
+
+   use Logical_Array_Assertions_W_Debug_Trace;
+
    -- TODOC: Duplicated node tags not supported. <2019-11-06>
    procedure To_Arrays (Obj           :     Test_Reporter_Data;
                         Node_Tag_Tree : out Node_Tag_Tree_As_Array;
                         Event_Data    : out Node_Tag_Test_Event_Data_Array)
-     with Pre => not Has_Duplicate_Node_Tag (Obj)
-                   and then
-                 Node_Tag_Tree'Length = Tree_Node_Count (Obj)
-                   and then
-                 Event_Data'Length = Event_Vector_Length (Obj);
+     with Pre => All_True ((not Has_Duplicate_Node_Tag (Obj),
+                            Node_Tag_Tree'Length = Tree_Node_Count (Obj),
+                            Event_Data'Length    = Event_Vector_Length (Obj)));
 
 end Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays;

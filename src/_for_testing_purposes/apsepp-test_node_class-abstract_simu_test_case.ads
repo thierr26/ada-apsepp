@@ -3,11 +3,20 @@
 
 with Apsepp.Test_Case_Count_Types; use Apsepp.Test_Case_Count_Types;
 
+with Apsepp.Generic_Logical_Array.Assertions_W_Debug_Trace;
+
 -- TODOC: This package is withed by package
 -- 'Apsepp.Test_Node_Class.Abstract_Test_Case' (which belongs to project
 -- Apsepp). That's why it had to be kept in project Apsepp and could not be
 -- moved to project Apsepp_Test.
 package Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
+
+   package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);
+
+   package Logical_Array_Assertions_W_Debug_Trace
+     is new Logical_Array.Assertions_W_Debug_Trace;
+
+   use Logical_Array_Assertions_W_Debug_Trace;
 
    type Test_Routine_Destiny_Kind is (No_Failure,
                                       Access_Failure,
@@ -26,11 +35,10 @@ package Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
      is array (Test_Routine_Index range <>) of Test_Routine_Destiny;
 
    type Simu_Test_Case is abstract limited new Test_Node_Interfa with private
-     with Type_Invariant'Class => Simu_Test_Case.Story_Equiv_To_Routine
-                                    and then
-                                  Simu_Test_Case.Child_Count = 0
-                                    and then
-                                  not Simu_Test_Case.Has_Early_Test;
+     with Type_Invariant'Class
+            => All_True ((Simu_Test_Case.Story_Equiv_To_Routine,
+                          Simu_Test_Case.Child_Count = 0,
+                          not Simu_Test_Case.Has_Early_Test));
 
    overriding
    function Child_Count (Obj : Simu_Test_Case)

@@ -1,15 +1,27 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+with Apsepp.Generic_Logical_Array.Assertions_W_Debug_Trace;
+
 package body Apsepp.Test_Node_Class.Abstract_Test_Case.Case_Status_Array is
 
    ----------------------------------------------------------------------------
 
    function Flat_Tag_Case_Status_Array_Invariant
-     (X : Flat_Tag_Case_Status_Array) return Boolean
-     is (X'First = 1
-           and then
-         Is_Monotonic_Incr (X(2 .. X'Last)));
+     (X : Flat_Tag_Case_Status_Array) return Boolean is
+
+      package Logical_Array
+        is new Generic_Logical_Array (Index_Type => Positive);
+      package Logical_Array_Assertions_W_Debug_Trace
+        is new Logical_Array.Assertions_W_Debug_Trace;
+      use Logical_Array_Assertions_W_Debug_Trace;
+
+   begin
+
+      return All_True((X'First = 1,
+                       Is_Monotonic_Incr (X(2 .. X'Last))));
+
+   end Flat_Tag_Case_Status_Array_Invariant;
 
    ----------------------------------------------------------------------------
 

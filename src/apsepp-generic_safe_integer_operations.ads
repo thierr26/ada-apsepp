@@ -1,13 +1,13 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+private with Apsepp.Generic_Logical_Array;
+
 generic
 
    type Integer_Type is range <>;
 
 package Apsepp.Generic_Safe_Integer_Operations is
-
-   pragma Pure (Apsepp.Generic_Safe_Integer_Operations);
 
    -- Force run-time pre-condition check in this package.
    pragma Assertion_Policy (Pre => Check);
@@ -42,6 +42,10 @@ package Apsepp.Generic_Safe_Integer_Operations is
 
 private
 
+   package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);
+
+   use Logical_Array;
+
    type Safe_Integer is record
 
       V : Integer_Type := Integer_Type'First;
@@ -49,12 +53,9 @@ private
       S : Boolean      := False;
 
    end record
-     with Type_Invariant => (
-                              Val (Safe_Integer) = Integer_Type'First
-                                or else
-                              Val (Safe_Integer) = Integer_Type'Last
-                                or else
-                              not Sat (Safe_Integer)
-                            );
+     with Type_Invariant
+            => Some_True ((Val (Safe_Integer) = Integer_Type'First,
+                           Val (Safe_Integer) = Integer_Type'Last,
+                           not Sat (Safe_Integer)));
 
 end Apsepp.Generic_Safe_Integer_Operations;
