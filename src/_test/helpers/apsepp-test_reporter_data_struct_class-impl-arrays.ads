@@ -18,7 +18,7 @@ package Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
      is array (Positive range <>) of Node_Tag_W_Parent_Index;
 
    function Tree_Node_Tag (A : Node_Tag_Tree_As_Array;
-                          K : Positive) return Tag
+                           K : Positive) return Tag
      is (A(K).Node_Tag)
      with Pre => K in A'Range;
 

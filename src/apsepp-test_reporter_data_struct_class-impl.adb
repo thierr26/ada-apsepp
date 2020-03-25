@@ -155,14 +155,14 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
          begin
 
-            -- Iterate over children of the node pointed to by 'C'.
+            -- Iterate over children of the node designated by 'C'.
             for Child_C in Obj.Node_Data_Tree.Iterate_Children (C) loop
 
                if Node_Data_Trees.Element (Child_C).T = T then
-                  -- The node pointed to by 'C' has a child with node tag 'T'.
+                  -- The node designated by 'C' has a child with node tag 'T'.
 
-                  -- Have 'C' point to this child node and stop requiring child
-                  -- creation.
+                  -- Have 'C' designate this child node and stop requiring
+                  -- child creation.
                   C := Child_C;
                   Child_Creation_Required := False;
 
@@ -174,7 +174,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
             if Child_Creation_Required then
 
-               -- For the node pointed to by 'C', create a child with node tag
+               -- For the node designated by 'C', create a child with node tag
                -- 'T' and get a cursor to the new node in 'C'.
                Obj.Create_Node_Child (C, T);
 
