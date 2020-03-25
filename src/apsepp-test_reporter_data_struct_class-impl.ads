@@ -81,9 +81,9 @@ private
    end record;
 
    not overriding
-   procedure Create_Node_First_Child (Obj : in out Test_Reporter_Data;
-                                      C   : in out Node_Data_Trees.Cursor;
-                                      T   :        Tag);
+   procedure Create_Node_Child (Obj : in out Test_Reporter_Data;
+                                C   : in out Node_Data_Trees.Cursor;
+                                T   :        Tag);
 
    not overriding
    function Is_Active_Node (Obj : Test_Reporter_Data;

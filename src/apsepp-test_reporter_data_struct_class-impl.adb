@@ -8,7 +8,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
    ----------------------------------------------------------------------------
 
    not overriding
-   procedure Create_Node_First_Child (Obj : in out Test_Reporter_Data;
+   procedure Create_Node_Child (Obj : in out Test_Reporter_Data;
                                       C   : in out Node_Data_Trees.Cursor;
                                       T   :        Tag) is
 
@@ -22,8 +22,11 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
          New_Item => (T                  => T,
                       Event_Index_Vector => <>),
          Position => C);
+      -- Value 'Node_Data_Trees.No_Element' for parameter 'Before' implies that
+      -- the new child is inserted after the last existing child.
+      -- REF: ARM A18.10(167/3). <2020-03-25>
 
-   end Create_Node_First_Child;
+   end Create_Node_Child;
 
    ----------------------------------------------------------------------------
 
@@ -59,7 +62,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
             -- Insert a new node for 'T' in the node data tree and get a cursor
             -- to that node in 'C'.
             C := Node_Data_Trees.Root (Obj.Node_Data_Tree);
-            Obj.Create_Node_First_Child (C, T);
+            Obj.Create_Node_Child (C, T);
 
          end if;
 
@@ -173,7 +176,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
                -- For the node pointed to by 'C', create a child with node tag
                -- 'T' and get a cursor to the new node in 'C'.
-               Obj.Create_Node_First_Child (C, T);
+               Obj.Create_Node_Child (C, T);
 
             end if;
 
