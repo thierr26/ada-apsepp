@@ -117,8 +117,8 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
                         Node_Tag_Tree : out Node_Tag_Tree_As_Array;
                         Event_Data    : out Node_Tag_Test_Event_Data_Array) is
 
-      K_Node_Tag_Tree : Natural := 0;
-      K_Event_Data    : Natural := 0;
+      Index      : Positive;
+      First_Iter : Boolean;
 
       -----------------------------------------------------
 
@@ -126,10 +126,15 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
       begin
 
-         K_Node_Tag_Tree := K_Node_Tag_Tree + 1;
+         if First_Iter then
+            Index      := Node_Tag_Tree'First;
+            First_Iter := False;
+         else
+            Index := Index + 1;
+         end if;
 
          declare
-            A : Node_Tag_W_Parent_Index renames Node_Tag_Tree(K_Node_Tag_Tree);
+            A : Node_Tag_W_Parent_Index renames Node_Tag_Tree(Index);
          begin
             A.Node_Tag := Node_Data_Trees.Element (Position).T;
             A.Active   := Obj.Active_Node_Map.Contains (A.Node_Tag);
@@ -146,23 +151,28 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
       begin
 
-         K_Node_Tag_Tree := K_Node_Tag_Tree + 1;
+         if First_Iter then
+            Index      := Node_Tag_Tree'First;
+            First_Iter := False;
+         else
+            Index := Index + 1;
+         end if;
 
          if not Node_Data_Trees.Is_Root (Parent_Position) then
 
             declare
 
                A : Node_Tag_W_Parent_Index
-                 renames Node_Tag_Tree(K_Node_Tag_Tree);
+                 renames Node_Tag_Tree(Index);
 
                Parent_Tag : constant Tag
                  := Node_Data_Trees.Element (Parent_Position).T;
 
-               K : Natural := K_Node_Tag_Tree;
+               K : Natural := Index;
                -- After the loops below, K should be the index in Node_Tag_Tree
                -- of the parent of the element at Position in the tree (or at
-               -- index K_Node_Tag_Tree in Node_Tag_Tree). The search is
-               -- started at K_Node_Tag_Tree because the tree traversal is
+               -- index Index in Node_Tag_Tree). The search is
+               -- started at Index because the tree traversal is
                -- supposed to be depth-first, post-order (the children are
                -- visited before the parents).
 
@@ -182,7 +192,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
                   Process;
                end loop;
                K := 0;
-               while A.Parent_Index = 0 and then K < K_Node_Tag_Tree loop
+               while A.Parent_Index = 0 and then K < Index loop
                   Process;
                end loop;
                Ada.Assertions.Assert
@@ -192,7 +202,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
             end;
 
          else
-            Node_Tag_Tree(K_Node_Tag_Tree).Parent_Index := 0;
+            Node_Tag_Tree(Index).Parent_Index := 0;
          end if;
 
       end Process_Parent_Index;
@@ -211,10 +221,15 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
       begin
 
-         K_Event_Data := K_Event_Data + 1;
+         if First_Iter then
+            Index      := Event_Data'First;
+            First_Iter := False;
+         else
+            Index := Index + 1;
+         end if;
 
          declare
-            A : Node_Tag_Test_Event_Data renames Event_Data(K_Event_Data);
+            A : Node_Tag_Test_Event_Data renames Event_Data(Index);
          begin
             A.Node_Tag           := T;
             A.Has_E              := E.Exception_Access /= null;
@@ -246,11 +261,13 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
    begin
 
+      First_Iter := True;
       Obj.Node_Data_Tree.Iterate (Process_Node_Tag'Access);
 
-      K_Node_Tag_Tree := 0;
+      First_Iter := True;
       Obj.Node_Data_Tree.Iterate (Process_Parent_Index'Access);
 
+      First_Iter := True;
       Obj.Event_Vector.Iterate (Process_Event_Data'Access);
 
    end To_Arrays;
