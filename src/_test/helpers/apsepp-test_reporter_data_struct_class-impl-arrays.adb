@@ -113,9 +113,10 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
    ----------------------------------------------------------------------------
 
-   procedure To_Arrays (Obj           :     Test_Reporter_Data;
-                        Node_Tag_Tree : out Node_Tag_Tree_As_Array;
-                        Event_Data    : out Node_Tag_Test_Event_Data_Array) is
+   procedure Lossy_Conversion_To_Arrays
+     (Obj           :     Test_Reporter_Data;
+      Node_Tag_Tree : out Node_Tag_Tree_As_Array;
+      Event_Data    : out Node_Tag_Test_Event_Data_Array) is
 
       Index      : Positive;
       First_Iter : Boolean;
@@ -270,7 +271,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
       First_Iter := True;
       Obj.Event_Vector.Iterate (Process_Event_Data'Access);
 
-   end To_Arrays;
+   end Lossy_Conversion_To_Arrays;
 
    ----------------------------------------------------------------------------
 

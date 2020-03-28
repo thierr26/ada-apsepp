@@ -276,7 +276,7 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
 
    begin
 
-      To_Arrays (Data_Bef.all, T_B, Ev_B);
+      Lossy_Conversion_To_Arrays (Data_Bef.all, T_B, Ev_B);
 
       if Parent_Node_Tag /= No_Tag then
          TRSB.Provide_Node_Lineage ((Parent_Node_Tag, Node_Tag));
@@ -384,7 +384,7 @@ package body Apsepp_Test_Reporter_Class_Struct_Builder_Impl_Early_Test_Case is
 
       begin
 
-         To_Arrays (Data_Aft.all, T_A, Ev_A);
+         Lossy_Conversion_To_Arrays (Data_Aft.all, T_A, Ev_A);
          Ev_A_1 := Ev_A (1 .. Ev_B_L);
 
          Ada.Assertions.Assert (Ev_A_1 = Ev_B, "Corrupted test event vector");
