@@ -25,6 +25,6 @@ package Apsepp.Generic_Discrete_Operations is
    function Val (Rk    : Diff_Type;
                  First : Discrete_Type) return Discrete_Type
      is (Discrete_Type'Val (Discrete_Type'Pos (First) - 1 + Rk))
-     with Post => Rk < 0 or else Val'Result >= First;
+     with Post => Rk < 1 or else Val'Result >= First;
 
 end Apsepp.Generic_Discrete_Operations;
