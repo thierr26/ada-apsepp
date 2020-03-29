@@ -5,7 +5,6 @@ with Ada.Tags;         use Ada.Tags;
 with Ada.Containers;   use Ada.Containers;
 
 with Ada.Strings.Hash;
-  use Ada.Strings;
 
 package Apsepp.Tags is
 
@@ -28,6 +27,6 @@ package Apsepp.Tags is
      is (Total_Expanded_Name (Left) >= Total_Expanded_Name (Right));
 
    function Tag_Hash (T : Tag) return Hash_Type
-     is (Hash (Total_Expanded_Name (T)));
+     is (Ada.Strings.Hash (Total_Expanded_Name (T)));
 
 end Apsepp.Tags;
