@@ -5,13 +5,6 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
-   function Create (Value     : Integer_Type;
-                    Saturated : Boolean      := False) return Safe_Integer
-     is (V => Value,
-         S => Saturated);
-
-   ----------------------------------------------------------------------------
-
    function Val (X : Safe_Integer) return Integer_Type
      is (X.V);
 
@@ -22,23 +15,29 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
-   function Sat_U (X : Safe_Integer) return Boolean
-     is (Sat (X) and then Val (X) = Integer_Type'Last);
+   function Create (Value     : Integer_Type;
+                    Saturated : Boolean      := False) return Safe_Integer
+     is (V => Value,
+         S => Saturated);
+
+   Sat_Last : constant Safe_Integer
+     := Create (Value     => Integer_Type'Last,
+                Saturated => True);
 
    ----------------------------------------------------------------------------
 
    function "+" (X_1 : Safe_Integer;
                  X_2 : Natural_Safe_Integer) return Safe_Integer is
 
-      Ret : Safe_Integer := (if Sat_U (X_2) then
+      Ret : Safe_Integer := (if X_2 = Sat_Last then
                                 X_2
                              else
                                 X_1);
 
    begin
 
-      if not Sat_U (Ret) then
-         -- 'not (Sat_U (X_1) or Sat_U (X_2))' is true.
+      if Ret /= Sat_Last then
+         -- 'X_1 /= Sat_Last and X_2 /= Sat_Last' is true.
 
          declare
             V_1 : constant Integer_Type := Val (X_1);
@@ -77,7 +76,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
          end;
 
       else
-         -- 'Sat_U (X_1) or Sat_U (X_2)' is true.
+         -- 'X_1 = Sat_Last or X_2 = Sat_Last' is true.
 
          -- Nothing more to do.
          null;
@@ -94,7 +93,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    begin
 
-      if not Sat_U (X) and then By /= 0 then
+      if X /= Sat_Last and then By /= 0 then
          -- 'X' has to be changed.
 
          declare
@@ -106,8 +105,9 @@ package body Apsepp.Generic_Safe_Integer_Operations is
             if By = 1 and then V < Integer_Type'Last then
                -- Easy case.
 
-               -- Just increment the value.
+               -- Just increment the value and reset the saturation flag.
                X.V := X.V + 1;
+               X.S := False;
 
             elsif By = 1 then
                -- Still easy.

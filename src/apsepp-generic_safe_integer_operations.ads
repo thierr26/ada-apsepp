@@ -31,14 +31,23 @@ package Apsepp.Generic_Safe_Integer_Operations is
    function Sat (X : Safe_Integer) return Boolean;
 
    function "+" (X_1 : Safe_Integer;
-                 X_2 : Natural_Safe_Integer) return Safe_Integer;
+                 X_2 : Natural_Safe_Integer) return Safe_Integer
+     with Post => (Sat ("+"'Result) and Val ("+"'Result) = Integer_Type'Last)
+                    or else
+                  Val ("+"'Result) = Val (X_1) + Val (X_2);
 
    subtype Natural_Base
      is Integer_Type'Base range 0 .. Integer_Type'Base'Last;
 
-   procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1);
+   procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1)
+     with Post => (Sat (X) and Val (X) = Integer_Type'Last)
+                    or else
+                  Val (X) = Val (X'Old) + By;
 
-   function Inc (X : Safe_Integer; By : Natural_Base := 1) return Safe_Integer;
+   function Inc (X : Safe_Integer; By : Natural_Base := 1) return Safe_Integer
+     with Post => (Sat (Inc'Result) and Val (Inc'Result) = Integer_Type'Last)
+                    or else
+                  Val (Inc'Result) = Val (X) + By;
 
 private
 
