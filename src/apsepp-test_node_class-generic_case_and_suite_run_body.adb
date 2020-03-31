@@ -17,7 +17,7 @@ procedure Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
 
    T : constant Tag := Obj'Tag;
 
-      -----------------------------------------------------
+   ----------------------------------------------------------------------------
 
    function Cond_Check_Succeed return Boolean is
 
@@ -39,7 +39,7 @@ procedure Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body
 
    end Cond_Check_Succeed;
 
-      -----------------------------------------------------
+   ----------------------------------------------------------------------------
 
 begin
 
@@ -60,8 +60,9 @@ begin
          if not Cond_Check_Succeed then
             Test_Reporter.Report_Failed_Node_Cond_Assert (Node_Tag => T);
             raise Assertion_Error
-              with "Unmet run condition for object with tag "
-                   & Ada.Tags.Expanded_Name (T);
+              with "Unmet run condition for object with tag """
+                   & Ada.Tags.Expanded_Name (T)
+                   & """.";
          else
             Test_Reporter.Report_Passed_Node_Cond_Assert (Node_Tag => T);
          end if;

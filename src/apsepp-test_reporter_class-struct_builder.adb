@@ -395,6 +395,7 @@ package body Apsepp.Test_Reporter_Class.Struct_Builder is
 
       -----------------------------------------------------
 
+      -- TODO: Try to avoid the ''Unchecked_Access'. <2020-04-01>
       function Data_Access return not null access constant Test_Reporter_Data
         is (Data'Unchecked_Access);
 

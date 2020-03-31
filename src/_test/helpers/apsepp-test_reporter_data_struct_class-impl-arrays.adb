@@ -57,11 +57,11 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
    ----------------------------------------------------------------------------
 
-   function Multiple_Tag_Occurrences
-     (Obj      : Test_Reporter_Data;
-      Position : Node_Data_Trees.Cursor) return Boolean is
+   function Node_Data_Has_Duplicated_Tag
+     (Obj     : Test_Reporter_Data;
+      Element : Node_Data) return Boolean is
 
-      T         : constant Tag := Node_Data_Trees.Element (Position).T;
+      T         : constant Tag := Element.T;
       Tag_Found : Boolean      := False;
 
    begin
@@ -87,13 +87,13 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
       -- Here we know that 'T' has not been found more than once.
       return False;
 
-   end Multiple_Tag_Occurrences;
+   end Node_Data_Has_Duplicated_Tag;
 
    ----------------------------------------------------------------------------
 
    function Has_Duplicate_Node_Tag (Obj : Test_Reporter_Data) return Boolean
-     is (for some C in Obj.Node_Data_Tree.Iterate
-           => Multiple_Tag_Occurrences (Obj, C));
+     is (for some E of Obj.Node_Data_Tree
+           => Node_Data_Has_Duplicated_Tag (Obj, E));
 
    ----------------------------------------------------------------------------
 

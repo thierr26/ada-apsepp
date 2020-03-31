@@ -367,10 +367,11 @@ package body Apsepp_Testing_System_Test_Fixture is
 
       -- We get there only if we haven't found what we were looking for.
       raise Ada.Assertions.Assertion_Error
-        with "Unexpected tag: " & (if T = No_Tag then
-                                      "No_Tag"
-                                   else
-                                      Expanded_Name (T));
+        with "Unexpected tag: """ & (if T = No_Tag then
+                                        "No_Tag"
+                                     else
+                                        Expanded_Name (T))
+                                  & """.";
 
    end Tag_To_Char;
 
@@ -397,7 +398,7 @@ package body Apsepp_Testing_System_Test_Fixture is
 
       -- We get there only if we haven't found what we were looking for.
       raise Ada.Assertions.Assertion_Error
-        with "Cannot find tag corresponding to '" & Char & "'";
+        with "Cannot find tag corresponding to '" & Char & "'.";
 
    end Char_To_Tag;
 

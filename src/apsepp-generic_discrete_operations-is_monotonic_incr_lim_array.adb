@@ -11,7 +11,7 @@ function Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
    type Boolean_Operator
      is not null access function (Left, Right : Discrete_Type) return Boolean;
 
-      -----------------------------------------------------
+   ----------------------------------------------------------------------------
 
    function Operator_Strict (Left, Right : Discrete_Type) return Boolean is
 
@@ -24,7 +24,7 @@ function Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
 
    end Operator_Strict;
 
-      -----------------------------------------------------
+   ----------------------------------------------------------------------------
 
    function Operator_Not_Strict (Left, Right : Discrete_Type) return Boolean is
 
@@ -39,7 +39,7 @@ function Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
 
    end Operator_Not_Strict;
 
-      -----------------------------------------------------
+   ----------------------------------------------------------------------------
 
    Is_Lower_Than : constant Boolean_Operator
      := (if Strict then

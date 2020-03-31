@@ -39,10 +39,10 @@ package Apsepp.Generic_Shared_Instance is
    procedure Set
      (L_H : Controlled_Lock_Holder'Class;
       I_A : access Instance_Ancestor_Type'Class)
-     with Pre  => L_H.L = Instance_Lock'Access;
+     with Pre => L_H.L = Instance_Lock'Access;
 
    procedure Reset (L_H : Controlled_Lock_Holder'Class)
-     with Pre  => L_H.L = Instance_Lock'Access;
+     with Pre => L_H.L = Instance_Lock'Access;
 
 private
 

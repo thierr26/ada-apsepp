@@ -175,7 +175,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
          when Access_Failure =>
             raise Simu_Test_Routine_Access_Error
-              with "Simulated test routine access failure";
+              with "Simulated test routine access failure.";
 
       end case;
 
@@ -224,7 +224,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
             Global_Data_Protection_Barrier.Open;
 
             raise Simu_Test_Routine_Setup_Error
-              with "Simulated test routine access failure";
+              with "Simulated test routine access failure.";
 
          when Access_Failure =>
             null; -- Impossible case, has already caused

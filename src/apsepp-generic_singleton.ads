@@ -8,9 +8,6 @@ private with Apsepp.Protected_Barrier;
 generic
 package Apsepp.Generic_Singleton is
 
-   -- Force run-time pre-condition check in this package.
-   pragma Assertion_Policy (Pre => Check);
-
    type Singleton
      is limited new Ada.Finalization.Limited_Controlled with private;
 
