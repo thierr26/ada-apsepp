@@ -5,6 +5,30 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
+   -- The following operators save us a lot of 'Integer_Type'Pos' occurrences.
+
+   function "+" (Left, Right : Integer_Type) return Integer_Type
+     is (Integer_Type'Val (Integer_Type'Pos (Left)
+                             +
+                           Integer_Type'Pos (Right)));
+
+   function "-" (Left, Right : Integer_Type) return Integer_Type
+     is (Integer_Type'Val (Integer_Type'Pos (Left)
+                             -
+                           Integer_Type'Pos (Right)));
+
+   function "*" (Left, Right : Integer_Type) return Integer_Type
+     is (Integer_Type'Val (Integer_Type'Pos (Left)
+                             *
+                           Integer_Type'Pos (Right)));
+
+   function "/" (Left, Right : Integer_Type) return Integer_Type
+     is (Integer_Type'Val (Integer_Type'Pos (Left)
+                             /
+                           Integer_Type'Pos (Right)));
+
+   ----------------------------------------------------------------------------
+
    function Val (X : Safe_Integer) return Integer_Type
      is (X.V);
 
@@ -48,7 +72,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
             V_2 : constant Integer_Type := Val (X_2);
          begin
 
-            if V_1 <= 0 then
+            if Integer_Type'Pos (V_1) <= 0 then
                -- 'V1 + V_2' is safe because 'V_2 >= 0'.
 
                Ret := Create (Value     => V_1 + V_2,
@@ -93,11 +117,12 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
-   procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1) is
+   procedure Inc (X  : in out Safe_Integer;
+                  By : Natural_Base := Natural_Base'Val (1)) is
 
    begin
 
-      if X /= Sat_Last and then By /= 0 then
+      if X /= Sat_Last and then Natural_Base'Pos (By) /= 0 then
          -- 'X' has to be changed.
 
          declare
@@ -106,14 +131,14 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
          begin
 
-            if By = 1 and then V < Integer_Type'Last then
+            if Natural_Base'Pos (By) = 1 and then V < Integer_Type'Last then
                -- Easy case.
 
                -- Just increment the value and reset the saturation flag.
-               X.V := X.V + 1;
+               X.V := Integer_Type'Succ (X.V);
                X.S := False;
 
-            elsif By = 1 then
+            elsif Natural_Base'Pos (By) = 1 then
                -- Still easy.
 
                -- Just turn the saturation flag on.
@@ -122,8 +147,8 @@ package body Apsepp.Generic_Safe_Integer_Operations is
             else
                -- Not so easy.
 
-               if V <= 0 then
-                  -- 'V + By' is safe because 'By >= 0'.
+               if Integer_Type'Pos (V) <= 0 then
+                  -- 'V + By' is safe because 'Natural_Base'Pos (By) >= 0'.
 
                   declare
                      Sum : constant Integer_Type'Base := V + By;
@@ -175,8 +200,9 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    ----------------------------------------------------------------------------
 
-   function Inc (X  : Safe_Integer;
-                 By : Natural_Base := 1) return Safe_Integer is
+   function Inc
+     (X  : Safe_Integer;
+      By : Natural_Base := Natural_Base'Val (1)) return Safe_Integer is
 
       Ret : Safe_Integer := X;
 
@@ -206,7 +232,7 @@ package body Apsepp.Generic_Safe_Integer_Operations is
             if V > Integer_Type'First then
 
                -- Just decrement the value and reset the saturation flag.
-               X.V := X.V - 1;
+               X.V := Integer_Type'Pred (X.V);
                X.S := False;
 
             else
@@ -253,15 +279,17 @@ package body Apsepp.Generic_Safe_Integer_Operations is
 
    begin
 
-      if Val (X_1) = 0 or else Val (X_2) = 0 then
-         -- The return value is 0, unsaturated.
+      if Integer_Type'Pos (Val (X_1)) = 0
+           or else
+         Integer_Type'Pos (Val (X_2)) = 0 then
+         -- The return value has position 0 and is unsaturated.
 
-         return Create (Value     => 0,
+         return Create (Value     => Integer_Type'Val (0),
                         Saturated => False); -- Early return.
 
       elsif not Sat (X_1) and not Sat (X_2) then
-         -- The return value is a non-zero value, possibly the largest possible
-         -- value (saturated or not).
+         -- The return value has a non-zero position, possibly the largest
+         -- possible 'Integer_Type' value (saturated or not).
 
          declare
 

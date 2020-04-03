@@ -5,7 +5,9 @@ private with Apsepp.Generic_Logical_Array;
 
 generic
 
-   type Integer_Type is range <>;
+   -- TODOC: Can be an integer (signed or modular) type, but also an
+   -- enumeration type. <2020-04-03>
+   type Integer_Type is (<>);
 
 package Apsepp.Generic_Safe_Integer_Operations is
 
@@ -15,7 +17,8 @@ package Apsepp.Generic_Safe_Integer_Operations is
    type Safe_Integer is private;
 
    subtype Natural_Safe_Integer is Safe_Integer
-     with Dynamic_Predicate => Val (Natural_Safe_Integer) >= 0;
+     with Dynamic_Predicate =>
+       Integer_Type'Pos (Val (Natural_Safe_Integer)) >= 0;
 
    function Create (Value     : Integer_Type;
                     Saturated : Boolean      := False) return Safe_Integer
@@ -34,37 +37,55 @@ package Apsepp.Generic_Safe_Integer_Operations is
                  X_2 : Natural_Safe_Integer) return Safe_Integer
      with Post => (Sat ("+"'Result) and Val ("+"'Result) = Integer_Type'Last)
                     or else
-                  Val ("+"'Result) = Val (X_1) + Val (X_2);
+                  Integer_Type'Pos (Val ("+"'Result))
+                    =
+                  Integer_Type'Pos (Val (X_1)) + Integer_Type'Pos (Val (X_2));
 
    subtype Natural_Base
-     is Integer_Type'Base range 0 .. Integer_Type'Base'Last;
+     is Integer_Type'Base range Integer_Type'Val (0) .. Integer_Type'Base'Last;
 
-   procedure Inc (X : in out Safe_Integer; By : Natural_Base := 1)
+   procedure Inc (X  : in out Safe_Integer;
+                  By : Natural_Base := Natural_Base'Val (1))
      with Post => (Sat (X) and Val (X) = Integer_Type'Last)
                     or else
-                  Val (X) = Val (X'Old) + By;
+                  Integer_Type'Pos (Val (X)) = Integer_Type'Pos (Val (X'Old))
+                                                 +
+                                               Natural_Base'Pos (By);
 
-   function Inc (X : Safe_Integer; By : Natural_Base := 1) return Safe_Integer
+   function Inc (X  : Safe_Integer;
+                 By : Natural_Base := Natural_Base'Val (1)) return Safe_Integer
      with Post => (Sat (Inc'Result) and Val (Inc'Result) = Integer_Type'Last)
                     or else
-                  Val (Inc'Result) = Val (X) + By;
+                  (
+                    Integer_Type'Pos (Val (Inc'Result))
+                      =
+                    Integer_Type'Pos (Val (X)) + Natural_Base'Pos (By)
+                  );
 
    procedure Dec (X : in out Safe_Integer)
      with Post => (Sat (X) and Val (X) = Integer_Type'First)
                     or else
-                  Val (X) = Val (X'Old) - 1;
+                  Integer_Type'Pos (Val (X)) = Integer_Type'Pos (Val (X'Old))
+                                                 -
+                                               1;
 
    function Dec (X : Safe_Integer) return Safe_Integer
      with Post => (Sat (Dec'Result) and Val (Dec'Result) = Integer_Type'First)
                     or else
-                  Val (Dec'Result) = Val (X) - 1;
+                  (
+                    Integer_Type'Pos (Val (Dec'Result))
+                      =
+                    Integer_Type'Pos (Val (X)) - 1
+                  );
 
    function "*" (X_1, X_2 : Natural_Safe_Integer) return Natural_Safe_Integer
      with Post => (
-                    Val (X_1) /= 0 and then Val (X_2) /= 0
+                    Integer_Type'Pos (Val (X_1)) /= 0
+                      and then
+                    Integer_Type'Pos (Val (X_2)) /= 0
                   )
                     or else
-                  Val ("*"'Result) = 0;
+                  Integer_Type'Pos (Val ("*"'Result)) = 0;
 
 private
 
