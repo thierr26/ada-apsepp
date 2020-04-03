@@ -9,7 +9,7 @@
 -- REF: "Programming in Ada 2012" by John Barnes, section 6.8. <2020-03-31>
 generic
 
-   type Alternative_Type is range <>;
+   type Alternative_Type is (<>);
 
 package Apsepp.Generic_Safe_Integer_Operations.Conversions is
 
