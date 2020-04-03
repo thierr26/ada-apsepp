@@ -11,7 +11,7 @@ package body Apsepp.Generic_Singleton is
 
       -- Instantiate a controlled barrier handler to protect access to
       -- 'Instantiated_Flag'.
-      use Apsepp.Barrier_Class.Finalized_Handler;
+      use Barrier_Class.Finalized_Handler;
       H : Controlled_Barrier_Handler (Instantiated_Flag_Barrier'Access);
 
       pragma Unreferenced (H);
@@ -29,7 +29,7 @@ package body Apsepp.Generic_Singleton is
 
       -- Instantiate a controlled barrier handler to protect access to
       -- 'Instantiated_Flag'.
-      use Apsepp.Barrier_Class.Finalized_Handler;
+      use Barrier_Class.Finalized_Handler;
       H : Controlled_Barrier_Handler (Instantiated_Flag_Barrier'Access);
 
       Error_Message : constant String
@@ -53,7 +53,7 @@ package body Apsepp.Generic_Singleton is
 
       -- Instantiate a controlled barrier handler to protect access to
       -- 'Instantiated_Flag'.
-      use Apsepp.Barrier_Class.Finalized_Handler;
+      use Barrier_Class.Finalized_Handler;
       H : Controlled_Barrier_Handler (Instantiated_Flag_Barrier'Access);
 
       pragma Unreferenced (Obj, H);

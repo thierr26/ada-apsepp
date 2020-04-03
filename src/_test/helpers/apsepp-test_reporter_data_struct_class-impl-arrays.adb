@@ -213,7 +213,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
       procedure Process_Event_Data (Position : Node_Event_Vectors.Cursor) is
 
          use Ada.Exceptions,
-             Apsepp.Calendar,
+             Calendar,
              Node_Event_Vectors;
 
          E : constant Test_Event_Access := Element (Position).Event;

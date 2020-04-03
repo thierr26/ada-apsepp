@@ -18,7 +18,7 @@ package Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes is
 
 private
 
-   use Apsepp.Test_Node_Class.Abstract_Test_Suite;
+   use Abstract_Test_Suite;
 
    type Test_Node_Array_Access is access Test_Node_Array;
 

@@ -55,7 +55,7 @@ package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
                                                       Time_Out);
 
    package Safe_Natural_Operations
-     is new Apsepp.Generic_Safe_Integer_Operations (Integer_Type => Natural);
+     is new Generic_Safe_Integer_Operations (Integer_Type => Natural);
 
    protected type Test_Node_Barrier is
 

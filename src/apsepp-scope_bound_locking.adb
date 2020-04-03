@@ -12,7 +12,7 @@ package body Apsepp.Scope_Bound_Locking is
 
       -- Instantiate a controlled barrier handler to protect access to the lock
       -- ('Lock').
-      use Apsepp.Barrier_Class.Finalized_Handler;
+      use Barrier_Class.Finalized_Handler;
       H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
 
       pragma Unreferenced (H);
@@ -50,7 +50,7 @@ package body Apsepp.Scope_Bound_Locking is
 
                -- Instantiate a controlled barrier handler to protect access to
                -- the lock ('Obj.L').
-               use Apsepp.Barrier_Class.Finalized_Handler;
+               use Barrier_Class.Finalized_Handler;
                H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
 
                pragma Unreferenced (H);
@@ -103,7 +103,7 @@ package body Apsepp.Scope_Bound_Locking is
 
                -- Instantiate a controlled barrier handler to protect access to
                -- the lock ('Obj.L').
-               use Apsepp.Barrier_Class.Finalized_Handler;
+               use Barrier_Class.Finalized_Handler;
                H : Controlled_Barrier_Handler (Lock_Protection_Barrier'Access);
 
                pragma Unreferenced (H);

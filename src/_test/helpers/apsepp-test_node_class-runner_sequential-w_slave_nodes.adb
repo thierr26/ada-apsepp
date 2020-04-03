@@ -27,7 +27,7 @@ package body Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes is
 
    task body Slave_Node_Task is
 
-      Nod  : access Apsepp.Test_Node_Class.Test_Node_Interfa'Class;
+      Nod  : access Test_Node_Interfa'Class;
       Outc : Test_Outcome;
       Ex   : Exception_Occurrence_Access;
 

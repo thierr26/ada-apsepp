@@ -67,8 +67,7 @@ package Apsepp.Test_Node_Class.Abstract_Test_Case is
    procedure Set_Up_Routine (Obj : Test_Case) is null;
 
    -- TODOC: 'Obj' must be a descendant of 'Test_Case' or of
-   -- 'Apsepp.Test_Node_Class.Abstract_Simu_Test_Case.Simu_Test_Case'.
-   -- <2020-03-08>
+   -- 'Abstract_Simu_Test_Case.Simu_Test_Case'. <2020-03-08>
    procedure Run_Test_Routines (Obj     :     Test_Node_Interfa'Class;
                                 Outcome : out Test_Outcome);
 

@@ -200,18 +200,18 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
          use Ada.Exceptions,
              Safe_Natural_Operations,
-             Apsepp.Finalized_Debug_Tracer;
+             Finalized_Debug_Tracer;
 
          -- PORT: Defining 'C_D_T' as an instance of generic package
-         -- 'Apsepp.Finalized_Debug_Tracer.Generic_Instantiator' causes a
-         -- compiler crash. <2020-03-08>
+         -- 'Finalized_Debug_Tracer.Generic_Instantiator' causes a compiler
+         -- crash. <2020-03-08>
          Scope_Name : aliased constant String
            := Full_Local_Scope_Name (Protected_Subprogram_Name ("Cross"));
-         C_D_T : Apsepp.Finalized_Debug_Tracer.Controlled_Debug_Tracer
+         C_D_T : Finalized_Debug_Tracer.Controlled_Debug_Tracer
            (Scope_Name_Access => Scope_Name'Access,
             Kind               => N);
          -- package C_D_T
-         --   is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
+         --   is new Finalized_Debug_Tracer.Generic_Instantiator
          --   (Scope_Name =>
          --      Full_Local_Scope_Name (Protected_Subprogram_Name ("Cross")),
          --    Kind        => N);
@@ -277,10 +277,10 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
       procedure Time_Out is
 
          use Safe_Natural_Operations,
-             Apsepp.Finalized_Debug_Tracer;
+             Finalized_Debug_Tracer;
 
          package C_D_T
-           is new Apsepp.Finalized_Debug_Tracer.Generic_Instantiator
+           is new Finalized_Debug_Tracer.Generic_Instantiator
            (Scope_Name =>
               Full_Local_Scope_Name (Protected_Subprogram_Name ("Time_Out")),
             Kind        => N);

@@ -5,11 +5,10 @@ package Apsepp.Test_Node_Class.Abstract_Children_Early_Test_Handler is
 
    -- TODOC: It's been considered making 'Children_Early_Test_Handler' a root
    -- tagged type (and thus not a descendant of 'Test_Node_Interfa') and using
-   -- multiple inheritance to make
-   -- 'Apsepp.Test_Node_Class.Abstract_Test_Suite.Test_Suite' and
-   -- 'Apsepp.Test_Node_Class.Runner_Sequential.Test_Runner_Sequential'
-   -- descendant of both 'Test_Node_Interfa' and 'Children_Early_Test_Handler',
-   -- but then the same contracts would have had to be written twice (once for
+   -- multiple inheritance to make 'Abstract_Test_Suite.Test_Suite' and
+   -- 'Runner_Sequential.Test_Runner_Sequential' descendant of both
+   -- 'Test_Node_Interfa' and 'Children_Early_Test_Handler', but then the same
+   -- contracts would have had to be written twice (once for
    -- 'Test_Node_Interfa' and once for 'Children_Early_Test_Handler').
    -- <2020-02-28>
    type Children_Early_Test_Handler

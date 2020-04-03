@@ -20,7 +20,7 @@ private package Apsepp.Debug_Trace_Class.Private_Protected_Clock is
 
       Offset : Time_Offset := 0;
 
-      Reset_Date : Ada.Calendar.Time := Apsepp.Calendar.Time_First;
+      Reset_Date : Ada.Calendar.Time := Calendar.Time_First;
 
    end Clock_Handler;
 

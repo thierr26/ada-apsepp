@@ -12,15 +12,14 @@ private package Apsepp.Test_Node_Class.Private_Test_Reporter is
 
    package Lock_W_Test_Reporter_Rendering is
 
-      type Lock is limited new Apsepp.Scope_Bound_Locking.Lock with private;
+      type Lock is limited new Scope_Bound_Locking.Lock with private;
 
       overriding
       procedure On_Unlock (Obj : Lock);
 
    private
 
-      type Lock
-        is limited new Apsepp.Scope_Bound_Locking.Lock with null record;
+      type Lock is limited new Scope_Bound_Locking.Lock with null record;
 
    end Lock_W_Test_Reporter_Rendering;
 

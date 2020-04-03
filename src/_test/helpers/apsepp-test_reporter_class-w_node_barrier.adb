@@ -34,7 +34,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj        : in out Test_Reporter_W_Node_Barrier;
       Node_Tag   :        Tag;
       Event_Kind :        Test_Event_Kind;
-      Event_Data : in out Apsepp.Test_Event_Class.Test_Event_Data) is
+      Event_Data : in out Test_Event_Class.Test_Event_Data) is
 
       Dispatching_Obj : constant access Test_Reporter_W_Node_Barrier'Class
         := Obj'Access;
@@ -97,7 +97,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Previous_Child_Tag :        Tag;
       Error              :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error              => Save_Occurrence (Error),
             Previous_Child_Tag => Previous_Child_Tag,
             others             => <>);
@@ -120,7 +120,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Node_Tag :        Tag;
       Error    :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error  => Save_Occurrence (Error),
             others => <>);
 
@@ -142,7 +142,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Node_Tag :        Tag;
       Error    :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error  => Save_Occurrence (Error),
             others => <>);
 
@@ -163,7 +163,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -183,7 +183,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -203,7 +203,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -223,7 +223,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -243,7 +243,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -263,7 +263,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -284,7 +284,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Node_Tag      :        Tag;
       Routine_Index :        Test_Routine_Index) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Routine_Index => Routine_Index,
             others        => <>);
 
@@ -307,7 +307,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       First_Routine_Index,
       Last_Routine_Index  :        Test_Routine_Index) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Routine_Index      => First_Routine_Index,
             Last_Routine_Index => Last_Routine_Index,
             others             => <>);
@@ -331,7 +331,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Routine_Index :        Test_Routine_Index;
       Error         :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error         => Save_Occurrence (Error),
             Routine_Index => Routine_Index,
             others        => <>);
@@ -355,7 +355,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Routine_Index :        Test_Routine_Index;
       Error         :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error         => Save_Occurrence (Error),
             Routine_Index => Routine_Index,
             others        => <>);
@@ -380,7 +380,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Assert_Num_Avail :        Boolean;
       Assert_Num       :        Test_Assert_Index) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (if Assert_Num_Avail then
                (Routine_Index => Routine_Index,
                 Assert_Num    => Assert_Num,
@@ -410,7 +410,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Assert_Num       :        Test_Assert_Index;
       Error            :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (if Assert_Num_Avail then
                (Error         => Save_Occurrence (Error),
                 Routine_Index => Routine_Index,
@@ -440,7 +440,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Routine_Index :        Test_Routine_Index;
       Error         :        Exception_Occurrence) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Error         => Save_Occurrence (Error),
             Routine_Index => Routine_Index,
             others        => <>);
@@ -463,7 +463,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Node_Tag      :        Tag;
       Routine_Index :        Test_Routine_Index) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Routine_Index => Routine_Index,
             others        => <>);
 
@@ -485,7 +485,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
       Node_Tag      :        Tag;
       Routine_Index :        Test_Routine_Index) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (Routine_Index => Routine_Index,
             others        => <>);
 
@@ -506,7 +506,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin
@@ -526,7 +526,7 @@ package body Apsepp.Test_Reporter_Class.W_Node_Barrier is
      (Obj      : in out Test_Reporter_W_Node_Barrier;
       Node_Tag :        Tag) is
 
-      Event_Data : Apsepp.Test_Event_Class.Test_Event_Data
+      Event_Data : Test_Event_Class.Test_Event_Data
         := (others => <>);
 
    begin

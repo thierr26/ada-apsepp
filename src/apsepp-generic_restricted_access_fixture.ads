@@ -18,7 +18,7 @@ package Apsepp.Generic_Restricted_Access_Fixture is
    package Fixture_Lock is
 
       type Lock
-        is limited new Apsepp.Scope_Bound_Locking.Lock with private;
+        is limited new Scope_Bound_Locking.Lock with private;
 
       overriding
       procedure On_Lock (Obj : Lock);
@@ -29,14 +29,14 @@ package Apsepp.Generic_Restricted_Access_Fixture is
    private
 
       type Lock
-        is limited new Apsepp.Scope_Bound_Locking.Lock with null record;
+        is limited new Scope_Bound_Locking.Lock with null record;
 
    end Fixture_Lock;
 
    Fixture_Instance_Lock : aliased Fixture_Lock.Lock;
 
    function Fixture_Instance_Access
-     (L_H : Apsepp.Scope_Bound_Locking.Lock_Holder'Class)
+     (L_H : Scope_Bound_Locking.Lock_Holder'Class)
      return not null access Fixture_Type
      with Pre => L_H.L = Fixture_Instance_Lock'Access
                    and then

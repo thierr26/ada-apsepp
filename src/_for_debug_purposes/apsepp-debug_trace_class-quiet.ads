@@ -17,11 +17,10 @@ package Apsepp.Debug_Trace_Class.Quiet is
      is (Exception_Name (Error) & " (" & Exception_Message (Error) & ")");
 
    -- TODOC: On first call, reset of elapsed time is done regardless of
-     -- 'Reset_Elapsed' parameter. The reset actually affects protected object
-     -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock', so the reset
-     -- applies to all 'Debug_Trace_Interfa'Class' objects with an
-     -- implementation relying on
-     -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'. <2020-02-24>
+   -- 'Reset_Elapsed' parameter. The reset actually affects protected object
+   -- 'Private_Protected_Clock', so the reset applies to all
+   -- 'Debug_Trace_Interfa'Class' objects with an implementation relying on
+   -- 'Private_Protected_Clock'. <2020-02-24>
    overriding
    function Clock_String
      (Obj           : Debug_Trace_Quiet;
@@ -33,9 +32,9 @@ package Apsepp.Debug_Trace_Class.Quiet is
                       Entity_Name :        String               := "");
 
    -- TODOC: Calls 'Clock_Handler.Set_Time_Zone' (of package
-   -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'), so affects all
-   -- 'Debug_Trace_Interfa'Class' objects with an implementation relying on
-   -- 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'. <2020-02-24>
+   -- 'Private_Protected_Clock'), so affects all 'Debug_Trace_Interfa'Class'
+   -- objects with an implementation relying on 'Private_Protected_Clock'.
+   -- <2020-02-24>
    overriding
    procedure Set_Time_Zone (Obj       : in out Debug_Trace_Quiet;
                             Time_Zone :        Time_Offset);
@@ -46,7 +45,7 @@ package Apsepp.Debug_Trace_Class.Quiet is
 
    -- TODOC: Calls 'Debug_Trace_Quiet'Class (Obj).Clock_String'. So the reset
    -- applies to all 'Debug_Trace_Interfa'Class' objects with an implementation
-   -- relying on 'Apsepp.Debug_Trace_Class.Private_Protected_Clock'.
+   -- relying on 'Private_Protected_Clock'.
    -- <2020-02-24>
    overriding
    procedure Trace_Time

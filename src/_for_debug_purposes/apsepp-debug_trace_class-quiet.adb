@@ -65,7 +65,7 @@ package body Apsepp.Debug_Trace_Class.Quiet is
    procedure Set_Time_Zone (Obj       : in out Debug_Trace_Quiet;
                             Time_Zone :        Time_Offset) is
 
-      use Apsepp.Debug_Trace_Class.Private_Protected_Clock;
+      use Private_Protected_Clock;
 
       pragma Unreferenced (Obj);
 

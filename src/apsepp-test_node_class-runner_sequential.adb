@@ -61,9 +61,8 @@ package body Apsepp.Test_Node_Class.Runner_Sequential is
 
       -----------------------------------------------------
 
-      -- Make Apsepp.Test_Node_Class.Private_Suite_Run_Body.Run_Body
-      -- visible.
-      use Apsepp.Test_Node_Class.Private_Suite_Run_Body;
+      -- Make Private_Suite_Run_Body.Run_Body visible.
+      use Private_Suite_Run_Body;
 
    begin
 

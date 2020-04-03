@@ -15,9 +15,8 @@ function Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes.Create
 
 begin
 
-   return (Apsepp.Test_Node_Class.Runner_Sequential.Create
-             (Root_Test_Node_Access,
-              Test_Reporter_Instance_Access)
+   return (Create (Root_Test_Node_Access,
+                   Test_Reporter_Instance_Access)
              with Slaves => (Limited_Controlled with A => Sla));
 
 end Apsepp.Test_Node_Class.Runner_Sequential.W_Slave_Nodes.Create;
