@@ -95,7 +95,7 @@ private
 
    type Safe_Integer is record
 
-      V : Integer_Type := Integer_Type'First;
+      V : Integer_Type := Integer_Type'Val (0);
 
       S : Boolean      := False;
 
