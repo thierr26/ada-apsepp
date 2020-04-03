@@ -49,6 +49,23 @@ package Apsepp.Generic_Safe_Integer_Operations is
                     or else
                   Val (Inc'Result) = Val (X) + By;
 
+   procedure Dec (X : in out Safe_Integer)
+     with Post => (Sat (X) and Val (X) = Integer_Type'First)
+                    or else
+                  Val (X) = Val (X'Old) - 1;
+
+   function Dec (X : Safe_Integer) return Safe_Integer
+     with Post => (Sat (Dec'Result) and Val (Dec'Result) = Integer_Type'First)
+                    or else
+                  Val (Dec'Result) = Val (X) - 1;
+
+   function "*" (X_1, X_2 : Natural_Safe_Integer) return Natural_Safe_Integer
+     with Post => (
+                    Val (X_1) /= 0 and then Val (X_2) /= 0
+                  )
+                    or else
+                  Val ("*"'Result) = 0;
+
 private
 
    package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);

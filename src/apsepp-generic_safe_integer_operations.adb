@@ -20,6 +20,10 @@ package body Apsepp.Generic_Safe_Integer_Operations is
      is (V => Value,
          S => Saturated);
 
+   Sat_First : constant Safe_Integer
+     := Create (Value     => Integer_Type'First,
+                Saturated => True);
+
    Sat_Last : constant Safe_Integer
      := Create (Value     => Integer_Type'Last,
                 Saturated => True);
@@ -183,6 +187,123 @@ package body Apsepp.Generic_Safe_Integer_Operations is
       return Ret;
 
    end Inc;
+
+   ----------------------------------------------------------------------------
+
+   procedure Dec (X : in out Safe_Integer) is
+
+   begin
+
+      if X /= Sat_First then
+         -- 'X' has to be changed.
+
+         declare
+
+            V : constant Integer_Type := Val (X);
+
+         begin
+
+            if V > Integer_Type'First then
+
+               -- Just decrement the value and reset the saturation flag.
+               X.V := X.V - 1;
+               X.S := False;
+
+            else
+
+               -- Just set the saturation flag.
+               X.S := True;
+
+            end if;
+
+         end;
+
+      else
+         -- 'X' must be left unchanged.
+
+         -- Nothing more to do.
+         null;
+
+      end if;
+
+   end Dec;
+
+   ----------------------------------------------------------------------------
+
+   function Dec (X  : Safe_Integer) return Safe_Integer is
+
+      Ret : Safe_Integer := X;
+
+   begin
+
+      Dec (Ret);
+
+      return Ret;
+
+   end Dec;
+
+   ----------------------------------------------------------------------------
+
+   function "*" (X_1, X_2 : Natural_Safe_Integer)
+     return Natural_Safe_Integer is
+
+      Sat_U_Value : constant Safe_Integer
+        := Create (Value => Integer_Type'Last,
+                   Saturated => True);
+
+   begin
+
+      if Val (X_1) = 0 or else Val (X_2) = 0 then
+         -- The return value is 0, unsaturated.
+
+         return Create (Value     => 0,
+                        Saturated => False); -- Early return.
+
+      elsif not Sat (X_1) and not Sat (X_2) then
+         -- The return value is a non-zero value, possibly the largest possible
+         -- value (saturated or not).
+
+         declare
+
+            function Product_Of_Unsaturated
+              (Greatest,
+               Smallest : Natural_Safe_Integer) return Natural_Safe_Integer is
+
+               Gr_V : constant Integer_Type := Val (Greatest);
+               Sm_V : constant Integer_Type := Val (Smallest);
+
+            begin
+
+              return (if Integer_Type'Last / Gr_V < Sm_V then
+                         Sat_U_Value
+                      else
+                         Create (Value     => Gr_V * Sm_V,
+                                 Saturated => False));
+
+            end Product_Of_Unsaturated;
+
+         begin
+
+            if Val (X_1) > Val (X_2) then
+
+               return Product_Of_Unsaturated (X_1, X_2); -- Early return.
+
+            else
+
+               return Product_Of_Unsaturated (X_2, X_1); -- Early return.
+
+            end if;
+
+         end;
+
+      else
+         -- The return value is the largest possible value, with saturation.
+
+         return Sat_U_Value; -- Early return.
+
+      end if;
+
+   end "*";
 
    ----------------------------------------------------------------------------
 
