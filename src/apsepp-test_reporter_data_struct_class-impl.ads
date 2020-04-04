@@ -81,9 +81,9 @@ private
    end record;
 
    not overriding
-   procedure Create_Node_Child (Obj : in out Test_Reporter_Data;
-                                C   : in out Node_Data_Trees.Cursor;
-                                T   :        Tag);
+   procedure Create_Node_Child (Obj      : in out Test_Reporter_Data;
+                                Position : in out Node_Data_Trees.Cursor;
+                                T        :        Tag);
 
    not overriding
    function Is_Active_Node (Obj : Test_Reporter_Data;
@@ -96,9 +96,10 @@ private
                                         Event_Index_Vector => <>));
 
    not overriding
-   procedure Add_And_Or_Set_Active_Node (Obj : in out Test_Reporter_Data;
-                                         T   :        Tag;
-                                         C   :    out Node_Data_Trees.Cursor)
+   procedure Add_And_Or_Set_Active_Node
+     (Obj      : in out Test_Reporter_Data;
+      T        :        Tag;
+      Position :    out Node_Data_Trees.Cursor)
      with Post'Class
        => Obj.Node_Data_Tree.Contains ((T                  => T,
                                         Event_Index_Vector => <>))

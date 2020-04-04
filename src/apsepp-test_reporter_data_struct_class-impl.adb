@@ -8,11 +8,11 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
    ----------------------------------------------------------------------------
 
    not overriding
-   procedure Create_Node_Child (Obj : in out Test_Reporter_Data;
-                                      C   : in out Node_Data_Trees.Cursor;
-                                      T   :        Tag) is
+   procedure Create_Node_Child (Obj      : in out Test_Reporter_Data;
+                                Position : in out Node_Data_Trees.Cursor;
+                                T        :        Tag) is
 
-      Parent : constant Node_Data_Trees.Cursor := C;
+      Parent : constant Node_Data_Trees.Cursor := Position;
 
    begin
 
@@ -21,7 +21,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
          Before   => Node_Data_Trees.No_Element,
          New_Item => (T                  => T,
                       Event_Index_Vector => <>),
-         Position => C);
+         Position => Position);
       -- Value 'Node_Data_Trees.No_Element' for parameter 'Before' implies that
       -- the new child is inserted after the last existing child.
       -- REF: ARM A18.10(167/3). <2020-03-25>
@@ -32,9 +32,9 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
    not overriding
    procedure Add_And_Or_Set_Active_Node
-     (Obj : in out Test_Reporter_Data;
-      T   :        Tag;
-      C   :    out Node_Data_Trees.Cursor) is
+     (Obj      : in out Test_Reporter_Data;
+      T        :        Tag;
+      Position :    out Node_Data_Trees.Cursor) is
 
       use type Node_Data_Hashed_Maps.Cursor;
 
@@ -48,32 +48,32 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
          -- Node tag 'T' not found in the active nodes map.
 
          -- Search node tag 'T' in the node data tree.
-         C := Node_Data_Trees.No_Element;
-         for Cu in Obj.Node_Data_Tree.Iterate loop
-            if Node_Data_Trees.Element (Cu).T = T then
-               C := Cu;
+         Position := Node_Data_Trees.No_Element;
+         for K in Obj.Node_Data_Tree.Iterate loop
+            if Node_Data_Trees.Element (K).T = T then
+               Position := K;
                exit; -- Early exit.
             end if;
          end loop;
 
-         if C = Node_Data_Trees.No_Element then
+         if Position = Node_Data_Trees.No_Element then
             -- Node tag 'T' not found in the node data tree.
 
             -- Insert a new node for 'T' in the node data tree and get a cursor
-            -- to that node in 'C'.
-            C := Node_Data_Trees.Root (Obj.Node_Data_Tree);
-            Obj.Create_Node_Child (C, T);
+            -- to that node in 'Position'.
+            Position := Node_Data_Trees.Root (Obj.Node_Data_Tree);
+            Obj.Create_Node_Child (Position, T);
 
          end if;
 
          -- Add the 'T' node to the active nodes map.
          Obj.Active_Node_Map.Insert (Key      => T,
-                                     New_Item => C);
+                                     New_Item => Position);
 
       else
 
          -- Get a cursor to the 'T' node of the active nodes map.
-         C := Node_Data_Hashed_Maps.Element (Active_Node_Map_C);
+         Position := Node_Data_Hashed_Maps.Element (Active_Node_Map_C);
 
       end if;
 
@@ -142,8 +142,9 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
    procedure Include_Node (Obj          : in out Test_Reporter_Data;
                            Node_Lineage :        Tag_Array) is
 
-      -- Initialize 'C' to the node data tree root.
-      C : Node_Data_Trees.Cursor := Node_Data_Trees.Root (Obj.Node_Data_Tree);
+      -- Initialize 'Position' to the node data tree root.
+      Position : Node_Data_Trees.Cursor
+        := Node_Data_Trees.Root (Obj.Node_Data_Tree);
 
    begin
 
@@ -155,15 +156,16 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
          begin
 
-            -- Iterate over children of the node designated by 'C'.
-            for Child_C in Obj.Node_Data_Tree.Iterate_Children (C) loop
+            -- Iterate over children of the node designated by 'Position'.
+            for Child_C in Obj.Node_Data_Tree.Iterate_Children (Position) loop
 
                if Node_Data_Trees.Element (Child_C).T = T then
-                  -- The node designated by 'C' has a child with node tag 'T'.
+                  -- The node designated by 'Position' has a child with node
+                  -- tag 'T'.
 
-                  -- Have 'C' designate this child node and stop requiring
-                  -- child creation.
-                  C := Child_C;
+                  -- Have 'Position' designate this child node and stop
+                  -- requiring child creation.
+                  Position := Child_C;
                   Child_Creation_Required := False;
 
                   exit; -- Early exit.
@@ -174,9 +176,9 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
             if Child_Creation_Required then
 
-               -- For the node designated by 'C', create a child with node tag
-               -- 'T' and get a cursor to the new node in 'C'.
-               Obj.Create_Node_Child (C, T);
+               -- For the node designated by 'Position', create a child with
+               -- node tag 'T' and get a cursor to the new node in 'Position'.
+               Obj.Create_Node_Child (Position, T);
 
             end if;
 
@@ -202,21 +204,22 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
 
       -----------------------------------------------------
 
-      C : Node_Data_Trees.Cursor;
+      Position : Node_Data_Trees.Cursor;
 
    begin
 
       -- Make sure a node with node tag 'Node_Tag' is in the active nodes map.
-      Obj.Add_And_Or_Set_Active_Node (Node_Tag, C);
+      Obj.Add_And_Or_Set_Active_Node (Node_Tag, Position);
 
       -- Append event to the vector event.
       Obj.Event_Vector.Append (
-        (Node_Data_Cursor => C,
+        (Node_Data_Cursor => Position,
          Event            => new Test_Event_Base'Class'(Event)));
 
       -- Update the data of the associated node data in the node data tree
       -- (i.e. add the event index to the event index vector).
-      Obj.Node_Data_Tree.Update_Element (C, Update_Node_Event_Vector'Access);
+      Obj.Node_Data_Tree.Update_Element (Position,
+                                         Update_Node_Event_Vector'Access);
 
       if Event.Is_Node_Run_Final_Event then
          -- No more event can occur related to the test node.
