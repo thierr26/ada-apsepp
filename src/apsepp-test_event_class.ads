@@ -11,7 +11,7 @@ with Apsepp.Test_Case_Count_Types;
 
 package Apsepp.Test_Event_Class is
 
-   -- Force run-time pre-condition check in this package.
+   -- Force run-time class-wide pre-condition check in this package.
    pragma Assertion_Policy (Pre'Class => Check);
 
    type Test_Event_Data is record
