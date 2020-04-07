@@ -8,7 +8,7 @@ package body Apsepp.Text_Class.RO is
    function Constant_Reference
      (Obj      : aliased RO_Text_Interfa'Class;
       Position : Cursor) return Character_Array
-     is (Obj.Line (Position.Line_Index).all);
+     is (Obj.Line (I (Position).Line_Index).all);
 
    ----------------------------------------------------------------------------
 
@@ -36,56 +36,84 @@ package body Apsepp.Text_Class.RO is
 
    function Constant_Text_Access
      (Position : Cursor) return not null access constant RO_Text_Interfa'Class
-     is (Position.Text);
+     is (RO_Text_Interfa'Class (I (Position).Constant_Text_Access.all)'Access);
 
    ----------------------------------------------------------------------------
 
-   function Has_Line (Position : Cursor) return Boolean
-     is (Position.Text.Is_Line (Position.Line_Index));
+   function Has_Line (Position : Cursor) return Boolean is
+
+      I_P : constant Cursor_Internals'Class := I (Position);
+
+   begin
+
+      return I_P.Constant_Text_Access.Is_Line (I_P.Line_Index);
+
+   end Has_Line;
 
    ----------------------------------------------------------------------------
 
    function Line_Index (Position : Cursor) return Text_Line_Index
-     is (Position.Line_Index);
+     is (I (Position).Line_Index);
 
    ----------------------------------------------------------------------------
 
    function Line
-     (Position : Cursor) return not null access constant Character_Array
-     is (Position.Text.Line (Position.Line_Index));
+     (Position : Cursor) return not null access constant Character_Array is
+
+      I_P : constant Cursor_Internals'Class := I (Position);
+
+   begin
+
+      return I_P.Constant_Text_Access.Line (I_P.Line_Index);
+
+   end Line;
 
    ----------------------------------------------------------------------------
 
    type Shift_Kind is (Shift_Next, Shift_Previous);
 
    function Parameterized_Cursor_Shift (Position : Cursor;
-                                        Kind     : Shift_Kind) return Cursor
-     is (Text       => Position.Text,
-         Line_Index =>
-           (case Kind is
+                                        Kind     : Shift_Kind) return Cursor is
 
-               when Shift_Next =>
+      Ret   :          Cursor                 := Position;
+      I_P   : constant Cursor_Internals'Class := I (Ret);
+      L_I   : constant Text_Line_Index        := I_P.Line_Index;
+      Shift :          Boolean                := False; -- True means that a
+                                                        -- line index shift is
+                                                        -- needed, false means
+                                                        -- that a line index
+                                                        -- zeroing is needed.
 
-                      (if Position.Line_Index
-                            <
-                          Text_Line_Count'Last
+      -----------------------------------------------------
+
+      procedure Process (Element : in out Cursor_Internals'Class) is
+      begin
+         if Shift then
+            Shift_Line_Index (Element, (case Kind is
+                                           when Shift_Next     => +1,
+                                           when Shift_Previous => -1));
+         else
+            Set_Line_Index (Element, 0);
+         end if;
+      end Process;
+
+      -----------------------------------------------------
+
+   begin
+
+      Shift := (case Kind is
+                   when Shift_Next     =>
+                          L_I < Text_Line_Count'Last
                             and then
-                          Position.Text.Is_Line (Position.Line_Index + 1) then
+                          I_P.Constant_Text_Access.Is_Line (L_I + 1),
+                   when Shift_Previous =>
+                          L_I > 1);
 
-                          Position.Line_Index + 1
+      Ret.Internals.Update_Element (Process'Access);
 
-                       else
+      return Ret;
 
-                          0),
-
-               when Shift_Previous =>
-
-                      (if Position.Line_Index > 1 then
-                          Position.Line_Index - 1
-                       else
-                          0)
-
-           ));
+   end Parameterized_Cursor_Shift;
 
    ----------------------------------------------------------------------------
 

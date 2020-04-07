@@ -3,6 +3,8 @@
 
 with Ada.Iterator_Interfaces;
 
+private with Apsepp.Text_Class.Private_Cursor_Internals_Class;
+
 package Apsepp.Text_Class.RO is
 
    -- Force run-time pre-condition check in this package.
@@ -88,15 +90,16 @@ package Apsepp.Text_Class.RO is
 
 private
 
+   use Private_Cursor_Internals_Class;
+
    type Cursor is record
 
-      Text : access constant RO_Text_Interfa'Class;
-
-      -- TODOC: 0 means "Cursor does not designate an existing line in text".
-      -- <2020-04-06>
-      Line_Index : Text_Line_Count;
+      Internals : Cursor_Internals_Holders.Holder;
 
    end record;
+
+   function I (Position : Cursor) return Cursor_Internals'Class
+     is (Position.Internals.Element);
 
    type Iterator
      is new RO_Text_Iterator_Interfaces.Reversible_Iterator with record

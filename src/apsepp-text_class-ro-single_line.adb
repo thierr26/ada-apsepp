@@ -9,6 +9,45 @@ package body Apsepp.Text_Class.RO.Single_Line is
    ----------------------------------------------------------------------------
 
    overriding
+   function Constant_Text_Access
+     (Obj : Cursor_Internals_Single_Line)
+     return not null access constant Text_Interfa'Class
+     is (Obj.Text_Access);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Line_Index
+     (Obj : Cursor_Internals_Single_Line) return Text_Line_Count
+     is (Obj.Line_Index);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Set_Line_Index (Obj   : in out Cursor_Internals_Single_Line;
+                             Value : Text_Line_Count) is
+
+   begin
+
+      Obj.Line_Index := Value;
+
+   end Set_Line_Index;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Shift_Line_Index (Obj : in out Cursor_Internals_Single_Line;
+                               By  :        Text_Line_Count'Base) is
+
+   begin
+
+      Obj.Line_Index := Obj.Line_Index + By;
+
+   end Shift_Line_Index;
+
+   ----------------------------------------------------------------------------
+
+   overriding
    function Character_Length (Obj : RO_Text_Single_Line) return Character_Count
      is (Obj.A'Length);
 
@@ -101,12 +140,24 @@ package body Apsepp.Text_Class.RO.Single_Line is
    overriding
    function To_Cursor
      (Obj        : RO_Text_Single_Line;
-      Line_Index : Text_Line_Count := 1) return Cursor
-     is (Text       => Obj'Unchecked_Access,
-         Line_Index => (if Obj.Is_Line (Line_Index) then
-                           Line_Index
-                        else
-                           0));
+      Line_Index : Text_Line_Count     := 1) return Cursor is
+
+      T_A : constant not null access constant RO_Text_Single_Line'Class
+        := Obj'Unchecked_Access;
+
+      L_I : constant Text_Line_Count := (if Obj.Is_Line (Line_Index) then
+                                            Line_Index
+                                         else
+                                            0);
+
+      I   : constant Cursor_Internals_Single_Line := (Text_Access => T_A,
+                                                      Line_Index  => L_I);
+
+   begin
+
+      return (Internals => Cursor_Internals_Holders.To_Holder (New_Item => I));
+
+   end To_Cursor;
 
    ----------------------------------------------------------------------------
 

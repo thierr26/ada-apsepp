@@ -46,7 +46,7 @@ package Apsepp.Text_Class.RO.Single_Line is
    overriding
    function To_Cursor
      (Obj        : RO_Text_Single_Line;
-      Line_Index : Text_Line_Count := 1) return Cursor;
+      Line_Index : Text_Line_Count     := 1) return Cursor;
 
    overriding
    function First (Obj : RO_Text_Single_Line) return Cursor
@@ -73,5 +73,30 @@ private
       A : Character_Array_Access;
 
    end record;
+
+   type Cursor_Internals_Single_Line is new Cursor_Internals with record
+
+      Text_Access : access constant RO_Text_Single_Line'Class;
+
+      Line_Index : Text_Line_Count;
+
+   end record;
+
+   overriding
+   function Constant_Text_Access
+     (Obj : Cursor_Internals_Single_Line)
+     return not null access constant Text_Interfa'Class;
+
+   overriding
+   function Line_Index
+     (Obj : Cursor_Internals_Single_Line) return Text_Line_Count;
+
+   overriding
+   procedure Set_Line_Index (Obj   : in out Cursor_Internals_Single_Line;
+                             Value :        Text_Line_Count);
+
+   overriding
+   procedure Shift_Line_Index (Obj : in out Cursor_Internals_Single_Line;
+                               By  :        Text_Line_Count'Base);
 
 end Apsepp.Text_Class.RO.Single_Line;
