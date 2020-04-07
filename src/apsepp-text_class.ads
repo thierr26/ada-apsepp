@@ -7,8 +7,8 @@ private with Apsepp.Generic_Safe_Integer_Operations.Conversions;
 
 package Apsepp.Text_Class is
 
-   -- Force run-time class-wide pre-condition check in this package.
-   pragma Assertion_Policy (Pre'Class => Check);
+   -- Omit run-time class-wide pre-condition check in this package.
+   pragma Assertion_Policy (Pre'Class => Ignore);
 
    type Text_Line_Count is new Natural;
 

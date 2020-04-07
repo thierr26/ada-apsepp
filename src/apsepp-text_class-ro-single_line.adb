@@ -1,7 +1,8 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Unchecked_Deallocation;
+with Ada.Unchecked_Deallocation,
+     Ada.Strings.Fixed;
 
 package body Apsepp.Text_Class.RO.Single_Line is
 
@@ -13,18 +14,52 @@ package body Apsepp.Text_Class.RO.Single_Line is
 
    ----------------------------------------------------------------------------
 
+   procedure Check_K (K : Text_Line_Index) is
+
+      Expected_K : constant Text_Line_Index := 1;
+
+   begin
+
+      if K /= Expected_K then
+         raise Constraint_Error
+           with "Invalid 'K' parameter value ("
+                & Ada.Strings.Fixed.Trim (Text_Line_Index'Image (K),
+                                          Ada.Strings.Left)
+                & ", should have been"
+                & Text_Line_Index'Image (Expected_K)
+                & ").";
+      end if;
+
+   end Check_K;
+
+   ----------------------------------------------------------------------------
+
    overriding
    function Character_Length (Obj : RO_Text_Single_Line;
-                              K   : Text_Line_Index) return Character_Count
-     is (Obj.A'Length);
+                              K   : Text_Line_Index) return Character_Count is
+
+   begin
+
+      Check_K (K);
+
+      return Obj.A'Length;
+
+   end Character_Length;
 
    ----------------------------------------------------------------------------
 
    overriding
    function Line
      (Obj : RO_Text_Single_Line;
-      K   : Text_Line_Index) return not null access constant Character_Array
-     is (Obj.A);
+      K   : Text_Line_Index) return not null access constant Character_Array is
+
+   begin
+
+      Check_K (K);
+
+      return Obj.A;
+
+   end Line;
 
    ----------------------------------------------------------------------------
 
