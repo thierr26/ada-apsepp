@@ -38,11 +38,23 @@ package Apsepp.Text_Class is
    function EOL_Length (Kind : EOL_Kind) return Character_Count
      is (Character_Count (EOL_String_Length (Kind)));
 
-   type Text_Interfa is limited interface;
+   type Text_Interfa is limited interface
+     with Type_Invariant'Class =>
+            Text_Interfa.Is_Empty xor Text_Interfa.Is_Line (1);
 
    not overriding
    function Line_Count (Obj : Text_Interfa) return Text_Line_Count
      is abstract;
+
+   -- TODOC: Useful to check if a text has a line with index 'K' even if the
+   -- number of lines of the text is not precisely known at the time.
+   -- <2020-04-07>
+   not overriding
+   function Is_Line (Obj : Text_Interfa;
+                     K   : Text_Line_Index) return Boolean is abstract;
+
+   not overriding
+   function Is_Empty (Obj : Text_Interfa) return Boolean is abstract;
 
    -- TODOC: Not aware of the notion of "end of line sequence". <2020-03-29>
    not overriding
@@ -53,14 +65,14 @@ package Apsepp.Text_Class is
    function Character_Length (Obj : Text_Interfa;
                               K   : Text_Line_Index) return Character_Count
      is abstract
-     with Pre'Class => K <= Obj.Line_Count;
+     with Pre'Class => Obj.Is_Line (K);
 
    not overriding
    function Line
      (Obj : Text_Interfa;
       K   : Text_Line_Index) return not null access constant Character_Array
      is abstract
-     with Pre'Class  => K <= Obj.Line_Count,
+     with Pre'Class  => Obj.Is_Line (K),
           Post'Class => Line'Result'Length = Obj.Character_Length (K);
 
    not overriding
@@ -70,7 +82,9 @@ package Apsepp.Text_Class is
       Include_Last_EOL : Boolean      := False) return String is abstract
      with Post'Class => To_String'Result'First = 1
                           and then
-                        To_String'Result'Length = Obj.To_String_Length;
+                        To_String'Result'Length = Obj.To_String_Length
+                                                    (EOL,
+                                                     Include_Last_EOL);
 
    function To_String_Truncates
      (Obj              : Text_Interfa'Class;

@@ -27,21 +27,21 @@ package Apsepp.Text_Class.RO is
      with Post'Class =>
             Constant_Text_Access (To_Cursor'Result) = Obj'Unchecked_Access
               and then
-            Has_Line (To_Cursor'Result) = (Line_Index in 1 .. Obj.Line_Count);
+            Has_Line (To_Cursor'Result) = Obj.Is_Line (Line_Index);
 
    not overriding
    function First (Obj : RO_Text_Interfa) return Cursor is abstract
      with Post'Class =>
             Constant_Text_Access (First'Result) = Obj'Unchecked_Access
               and then
-            (Has_Line (First'Result) xor Obj.Line_Count = 0);
+            (Has_Line (First'Result) xor Obj.Is_Empty);
 
    not overriding
    function Last (Obj : RO_Text_Interfa) return Cursor is abstract
      with Post'Class =>
             Constant_Text_Access (Last'Result) = Obj'Unchecked_Access
               and then
-            (Has_Line (Last'Result) xor Obj.Line_Count = 0);
+            (Has_Line (Last'Result) xor Obj.Is_Empty);
 
    function Constant_Text_Access
      (Position : Cursor) return access constant RO_Text_Interfa'Class;

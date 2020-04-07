@@ -4,6 +4,7 @@
 with Ada.Unchecked_Deallocation;
 
 package body Apsepp.Text_Class.RO.Single_Line is
+
    ----------------------------------------------------------------------------
 
    overriding

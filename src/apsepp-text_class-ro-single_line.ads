@@ -7,11 +7,22 @@ package Apsepp.Text_Class.RO.Single_Line is
 
    type RO_Text_Single_Line is new Ada.Finalization.Controlled
                                      and
-                                   RO_Text_Interfa with private;
+                                   RO_Text_Interfa with private
+     with Type_Invariant'Class => RO_Text_Single_Line.Line_Count = 1;
 
    overriding
    function Line_Count (Obj : RO_Text_Single_Line) return Text_Line_Count
      is (1);
+
+   overriding
+   function Is_Line (Obj : RO_Text_Single_Line;
+                     K   : Text_Line_Index) return Boolean
+     is (K = 1)
+     with Post'Class => Is_Line'Result xor K /= 1;
+
+   overriding
+   function Is_Empty (Obj : RO_Text_Single_Line) return Boolean
+     is (False);
 
    overriding
    function Character_Length
