@@ -51,7 +51,8 @@ package Apsepp.Text_Class is
    -- <2020-04-07>
    not overriding
    function Is_Line (Obj : Text_Interfa;
-                     K   : Text_Line_Index) return Boolean is abstract;
+                     K   : Text_Line_Count) return Boolean is abstract
+     with Post'Class => K /= 0 or else not Is_Line'Result;
 
    not overriding
    function Is_Empty (Obj : Text_Interfa) return Boolean is abstract;

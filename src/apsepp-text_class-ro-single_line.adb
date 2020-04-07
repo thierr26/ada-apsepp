@@ -103,7 +103,7 @@ package body Apsepp.Text_Class.RO.Single_Line is
      (Obj        : RO_Text_Single_Line;
       Line_Index : Text_Line_Count := 1) return Cursor
      is (Text       => Obj'Unchecked_Access,
-         Line_Index => (if Line_Index <= Obj.Line_Count then
+         Line_Index => (if Obj.Is_Line (Line_Index) then
                            Line_Index
                         else
                            0));

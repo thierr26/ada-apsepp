@@ -41,7 +41,7 @@ package body Apsepp.Text_Class.RO is
    ----------------------------------------------------------------------------
 
    function Has_Line (Position : Cursor) return Boolean
-     is (Position.Line_Index in 1 .. Position.Text.Line_Count);
+     is (Position.Text.Is_Line (Position.Line_Index));
 
    ----------------------------------------------------------------------------
 
@@ -61,28 +61,31 @@ package body Apsepp.Text_Class.RO is
    function Parameterized_Cursor_Shift (Position : Cursor;
                                         Kind     : Shift_Kind) return Cursor
      is (Text       => Position.Text,
-         Line_Index => (case Kind is
+         Line_Index =>
+           (case Kind is
 
-                           when Shift_Next =>
+               when Shift_Next =>
 
-                                  (if Position.Line_Index
-                                        <
-                                      Position.Text.Line_Count then
+                      (if Position.Line_Index
+                            <
+                          Text_Line_Count'Last
+                            and then
+                          Position.Text.Is_Line (Position.Line_Index + 1) then
 
-                                      Position.Line_Index + 1
+                          Position.Line_Index + 1
 
-                                   else
+                       else
 
-                                      0),
+                          0),
 
-                           when Shift_Previous =>
+               when Shift_Previous =>
 
-                                  (if Position.Line_Index > 1 then
-                                      Position.Line_Index - 1
-                                   else
-                                      0)
+                      (if Position.Line_Index > 1 then
+                          Position.Line_Index - 1
+                       else
+                          0)
 
-                       ));
+           ));
 
    ----------------------------------------------------------------------------
 

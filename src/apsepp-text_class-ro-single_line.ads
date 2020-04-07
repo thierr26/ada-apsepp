@@ -16,7 +16,7 @@ package Apsepp.Text_Class.RO.Single_Line is
 
    overriding
    function Is_Line (Obj : RO_Text_Single_Line;
-                     K   : Text_Line_Index) return Boolean
+                     K   : Text_Line_Count) return Boolean
      is (K = 1)
      with Post'Class => Is_Line'Result xor K /= 1;
 
