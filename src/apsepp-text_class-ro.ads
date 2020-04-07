@@ -44,7 +44,7 @@ package Apsepp.Text_Class.RO is
             (Has_Line (Last'Result) xor Obj.Is_Empty);
 
    function Constant_Text_Access
-     (Position : Cursor) return access constant RO_Text_Interfa'Class;
+     (Position : Cursor) return not null access constant RO_Text_Interfa'Class;
 
    -- TODOC: True if 'Cursor' designates an existing line of its associated
    -- text object. <2020-04-03>

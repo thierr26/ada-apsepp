@@ -35,7 +35,7 @@ package body Apsepp.Text_Class.RO is
    ----------------------------------------------------------------------------
 
    function Constant_Text_Access
-     (Position : Cursor) return access constant RO_Text_Interfa'Class
+     (Position : Cursor) return not null access constant RO_Text_Interfa'Class
      is (Position.Text);
 
    ----------------------------------------------------------------------------
