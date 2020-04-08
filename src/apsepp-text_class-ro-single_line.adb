@@ -19,7 +19,7 @@ package body Apsepp.Text_Class.RO.Single_Line is
    overriding
    function Line_Index
      (Obj : Cursor_Internals_Single_Line) return Text_Line_Count
-     is (Obj.Line_Index);
+     is (Obj.Line_Idx);
 
    ----------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ package body Apsepp.Text_Class.RO.Single_Line is
 
    begin
 
-      Obj.Line_Index := Value;
+      Obj.Line_Idx := Value;
 
    end Set_Line_Index;
 
@@ -41,7 +41,7 @@ package body Apsepp.Text_Class.RO.Single_Line is
 
    begin
 
-      Obj.Line_Index := Obj.Line_Index + By;
+      Obj.Line_Idx := Obj.Line_Idx + By;
 
    end Shift_Line_Index;
 
@@ -151,7 +151,7 @@ package body Apsepp.Text_Class.RO.Single_Line is
                                             0);
 
       I   : constant Cursor_Internals_Single_Line := (Text_Access => T_A,
-                                                      Line_Index  => L_I);
+                                                      Line_Idx    => L_I);
 
    begin
 

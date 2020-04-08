@@ -78,7 +78,7 @@ private
 
       Text_Access : access constant RO_Text_Single_Line'Class;
 
-      Line_Index : Text_Line_Count;
+      Line_Idx : Text_Line_Count;
 
    end record;
 
