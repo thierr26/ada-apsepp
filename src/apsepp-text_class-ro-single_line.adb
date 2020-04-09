@@ -8,6 +8,22 @@ package body Apsepp.Text_Class.RO.Single_Line is
 
    ----------------------------------------------------------------------------
 
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Single_Line'Class;
+      Position : Cursor) return Constant_Reference_Type
+     is (Line  => Obj.Line (I (Position).Line_Index),
+         Dummy => False);
+
+   ----------------------------------------------------------------------------
+
+   function Constant_Reference
+     (Obj : aliased RO_Text_Single_Line'Class;
+      K   : Text_Line_Index) return Constant_Reference_Type
+     is (Line  => Obj.Line (K),
+         Dummy => False);
+
+   ----------------------------------------------------------------------------
+
    overriding
    function Constant_Text_Access
      (Obj : Cursor_Internals_Single_Line)

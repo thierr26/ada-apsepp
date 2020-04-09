@@ -5,6 +5,9 @@ with Ada.Finalization;
 
 package Apsepp.Text_Class.RO.Single_Line is
 
+   -- Force run-time pre-condition check in this package.
+   pragma Assertion_Policy (Pre => Check);
+
    type RO_Text_Single_Line is new Ada.Finalization.Controlled
                                      and
                                    RO_Text_Interfa with private
@@ -61,6 +64,24 @@ package Apsepp.Text_Class.RO.Single_Line is
 
    overriding
    procedure Finalize (Obj : in out RO_Text_Single_Line);
+
+   -- TODOC: Identical to 'Apsepp.Text_Class.RO.Constant_Reference', but the
+   -- local redeclaration seems to be necessary to make 'RO_Text_Single_Line'
+   -- an indexable container. From ARM: 'Constant_Indexing' aspect "hall be
+   -- specified by a name that denotes one or more functions declared
+   -- immediately within the same declaration list in which" the container type
+   -- is declared. <2020-04-09>
+   -- REF: ARM 4.1.6(2/3). <2020-04-09>
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Single_Line'Class;
+      Position : Cursor) return Constant_Reference_Type
+     with Pre => Constant_Text_Access (Position) = Obj'Access;
+
+   -- TODOC: See above. <2020-04-09>
+   function Constant_Reference
+     (Obj : aliased RO_Text_Single_Line'Class;
+      K   : Text_Line_Index) return Constant_Reference_Type
+     with Pre => Obj.Is_Line (K);
 
 private
 

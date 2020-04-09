@@ -5,38 +5,25 @@ package body Apsepp.Text_Class.RO is
 
    ----------------------------------------------------------------------------
 
-   function Constant_Reference
-     (Obj      : aliased RO_Text_Interfa'Class;
-      Position : Cursor) return Character_Array
-     is (Obj.Line (I (Position).Line_Index).all);
-
-   ----------------------------------------------------------------------------
-
-   function Parameterized_Iterate
-     (Obj              : RO_Text_Interfa'Class;
-      Start_Line_Index : Text_Line_Count)
-     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
-     is (Iterator'(Text             => Obj'Unchecked_Access,
-                   Start_Line_Index => Start_Line_Index));
-
-   ----------------------------------------------------------------------------
-
-   function Iterate (Obj : RO_Text_Interfa'Class)
-     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
-     is (Obj.Parameterized_Iterate (0));
-
-   ----------------------------------------------------------------------------
-
-   function Iterate (Obj   : RO_Text_Interfa'Class;
-                     Start : Cursor)
-     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
-     is (Obj.Parameterized_Iterate (Line_Index (Start)));
-
-   ----------------------------------------------------------------------------
-
    function Constant_Text_Access
      (Position : Cursor) return not null access constant RO_Text_Interfa'Class
      is (RO_Text_Interfa'Class (I (Position).Constant_Text_Access.all)'Access);
+
+   ----------------------------------------------------------------------------
+
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Interfa'Class;
+      Position : Cursor) return Constant_Reference_Type
+     is (Line  => Obj.Line (I (Position).Line_Index),
+         Dummy => False);
+
+   ----------------------------------------------------------------------------
+
+   function Constant_Reference
+     (Obj : aliased RO_Text_Interfa'Class;
+      K   : Text_Line_Index) return Constant_Reference_Type
+     is (Line  => Obj.Line (K),
+         Dummy => False);
 
    ----------------------------------------------------------------------------
 
@@ -167,6 +154,28 @@ package body Apsepp.Text_Class.RO is
    function Previous (Obj      : Iterator;
                       Position : Cursor) return Cursor
      is (Previous (Position));
+
+   ----------------------------------------------------------------------------
+
+   function Parameterized_Iterate
+     (Obj              : RO_Text_Interfa'Class;
+      Start_Line_Index : Text_Line_Count)
+     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
+     is (Iterator'(Text             => Obj'Unchecked_Access,
+                   Start_Line_Index => Start_Line_Index));
+
+   ----------------------------------------------------------------------------
+
+   function Iterate (Obj : RO_Text_Interfa'Class)
+     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
+     is (Obj.Parameterized_Iterate (0));
+
+   ----------------------------------------------------------------------------
+
+   function Iterate (Obj   : RO_Text_Interfa'Class;
+                     Start : Cursor)
+     return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
+     is (Obj.Parameterized_Iterate (Line_Index (Start)));
 
    ----------------------------------------------------------------------------
 

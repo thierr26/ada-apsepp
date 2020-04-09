@@ -37,6 +37,44 @@ package body Apsepp_Demo_TSL_Run is
 
       New_Line;
 
+      declare
+
+         use Apsepp.Text_Class,    -- Makes 'Character_Array' use visible.
+             Apsepp.Text_Class.RO; -- Makes 'Cursor' use visible.
+
+         Position       : constant Cursor          := Hello.To_Cursor;
+         Hello_Position : constant Character_Array := Hello(Position);
+
+      begin
+
+         Put_Line ("'Hello(Position)':");
+         Put_String (String (Hello_Position));
+
+         -- QUEST: The following line does not compile ("ambiguous operand in
+         -- conversion"). Don't understand why. <2020-04-09>
+         -- Put_String (String (Hello(Position)));
+
+      end;
+
+      New_Line;
+
+      declare
+
+         Hello_1 : constant Apsepp.Text_Class.Character_Array := Hello(1);
+
+      begin
+
+         Put_Line ("'Hello(1)':");
+         Put_String (String (Hello_1));
+
+         -- QUEST: The following line does not compile ("ambiguous operand in
+         -- conversion"). Don't understand why. <2020-04-09>
+         -- Put_String (String (Hello(1)));
+
+      end;
+
+      New_Line;
+
       Put_Line ("'Hello', via iterator:");
       for A of Hello loop
          Put_String (String (A));
@@ -62,6 +100,7 @@ package body Apsepp_Demo_TSL_Run is
       declare
 
          use all type Apsepp.Text_Class.RO.Cursor;
+         use Apsepp.Text_Class.RO;
 
          Start : constant Apsepp.Text_Class.RO.Cursor := Hello.To_Cursor;
 

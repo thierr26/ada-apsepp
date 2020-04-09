@@ -16,6 +16,8 @@ package Apsepp.Text_Class.RO is
    -- only if reserved word "limited" is used in the type declaration.
    -- <2020-03-31>
    -- REF: ARM 7.5(3/3). <2020-03-31>
+   -- TODOC: Indexable and iterable container interface. Indexing via cursor or
+   -- via text line index. <2020-04-09>
    type RO_Text_Interfa is interface and Text_Interfa
      with Constant_Indexing => Constant_Reference,
           Default_Iterator  => Iterate,
@@ -45,6 +47,21 @@ package Apsepp.Text_Class.RO is
               and then
             (Has_Line (Last'Result) xor Obj.Is_Empty);
 
+   type Constant_Reference_Type
+     (Line : not null access constant Character_Array) is private
+     with Implicit_Dereference => Line;
+
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Interfa'Class;
+      Position : Cursor) return Constant_Reference_Type
+     with Pre => Constant_Text_Access (Position) = Obj'Access;
+
+   function Constant_Reference
+     (Obj : aliased RO_Text_Interfa'Class;
+      K   : Text_Line_Index) return Constant_Reference_Type
+     with Pre => Obj.Is_Line (K);
+
+   -- TODOC: Useful for expressing contracts. <2020-04-09>
    function Constant_Text_Access
      (Position : Cursor) return not null access constant RO_Text_Interfa'Class;
 
@@ -75,11 +92,6 @@ package Apsepp.Text_Class.RO is
      Ada.Iterator_Interfaces (Cursor      => Cursor,
                               Has_Element => Has_Line);
 
-   function Constant_Reference
-     (Obj      : aliased RO_Text_Interfa'Class;
-      Position : Cursor) return Character_Array
-     with Pre => Constant_Text_Access (Position) = Obj'Access;
-
    function Iterate (Obj : RO_Text_Interfa'Class)
      return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class;
 
@@ -100,6 +112,20 @@ private
 
    function I (Position : Cursor) return Cursor_Internals'Class
      is (Position.Internals.Element);
+
+   type Constant_Reference_Type
+     (Line : not null access constant Character_Array) is record
+
+      -- TODOC: Useless, except to raise 'Program_Error' when the object is
+      -- instantiated with default initialization, as required by RM.
+      -- <2020-04-01>
+      -- REF: ARM A18.2(147.4/3), ARM A18.10(125/3), ... <2020-04-01>
+      Dummy : Boolean
+        := raise Program_Error
+          with "Uninitialized 'Constant_Reference_Type' instance creation "
+               & "attempt.";
+
+   end record;
 
    type Iterator
      is new RO_Text_Iterator_Interfaces.Reversible_Iterator with record

@@ -42,6 +42,9 @@ package Apsepp.Text_Class is
      with Type_Invariant'Class =>
             Text_Interfa.Is_Empty xor Text_Interfa.Is_Line (1);
 
+   -- TODOC: A zero return value for 'Line_Count' is equivalent to a true
+   -- return value for 'Is_Empty' (but 'Is_Empty' may be more efficient).
+   -- <2020-04-08>
    not overriding
    function Line_Count (Obj : Text_Interfa) return Text_Line_Count
      is abstract;
