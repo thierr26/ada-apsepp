@@ -137,7 +137,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
          declare
             A : Node_Tag_W_Parent_Index renames Node_Tag_Tree(Index);
          begin
-            A.Node_Tag := Node_Data_Trees.Element (Position).T;
+            A.Node_Tag := Obj.Node_Data_Tree(Position).T;
             A.Active   := Obj.Active_Node_Map.Contains (A.Node_Tag);
          end;
 
@@ -167,7 +167,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
                  renames Node_Tag_Tree(Index);
 
                Parent_Tag : constant Tag
-                 := Node_Data_Trees.Element (Parent_Position).T;
+                 := Obj.Node_Data_Tree(Parent_Position).T;
 
                K : Natural := Index;
                -- After the loops below, K should be the index in Node_Tag_Tree
@@ -218,7 +218,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl.Arrays is
 
          E : constant Test_Event_Access := Element (Position).Event;
          T : constant Tag
-           := Node_Data_Trees.Element (Element (Position).Node_Data_Cursor).T;
+           := Obj.Node_Data_Tree(Element (Position).Node_Data_Cursor).T;
 
       begin
 

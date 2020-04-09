@@ -47,17 +47,12 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
                -- Create an entry in map 'M' with key 'T' and data 'S' if there
                -- is not already an entry with such key, or replace the entry.
-               declare
-                  Position : constant Cursor := M.Find (T);
-               begin
-                  if Position = No_Element then
-                     M.Insert (Key      => T,
-                               New_Item => S);
-                  else
-                     M.Replace_Element (Position => Position,
-                                        New_Item => S);
-                  end if;
-               end;
+               if M.Contains (T) then
+                  M(T) := S;
+               else
+                  M.Insert (Key      => T,
+                            New_Item => S);
+               end if;
 
             end if;
 
@@ -65,15 +60,11 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
             -- assign to S (and set 'T' to 'Node_Tag'). If there is no
             -- 'Node_Tag' key in the map, than S is set to an appropriate
             -- initial value.
-            declare
-               Position : constant Cursor := M.Find (Node_Tag);
-            begin
-               T := Node_Tag;
-               S := (if Position = No_Element then
-                        Pre_Test_Routine_Case_Status (Routine_Index => 1)
-                     else
-                        Element (Position));
-            end;
+            T := Node_Tag;
+            S := (if M.Contains (Node_Tag) then
+                     M(T)
+                  else
+                     Pre_Test_Routine_Case_Status (Routine_Index => 1));
 
          else
             -- 'T' is already the wanted tag (and 'S' is the associated
@@ -181,14 +172,10 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
                   -- 'Node_Tag' is the current value of 'T' and the map is not
                   -- empty.
 
-                  -- Extract the first entry of the map and assign it to 'T'
-                  -- and 'S'.
-                  declare
-                     First_Position : constant Cursor := M.First;
-                  begin
-                     T := Key (First_Position);
-                     S := Element (First_Position);
-                  end;
+                  -- Set 'T' and 'S' to the key and element value of the first
+                  -- map entry. (It could have been any entry.)
+                  T := Key (M.First);
+                  S := M(T);
 
                elsif T = Node_Tag then
                   -- 'Node_Tag' is the current value of 'T' but the map is
@@ -270,18 +257,16 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Case is
 
             -- Copy map elements to other elements of the array (making sure to
             -- skip 'T' (already processed above)).
-            declare
-               procedure Process (Position : Cursor) is
-                  Key_C : constant Tag := Key (Position);
+            for Position in M.Iterate loop
+               declare
+                  K : constant Tag := Key (Position);
                begin
-                  if Key_C /= T then
-                     Push_To_Array ((T => Key_C,
-                                     S => Element (Position)));
+                  if K /= T then
+                     Push_To_Array ((T => K,
+                                     S => M(K)));
                   end if;
-               end Process;
-            begin
-               M.Iterate (Process'Access);
-            end;
+               end;
+            end loop;
 
          else
             -- No data available.

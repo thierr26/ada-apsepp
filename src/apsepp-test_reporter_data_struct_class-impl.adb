@@ -50,7 +50,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
          -- Search node tag 'T' in the node data tree.
          Position := Node_Data_Trees.No_Element;
          for K in Obj.Node_Data_Tree.Iterate loop
-            if Node_Data_Trees.Element (K).T = T then
+            if Obj.Node_Data_Tree(K).T = T then
                Position := K;
                exit; -- Early exit.
             end if;
@@ -159,7 +159,7 @@ package body Apsepp.Test_Reporter_Data_Struct_Class.Impl is
             -- Iterate over children of the node designated by 'Position'.
             for Child_C in Obj.Node_Data_Tree.Iterate_Children (Position) loop
 
-               if Node_Data_Trees.Element (Child_C).T = T then
+               if Obj.Node_Data_Tree(Child_C).T = T then
                   -- The node designated by 'Position' has a child with node
                   -- tag 'T'.
 
