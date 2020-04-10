@@ -68,8 +68,9 @@ package body Apsepp.Test_Node_Class.Abstract_Test_Suite is
    ----------------------------------------------------------------------------
 
    package Test_Node_Count_Operations
-     is new Generic_Discrete_Operations (Discrete_Type => Test_Node_Index,
-                                         Diff_Type     => Test_Node_Count);
+     is new Generic_Discrete_Operations
+       (Discrete_Type => Test_Node_Index,
+        Diff_Type     => Test_Node_Count'Base);
 
    use Test_Node_Count_Operations;
 

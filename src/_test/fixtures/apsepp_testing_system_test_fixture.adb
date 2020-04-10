@@ -417,7 +417,7 @@ package body Apsepp_Testing_System_Test_Fixture is
       package ISO_646_Upper_Letter_Operations
         is new Apsepp.Generic_Discrete_Operations
         (Discrete_Type => ISO_646_Upper_Letter,
-         Diff_Type     => Test_Node_Count);
+         Diff_Type     => Test_Node_Count'Base);
       use ISO_646_Upper_Letter_Operations;
 
    begin

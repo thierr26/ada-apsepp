@@ -153,7 +153,7 @@ package body Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
       package Test_Routine_Count_Operations is new Generic_Discrete_Operations
         (Discrete_Type => Test_Routine_Index,
-         Diff_Type     => Test_Routine_Count);
+         Diff_Type     => Test_Routine_Count'Base);
       use Test_Routine_Count_Operations;
 
       F : constant Test_Routine_Index
