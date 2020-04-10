@@ -2,7 +2,7 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Text_IO,
-     Apsepp.Text_Class.RO.Single_Line.Create;
+     Apsepp.Text_Class.RO.Single_Line.From_String;
 
 package body Apsepp_Demo_TSL_Run is
 
@@ -22,8 +22,17 @@ package body Apsepp_Demo_TSL_Run is
 
       -----------------------------------------------------
 
-      Empty : constant RO_Text_Single_Line := Create ("");
-      Hello : constant RO_Text_Single_Line := Create ("Hello world!");
+      -- Here 'From_String' is used to create the 'RO_Text_Single_Line'
+      -- objects. 'Apsepp.Text_Class.RO.Single_Line.Create' may have been used
+      -- instead. It takes a 'Apsepp.Text_Class.Character_Array' argument
+      -- instead of a 'String' argument, but string literals like '""' and
+      -- '"Hello world!"' are viewed as values of type 'String' or array
+      -- subaggregates (which don't have a type) and are valid values for any
+      -- 'Character' array.
+      -- REF: ARM 2.6(1). <2020-04-10>
+      -- REF: Annotated ARM 4.3.3(6.a). <2020-04-10>
+      Empty : constant RO_Text_Single_Line := From_String ("");
+      Hello : constant RO_Text_Single_Line := From_String ("Hello world!");
 
    begin
 

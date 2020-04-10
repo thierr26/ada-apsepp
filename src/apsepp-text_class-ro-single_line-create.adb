@@ -2,14 +2,11 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 function Apsepp.Text_Class.RO.Single_Line.Create
-  (Line : String) return RO_Text_Single_Line is
-
-   Slided_Line : constant Character_Array (1 .. Line'Length)
-     := Character_Array (Line);
+  (A : Character_Array) return RO_Text_Single_Line is
 
 begin
 
    return (Ada.Finalization.Controlled
-             with A => new Character_Array'(Slided_Line));
+             with A => new Character_Array'(A));
 
 end Apsepp.Text_Class.RO.Single_Line.Create;

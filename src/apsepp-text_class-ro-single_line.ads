@@ -91,6 +91,7 @@ private
                                      and
                                    RO_Text_Interfa with record
 
+      -- TODOC: Not guaranteed to be one-based. <2020-04-10>
       A : Character_Array_Access;
 
    end record;
