@@ -12,8 +12,6 @@ generic
    with function Element_Func
      (Element : Element_Type) return Element_Func_Ret_Type;
 
-   Strict : Boolean := True;
-
    with function "=" (Left,
                       Right : Element_Func_Ret_Type) return Boolean is <>;
 
@@ -21,4 +19,5 @@ generic
                       Right : Element_Func_Ret_Type) return Boolean is <>;
 
 function Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
-  (A : Array_Type) return Boolean;
+  (A      : Array_Type;
+   Strict : Boolean    := True) return Boolean;

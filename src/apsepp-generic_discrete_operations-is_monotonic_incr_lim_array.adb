@@ -2,7 +2,8 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 function Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
-  (A : Array_Type) return Boolean is
+  (A      : Array_Type;
+   Strict : Boolean    := True) return Boolean is
 
    type Operand_Pair is record
       Left, Right : Element_Func_Ret_Type;
