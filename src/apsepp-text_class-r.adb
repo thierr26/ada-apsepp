@@ -315,9 +315,11 @@ package body Apsepp.Text_Class.R is
          end;
 
       else
-         -- There is no room for the end of line sequence.
+         -- There is no room for the end of line sequence, probably because
+         -- 'EOL_Kind = None' and/or 'not Include_Last_EOL'. It could also be
+         -- that the 'String' type cannot accomodate the whole text.
 
-         Ret := String (Obj.A (1 .. Ret'Length));
+         Ret := String (Obj.A (Obj.A'First .. Obj.A'First - 1 + Ret'Length));
 
       end if;
 
