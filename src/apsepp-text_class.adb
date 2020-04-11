@@ -5,6 +5,9 @@ package body Apsepp.Text_Class is
 
    use all type Safe_Character_Count_Operations.Safe_Integer;
 
+   -- The following declaration ensures that the range of Character_Count is at
+   -- least as wide as the range of Text_Line_Count. (In the opposite case, the
+   -- compiler would reject it.)
    subtype Character_Count_Line_Count_Constrained
      is Character_Count range Character_Count (Text_Line_Count'First)
                                 ..

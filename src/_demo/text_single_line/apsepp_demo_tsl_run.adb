@@ -2,7 +2,7 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Text_IO,
-     Apsepp.Text_Class.RO.Single_Line.From_String;
+     Apsepp.Text_Class.R.Single_Line_From_String;
 
 package body Apsepp_Demo_TSL_Run is
 
@@ -11,7 +11,7 @@ package body Apsepp_Demo_TSL_Run is
    procedure Run is
 
       use Ada.Text_IO,
-          Apsepp.Text_Class.RO.Single_Line;
+          Apsepp.Text_Class.R;
 
       -----------------------------------------------------
 
@@ -23,7 +23,7 @@ package body Apsepp_Demo_TSL_Run is
       -----------------------------------------------------
 
       -- Here 'From_String' is used to create the 'RO_Text_Single_Line'
-      -- objects. 'Apsepp.Text_Class.RO.Single_Line.Create' may have been used
+      -- objects. 'Apsepp.Text_Class.R.Create_Single_Line' may have been used
       -- instead. It takes a 'Apsepp.Text_Class.Character_Array' argument
       -- instead of a 'String' argument, but string literals like '""' and
       -- '"Hello world!"' are viewed as values of type 'String' or array
@@ -31,8 +31,10 @@ package body Apsepp_Demo_TSL_Run is
       -- 'Character' array.
       -- REF: ARM 2.6(1). <2020-04-10>
       -- REF: Annotated ARM 4.3.3(6.a). <2020-04-10>
-      Empty : constant RO_Text_Single_Line := From_String ("");
-      Hello : constant RO_Text_Single_Line := From_String ("Hello world!");
+      Empty : constant RO_Text_Single_Line
+        := Single_Line_From_String ("");
+      Hello : constant RO_Text_Single_Line
+        := Single_Line_From_String ("Hello world!");
 
    begin
 
@@ -48,8 +50,7 @@ package body Apsepp_Demo_TSL_Run is
 
       declare
 
-         use Apsepp.Text_Class,    -- Makes 'Character_Array' use visible.
-             Apsepp.Text_Class.RO; -- Makes 'Cursor' use visible.
+         use Apsepp.Text_Class; -- Makes 'Character_Array' use visible.
 
          Position       : constant Cursor          := Hello.To_Cursor;
          Hello_Position : constant Character_Array := Hello(Position);
@@ -91,27 +92,16 @@ package body Apsepp_Demo_TSL_Run is
 
       New_Line;
 
-      declare
-
-         use all type Apsepp.Text_Class.RO.Cursor;
-
-      begin
-
-         Put_Line ("'Hello', via iterator (with cursor loop parameter):");
-         for K in Hello.Iterate loop
-            Put_String (String (Line (K).all));
-         end loop;
-
-      end;
+      Put_Line ("'Hello', via iterator (with cursor loop parameter):");
+      for K in Hello.Iterate loop
+         Put_String (String (Line (K).all));
+      end loop;
 
       New_Line;
 
       declare
 
-         use all type Apsepp.Text_Class.RO.Cursor;
-         use Apsepp.Text_Class.RO;
-
-         Start : constant Apsepp.Text_Class.RO.Cursor := Hello.To_Cursor;
+         Start : constant Cursor := Hello.To_Cursor;
 
       begin
 

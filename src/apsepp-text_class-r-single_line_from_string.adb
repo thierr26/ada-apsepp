@@ -1,9 +1,9 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Apsepp.Text_Class.RO.Single_Line.Create;
+with Apsepp.Text_Class.R.Create_Single_Line;
 
-function Apsepp.Text_Class.RO.Single_Line.From_String
+function Apsepp.Text_Class.R.Single_Line_From_String
   (Line : String) return RO_Text_Single_Line is
 
    -- Sliding makes the conversion to 'Character_Array' below safer. (For the
@@ -14,6 +14,6 @@ function Apsepp.Text_Class.RO.Single_Line.From_String
 
 begin
 
-   return Create (Character_Array (Slided_Line));
+   return Create_Single_Line (Character_Array (Slided_Line));
 
-end Apsepp.Text_Class.RO.Single_Line.From_String;
+end Apsepp.Text_Class.R.Single_Line_From_String;
