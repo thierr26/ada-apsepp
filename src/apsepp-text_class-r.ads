@@ -101,6 +101,7 @@ package Apsepp.Text_Class.R is
      return RO_Text_Iterator_Interfaces.Reversible_Iterator'Class
      with Pre => Constant_Text_Access (Start) = Obj'Unchecked_Access;
 
+   -- TODOC: 'Is_Empty' primitive always false. <2020-04-12>
    type RO_Text_Single_Line is new Ada.Finalization.Controlled
                                      and
                                    RO_Text_Interfa with private
@@ -226,7 +227,7 @@ private
                                      and
                                    RO_Text_Interfa with record
 
-      -- TODOC: Not guaranteed to be one-based. <2020-04-10>
+      -- TODOC: Not guaranteed to be 1-based. <2020-04-10>
       A : Character_Array_Access;
 
    end record;

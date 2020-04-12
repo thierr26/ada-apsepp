@@ -22,6 +22,8 @@ package body Apsepp_Demo_TSL_Run is
 
       -----------------------------------------------------
 
+      Default : RO_Text_Single_Line;
+
       -- Here 'From_String' is used to create the 'RO_Text_Single_Line'
       -- objects. 'Apsepp.Text_Class.R.Create_Single_Line' may have been used
       -- instead. It takes a 'Apsepp.Text_Class.Character_Array' argument
@@ -37,6 +39,11 @@ package body Apsepp_Demo_TSL_Run is
         := Single_Line_From_String ("Hello world!");
 
    begin
+
+      Put_Line ("'Default':");
+      Put_String (Default.To_String);
+
+      New_Line;
 
       Put_Line ("'Empty':");
       Put_String (Empty.To_String);

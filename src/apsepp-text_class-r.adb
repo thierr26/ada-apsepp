@@ -239,11 +239,14 @@ package body Apsepp.Text_Class.R is
 
    overriding
    function Character_Length (Obj : RO_Text_Single_Line) return Character_Count
-     is (Obj.A'Length);
+     is (if Obj.A = null then
+            0
+         else
+            Obj.A'Length);
 
    ----------------------------------------------------------------------------
 
-   procedure Check_K (K : Text_Line_Index) is
+   procedure Check_K_Is_1 (K : Text_Line_Index) is
 
       Expected_K : constant Text_Line_Index := 1;
 
@@ -259,7 +262,7 @@ package body Apsepp.Text_Class.R is
                 & ").";
       end if;
 
-   end Check_K;
+   end Check_K_Is_1;
 
    ----------------------------------------------------------------------------
 
@@ -269,13 +272,15 @@ package body Apsepp.Text_Class.R is
 
    begin
 
-      Check_K (K);
+      Check_K_Is_1 (K);
 
-      return Obj.A'Length;
+      return Obj.Character_Length;
 
    end Character_Length;
 
    ----------------------------------------------------------------------------
+
+   Empty_Line : aliased constant Character_Array := "";
 
    overriding
    function Line
@@ -284,9 +289,12 @@ package body Apsepp.Text_Class.R is
 
    begin
 
-      Check_K (K);
+      Check_K_Is_1 (K);
 
-      return Obj.A;
+      return (if Obj.A = null then
+                 Empty_Line'Access
+              else
+                 Obj.A);
 
    end Line;
 
@@ -300,18 +308,28 @@ package body Apsepp.Text_Class.R is
 
       Ret : String (1 .. To_String_Length (Obj, EOL, Include_Last_EOL));
 
+      C_Len : constant Character_Count := Obj.Character_Length;
+      Len   : constant Natural
+        := (if Character_Count'Pos (C_Len) > Natural'Pos (Natural'Last) then
+               Natural'Last
+            else
+               Natural (C_Len));
+
    begin
 
-      if Ret'Length > Obj.A'Length then -- 'Universal_Integer' operands.
+      if Ret'Length > Len then -- 'Universal_Integer' operands.
          -- There is room for at least a slice of the end of line sequence.
 
-         Ret(1 .. Obj.A'Length) := String (Obj.A.all);
+         Ret(1 .. Len) := (if Len = 0 then
+                              ""
+                           else
+                              String (Obj.A.all)); -- 'Len /= 0' implies
+                                                   -- 'Obj.A /= null'.
 
          declare
-            EOL_Room : constant Positive := Ret'Length - Obj.A'Length;
+            EOL_Room : constant Positive := Ret'Length - Len;
          begin
-            Ret(Obj.A'Length + 1 .. Obj.A'Length + EOL_Room)
-              := EOL_String (EOL)(1 .. EOL_Room);
+            Ret(Len + 1 .. Len + EOL_Room) := EOL_String (EOL)(1 .. EOL_Room);
          end;
 
       else
@@ -319,7 +337,11 @@ package body Apsepp.Text_Class.R is
          -- 'EOL_Kind = None' and/or 'not Include_Last_EOL'. It could also be
          -- that the 'String' type cannot accomodate the whole text.
 
-         Ret := String (Obj.A (Obj.A'First .. Obj.A'First - 1 + Ret'Length));
+         if Len /= 0 then -- 'Len /= 0' implies 'Obj.A /= null'.
+            Ret := String (Obj.A (Obj.A'First
+                                    ..
+                                  Obj.A'First - 1 + Ret'Length));
+         end if;
 
       end if;
 
