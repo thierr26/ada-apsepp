@@ -306,41 +306,43 @@ package body Apsepp.Text_Class.R is
       EOL              : EOL_Kind            := LF;
       Include_Last_EOL : Boolean             := False) return String is
 
-      Ret : String (1 .. To_String_Length (Obj, EOL, Include_Last_EOL));
-
       C_Len : constant Character_Count := Obj.Character_Length;
-      Len   : constant Natural
-        := (if Character_Count'Pos (C_Len) > Natural'Pos (Natural'Last) then
-               Natural'Last
-            else
-               Natural (C_Len));
+
+      Len : constant Natural := To_String_Length (Obj, EOL, Include_Last_EOL);
+
+      Ret : String (1 .. Len);
 
    begin
 
-      if Ret'Length > Len then -- 'Universal_Integer' operands.
-         -- There is room for at least a slice of the end of line sequence.
+      if Len /= 0 then
 
-         Ret(1 .. Len) := (if Len = 0 then
-                              ""
-                           else
-                              String (Obj.A.all)); -- 'Len /= 0' implies
-                                                   -- 'Obj.A /= null'.
+         if not To_String_Truncates (Obj) then
+            -- There is room for at least the full line of text
 
-         declare
-            EOL_Room : constant Positive := Ret'Length - Len;
-         begin
-            Ret(Len + 1 .. Len + EOL_Room) := EOL_String (EOL)(1 .. EOL_Room);
-         end;
+            declare
 
-      else
-         -- There is no room for the end of line sequence, probably because
-         -- 'EOL_Kind = None' and/or 'not Include_Last_EOL'. It could also be
-         -- that the 'String' type cannot accomodate the whole text.
+               Natural_C_Len : constant Natural := Natural (C_Len);
 
-         if Len /= 0 then -- 'Len /= 0' implies 'Obj.A /= null'.
+            begin
+
+               Ret(1 .. Natural_C_Len) := String (Obj.A.all);
+                                         -- 'Len /= 0' implies 'Obj.A /= null'.
+
+               -- Filling 'Ret' with the end of line sequence (or at least a
+               -- (possibly null) slice of it).
+               Ret(Natural_C_Len + 1 .. Len)
+                 := EOL_String (EOL)(1 .. Len - Natural_C_Len);
+
+            end;
+
+         else
+            -- The line of text must be truncated.
+
             Ret := String (Obj.A (Obj.A'First
                                     ..
                                   Obj.A'First - 1 + Ret'Length));
+                                         -- 'Len /= 0' implies 'Obj.A /= null'.
+
          end if;
 
       end if;
