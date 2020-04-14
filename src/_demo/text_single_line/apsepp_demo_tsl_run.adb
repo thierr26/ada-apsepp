@@ -101,7 +101,7 @@ package body Apsepp_Demo_TSL_Run is
 
       Put_Line ("'Hello', via iterator (with cursor loop parameter):");
       for K in Hello.Iterate loop
-         Put_String (String (Line (K).all));
+         Put_String (String (Line (K)));
       end loop;
 
       New_Line;
@@ -115,7 +115,7 @@ package body Apsepp_Demo_TSL_Run is
          Put_Line ("'Hello', via iterator (with cursor loop parameter and "
                    & "start cursor):");
          for K in Hello.Iterate (Start) loop
-            Put_String (String (Line (K).all));
+            Put_String (String (Line (K)));
          end loop;
 
       end;

@@ -52,15 +52,25 @@ package Apsepp.Text_Class.R is
      (Line : not null access constant Character_Array) is private
      with Implicit_Dereference => Line;
 
+   not overriding
    function Constant_Reference
-     (Obj      : aliased RO_Text_Interfa'Class;
-      Position : Cursor) return Constant_Reference_Type
-     with Pre => Constant_Text_Access (Position) = Obj'Access;
+     (Obj      : aliased RO_Text_Interfa;
+      Position : Cursor) return Constant_Reference_Type is abstract
+     with Pre'Class  => Constant_Text_Access (Position) = Obj'Access
+                          and then
+                        Has_Line (Position)
+                          and then
+                        Obj.Is_Line (Line_Index (Position)),
+          Post'Class => Constant_Reference'Result.Line.all
+                          =
+                        Obj.Line (Line_Index (Position));
 
+   not overriding
    function Constant_Reference
-     (Obj : aliased RO_Text_Interfa'Class;
-      K   : Text_Line_Index) return Constant_Reference_Type
-     with Pre => Obj.Is_Line (K);
+     (Obj : aliased RO_Text_Interfa;
+      K   : Text_Line_Index) return Constant_Reference_Type is abstract
+     with Pre'Class  => Obj.Is_Line (K),
+          Post'Class => Constant_Reference'Result.Line.all = Obj.Line (K);
 
    -- TODOC: Useful for expressing contracts. <2020-04-09>
    function Constant_Text_Access
@@ -73,8 +83,7 @@ package Apsepp.Text_Class.R is
    function Line_Index (Position : Cursor) return Text_Line_Index
      with Pre => Has_Line (Position);
 
-   function Line
-     (Position : Cursor) return not null access constant Character_Array
+   function Line (Position : Cursor) return Character_Array
      with Pre => Has_Line (Position);
 
    function Next (Position : Cursor) return Cursor
@@ -126,13 +135,14 @@ package Apsepp.Text_Class.R is
      (Obj : RO_Text_Single_Line) return Character_Count;
 
    overriding
-   function Character_Length (Obj : RO_Text_Single_Line;
-                              K   : Text_Line_Index) return Character_Count;
+   function Line_Character_Length
+     (Obj : RO_Text_Single_Line;
+      K   : Text_Line_Index) return Character_Count;
 
    overriding
    function Line
      (Obj : RO_Text_Single_Line;
-      K   : Text_Line_Index) return not null access constant Character_Array;
+      K   : Text_Line_Index) return Character_Array;
 
    overriding
    function To_String
@@ -159,15 +169,15 @@ package Apsepp.Text_Class.R is
    overriding
    procedure Finalize (Obj : in out RO_Text_Single_Line);
 
+   overriding
    function Constant_Reference
-     (Obj      : aliased RO_Text_Single_Line'Class;
-      Position : Cursor) return Constant_Reference_Type
-     with Pre => Constant_Text_Access (Position) = Obj'Access;
+     (Obj      : aliased RO_Text_Single_Line;
+      Position : Cursor) return Constant_Reference_Type;
 
+   overriding
    function Constant_Reference
-     (Obj : aliased RO_Text_Single_Line'Class;
-      K   : Text_Line_Index) return Constant_Reference_Type
-     with Pre => Obj.Is_Line (K);
+     (Obj : aliased RO_Text_Single_Line;
+      K   : Text_Line_Index) return Constant_Reference_Type;
 
 private
 

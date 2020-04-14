@@ -14,6 +14,8 @@ package Apsepp.Text_Class is
 
    subtype Text_Line_Index is Text_Line_Count range 1 .. Text_Line_Count'Last;
 
+   -- TODOC: It can be safely assumed that the range of 'Character_Count' is at
+   -- least as wide as the range of 'Text_Line_Count'. <2020-04-11>
    type Character_Count is new Natural;
 
    subtype Character_Index is Character_Count range 1 .. Character_Count'Last;
@@ -66,18 +68,18 @@ package Apsepp.Text_Class is
      is abstract;
 
    not overriding
-   function Character_Length (Obj : Text_Interfa;
-                              K   : Text_Line_Index) return Character_Count
+   function Line_Character_Length
+     (Obj : Text_Interfa;
+      K   : Text_Line_Index) return Character_Count
      is abstract
      with Pre'Class => Obj.Is_Line (K);
 
    not overriding
-   function Line
-     (Obj : Text_Interfa;
-      K   : Text_Line_Index) return not null access constant Character_Array
+   function Line (Obj : Text_Interfa;
+                  K   : Text_Line_Index) return Character_Array
      is abstract
      with Pre'Class  => Obj.Is_Line (K),
-          Post'Class => Line'Result'Length = Obj.Character_Length (K);
+          Post'Class => Line'Result'Length = Obj.Line_Character_Length (K);
 
    not overriding
    function To_String

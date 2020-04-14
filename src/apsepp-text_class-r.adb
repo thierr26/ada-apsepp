@@ -14,22 +14,6 @@ package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
-   function Constant_Reference
-     (Obj      : aliased RO_Text_Interfa'Class;
-      Position : Cursor) return Constant_Reference_Type
-     is (Line  => Obj.Line (I (Position).Line_Index),
-         Dummy => False);
-
-   ----------------------------------------------------------------------------
-
-   function Constant_Reference
-     (Obj : aliased RO_Text_Interfa'Class;
-      K   : Text_Line_Index) return Constant_Reference_Type
-     is (Line  => Obj.Line (K),
-         Dummy => False);
-
-   ----------------------------------------------------------------------------
-
    function Has_Line (Position : Cursor) return Boolean is
 
       I_P : constant Cursor_Internals'Class := I (Position);
@@ -47,8 +31,7 @@ package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
-   function Line
-     (Position : Cursor) return not null access constant Character_Array is
+   function Line (Position : Cursor) return Character_Array is
 
       I_P : constant Cursor_Internals'Class := I (Position);
 
@@ -182,18 +165,19 @@ package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
+   overriding
    function Constant_Reference
-     (Obj      : aliased RO_Text_Single_Line'Class;
+     (Obj      : aliased RO_Text_Single_Line;
       Position : Cursor) return Constant_Reference_Type
-     is (Line  => Obj.Line (I (Position).Line_Index),
-         Dummy => False);
+     is (Obj.Constant_Reference (Line_Index (Position)));
 
    ----------------------------------------------------------------------------
 
+   overriding
    function Constant_Reference
-     (Obj : aliased RO_Text_Single_Line'Class;
+     (Obj : aliased RO_Text_Single_Line;
       K   : Text_Line_Index) return Constant_Reference_Type
-     is (Line  => Obj.Line (K),
+     is (Line  => Obj.A,
          Dummy => False);
 
    ----------------------------------------------------------------------------
@@ -267,8 +251,9 @@ package body Apsepp.Text_Class.R is
    ----------------------------------------------------------------------------
 
    overriding
-   function Character_Length (Obj : RO_Text_Single_Line;
-                              K   : Text_Line_Index) return Character_Count is
+   function Line_Character_Length
+     (Obj : RO_Text_Single_Line;
+      K   : Text_Line_Index) return Character_Count is
 
    begin
 
@@ -276,25 +261,22 @@ package body Apsepp.Text_Class.R is
 
       return Obj.Character_Length;
 
-   end Character_Length;
+   end Line_Character_Length;
 
    ----------------------------------------------------------------------------
 
-   Empty_Line : aliased constant Character_Array := "";
-
    overriding
-   function Line
-     (Obj : RO_Text_Single_Line;
-      K   : Text_Line_Index) return not null access constant Character_Array is
+   function Line (Obj : RO_Text_Single_Line;
+                  K   : Text_Line_Index) return Character_Array is
 
    begin
 
       Check_K_Is_1 (K);
 
       return (if Obj.A = null then
-                 Empty_Line'Access
+                 ""
               else
-                 Obj.A);
+                 Obj.A.all);
 
    end Line;
 
