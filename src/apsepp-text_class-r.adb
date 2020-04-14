@@ -343,11 +343,10 @@ package body Apsepp.Text_Class.R is
       T_A : constant not null access constant RO_Text_Single_Line'Class
         := Obj'Unchecked_Access;
 
-      L_I : constant Text_Line_Count
-        := (if RO_Text_Single_Line'Class (Obj).Is_Line (Line_Index) then
-               Line_Index
-            else
-               0);
+      L_I : constant Text_Line_Count := (if Line_Index = 1 then
+                                            1
+                                         else
+                                            0);
 
       I   : constant Cursor_Internals_Single_Line := (Text_Access => T_A,
                                                       Line_Idx    => L_I);
