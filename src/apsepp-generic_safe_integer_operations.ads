@@ -1,7 +1,7 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-private with Apsepp.Generic_Logical_Array;
+private with Apsepp.Logical_Array_Instance;
 
 generic
 
@@ -89,9 +89,7 @@ package Apsepp.Generic_Safe_Integer_Operations is
 
 private
 
-   package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);
-
-   use Logical_Array;
+   use Logical_Array_Instance.L_A;
 
    type Safe_Integer is record
 

@@ -4,7 +4,7 @@
 with Ada.Exceptions,
      Apsepp.Finalized_Debug_Tracer.Generic_Instantiator,
      Apsepp.Generic_Discrete_Operations,
-     Apsepp.Generic_Logical_Array;
+     Apsepp.Logical_Array_Instance;
 
 package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
 
@@ -171,10 +171,7 @@ package body Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
             Index_C_C : constant Natural
               := Positive_Operations.Val (Val_C_C, Expected_Tags_Array'First);
 
-            package Logical_Array
-              is new Generic_Logical_Array (Index_Type => Positive);
-
-            use Logical_Array;
+            use Logical_Array_Instance.L_A;
 
          begin
 

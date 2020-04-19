@@ -3,7 +3,7 @@
 
 with Apsepp.Test_Case_Count_Types; use Apsepp.Test_Case_Count_Types;
 
-with Apsepp.Generic_Logical_Array.Assertions_W_Debug_Trace;
+with Apsepp.Logical_Array_Instance.Assertions_W_Debug_Trace;
 
 -- TODOC: This package is withed by package
 -- 'Apsepp.Test_Node_Class.Abstract_Test_Case' (which belongs to project
@@ -11,12 +11,8 @@ with Apsepp.Generic_Logical_Array.Assertions_W_Debug_Trace;
 -- moved to project Apsepp_Test.
 package Apsepp.Test_Node_Class.Abstract_Simu_Test_Case is
 
-   package Logical_Array is new Generic_Logical_Array (Index_Type => Positive);
-
-   package Logical_Array_Assertions_W_Debug_Trace
-     is new Logical_Array.Assertions_W_Debug_Trace;
-
-   use Logical_Array_Assertions_W_Debug_Trace;
+   use Logical_Array_Instance.Assertions_W_Debug_Trace
+         .L_A_Assertions_W_Debug_Trace;
 
    type Test_Routine_Destiny_Kind is (No_Failure,
                                       Access_Failure,
