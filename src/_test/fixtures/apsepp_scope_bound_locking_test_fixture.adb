@@ -1,6 +1,8 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+-- TODO: Use 'Apsepp.Generic_Safe_Counter' instead of
+-- 'Apsepp.Generic_Safe_Integer_Operations'. <2020-04-03>
 with Apsepp.Generic_Safe_Integer_Operations;
 
 package body Apsepp_Scope_Bound_Locking_Test_Fixture is

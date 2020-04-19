@@ -33,7 +33,7 @@ package body Apsepp_Demo_TSL_Run is
       -- 'Character' array.
       -- REF: ARM 2.6(1). <2020-04-10>
       -- REF: Annotated ARM 4.3.3(6.a). <2020-04-10>
-      Empty : constant RO_Text_Single_Line
+      Empty_Line : constant RO_Text_Single_Line
         := Single_Line_From_String ("");
       Hello : constant RO_Text_Single_Line
         := Single_Line_From_String ("Hello world!");
@@ -45,8 +45,8 @@ package body Apsepp_Demo_TSL_Run is
 
       New_Line;
 
-      Put_Line ("'Empty':");
-      Put_String (Empty.To_String);
+      Put_Line ("'Empty_Line':");
+      Put_String (Empty_Line.To_String);
 
       New_Line;
 

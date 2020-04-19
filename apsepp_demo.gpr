@@ -11,7 +11,8 @@ project Apsepp_Demo is
 
    for Main use ("apsepp_demo_output_sink_as_shared_instance.adb",
                  "apsepp_demo_debug_trace.adb",
-                 "apsepp_demo_text_single_line.adb");
+                 "apsepp_demo_text_single_line.adb",
+                 "apsepp_demo_text_multi_line.adb");
 
    package Compiler renames Apsepp_Build_Setup.Compiler;
 

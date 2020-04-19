@@ -4,6 +4,8 @@
 with Ada.Tags;                     use Ada.Tags;
 with Apsepp.Test_Case_Count_Types; use Apsepp.Test_Case_Count_Types;
 
+-- TODO: Use 'Apsepp.Generic_Safe_Counter' instead of
+-- 'Apsepp.Generic_Safe_Integer_Operations'. <2020-04-03>
 with Apsepp.Test_Node_Class.Generic_Case_And_Suite_Run_Body,
      Apsepp.Generic_Safe_Integer_Operations;
 

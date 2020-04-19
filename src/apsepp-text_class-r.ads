@@ -4,7 +4,7 @@
 with Ada.Finalization,
      Ada.Iterator_Interfaces;
 
-private with Apsepp.Text_Class.Private_Cursor_Internals_Class;
+private with Apsepp.Text_Class.Private_Line_References;
 
 package Apsepp.Text_Class.R is
 
@@ -29,7 +29,8 @@ package Apsepp.Text_Class.R is
      (Obj        : RO_Text_Interfa;
       Line_Index : Text_Line_Count := 1) return Cursor
      is abstract
-     with Post'Class =>
+     with Pre'Class  => Obj.Is_Line (Line_Index),
+          Post'Class =>
             Constant_Text_Access (To_Cursor'Result) = Obj'Unchecked_Access
               and then
             Has_Line (To_Cursor'Result) = Obj.Is_Line (Line_Index);
@@ -140,15 +141,24 @@ package Apsepp.Text_Class.R is
       K   : Text_Line_Index) return Character_Count;
 
    overriding
-   function Line
-     (Obj : RO_Text_Single_Line;
-      K   : Text_Line_Index) return Character_Array;
+   function Line (Obj        : RO_Text_Single_Line;
+                  K          : Text_Line_Index;
+                  Max_Length : Character_Count     := Character_Count'Last)
+     return Character_Array;
 
    overriding
    function To_String
      (Obj              : RO_Text_Single_Line;
       EOL              : EOL_Kind            := LF;
       Include_Last_EOL : Boolean             := False) return String;
+
+   overriding
+   procedure Get_Line_As_Access_And_Slice_Bounds
+     (Obj   :     RO_Text_Single_Line;
+      K     :     Text_Line_Index;
+      A     : out Constant_Character_Array_Access;
+      First : out Character_Index;
+      Last  : out Character_Count);
 
    overriding
    function To_Cursor
@@ -179,27 +189,115 @@ package Apsepp.Text_Class.R is
      (Obj : aliased RO_Text_Single_Line;
       K   : Text_Line_Index) return Constant_Reference_Type;
 
+   type RO_Text_Multi_Line is new Ada.Finalization.Controlled
+                                     and
+                                  RO_Text_Interfa with private;
+
+   not overriding
+   function Empty_Text return RO_Text_Multi_Line;
+
+   overriding
+   function Line_Count (Obj : RO_Text_Multi_Line) return Text_Line_Count;
+
+   overriding
+   function Is_Line (Obj : RO_Text_Multi_Line;
+                     K   : Text_Line_Count) return Boolean;
+
+   overriding
+   function Is_Empty (Obj : RO_Text_Multi_Line) return Boolean;
+
+   overriding
+   function Character_Length (Obj : RO_Text_Multi_Line) return Character_Count;
+
+   overriding
+   function Line_Character_Length
+     (Obj : RO_Text_Multi_Line;
+      K   : Text_Line_Index) return Character_Count;
+
+   overriding
+   function Line (Obj        : RO_Text_Multi_Line;
+                  K          : Text_Line_Index;
+                  Max_Length : Character_Count    := Character_Count'Last)
+     return Character_Array;
+
+   overriding
+   function To_String
+     (Obj              : RO_Text_Multi_Line;
+      EOL              : EOL_Kind           := LF;
+      Include_Last_EOL : Boolean            := False) return String;
+
+   overriding
+   procedure Get_Line_As_Access_And_Slice_Bounds
+     (Obj   :     RO_Text_Multi_Line;
+      K     :     Text_Line_Index;
+      A     : out Constant_Character_Array_Access;
+      First : out Character_Index;
+      Last  : out Character_Count);
+
+   overriding
+   function To_Cursor
+     (Obj        : RO_Text_Multi_Line;
+      Line_Index : Text_Line_Count    := 1) return Cursor;
+
+   overriding
+   function First (Obj : RO_Text_Multi_Line) return Cursor
+     is (RO_Text_Multi_Line'Class (Obj).To_Cursor (1));
+
+   overriding
+   function Last (Obj : RO_Text_Multi_Line) return Cursor
+     is (RO_Text_Multi_Line'Class (Obj).To_Cursor (1));
+
+   overriding
+   procedure Adjust (Obj : in out RO_Text_Multi_Line);
+
+   overriding
+   procedure Finalize (Obj : in out RO_Text_Multi_Line);
+
+   overriding
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Multi_Line;
+      Position : Cursor) return Constant_Reference_Type
+     with Pre => Constant_Text_Access (Position) = Obj'Access;
+
+   overriding
+   function Constant_Reference
+     (Obj : aliased RO_Text_Multi_Line;
+      K   : Text_Line_Index) return Constant_Reference_Type
+     with Pre => Obj.Is_Line (K);
+
 private
 
-   use Private_Cursor_Internals_Class;
+   use Private_Line_References;
 
    type Cursor is record
 
-      Internals : Cursor_Internals_Holders.Holder;
+      Text_Access : access constant RO_Text_Interfa'Class;
+
+      Line_Idx : Text_Line_Count;
 
    end record;
 
-   function I (Position : Cursor) return Cursor_Internals'Class
-     is (Position.Internals.Element);
+   type Controlled_Line_Copy_Key
+     is new Ada.Finalization.Controlled with record
+
+      Key : Line_Copy_Key;
+
+   end record;
+
+   overriding
+   procedure Adjust (Obj : in out Controlled_Line_Copy_Key);
+
+   overriding
+   procedure Finalize (Obj : in out Controlled_Line_Copy_Key);
 
    type Constant_Reference_Type
      (Line : not null access constant Character_Array) is record
 
-      -- TODOC: Useless, except to raise 'Program_Error' when the object is
-      -- instantiated with default initialization, as required by RM.
-      -- <2020-04-01>
+      -- TODOC: 'Program_Error' is raised when a 'Constant_Reference_Type'
+      -- object is instantiated with default initialization, as required by RM.
+      -- <2020-04-11>
       -- REF: ARM A18.2(147.4/3), ARM A18.10(125/3), ... <2020-04-01>
-      Dummy : Boolean
+      Controlled_Key : Controlled_Line_Copy_Key
         := raise Program_Error
           with "Uninitialized 'Constant_Reference_Type' instance creation "
                & "attempt.";
@@ -231,8 +329,6 @@ private
    function Previous (Obj      : Iterator;
                       Position : Cursor) return Cursor;
 
-   type Character_Array_Access is access Character_Array;
-
    type RO_Text_Single_Line is new Ada.Finalization.Controlled
                                      and
                                    RO_Text_Interfa with record
@@ -242,29 +338,31 @@ private
 
    end record;
 
-   type Cursor_Internals_Single_Line is new Cursor_Internals with record
+   type New_Line_Index_Array_Access is access New_Line_Index_Array;
 
-      Text_Access : access constant RO_Text_Single_Line'Class;
+   -- TODOC: After instantiation with defaults, 'Is_Empty' primitive returns
+   -- true. <2020-04-12>
+   type RO_Text_Multi_Line is new Ada.Finalization.Controlled
+                                     and
+                                  RO_Text_Interfa with record
 
-      Line_Idx : Text_Line_Count;
+      -- TODOC: Not guaranteed to be 1-based. <2020-04-10>
+      A : Character_Array_Access;
 
-   end record;
+      -- TODOC: Not guaranteed to be 1-based. <2020-04-10>
+      N : New_Line_Index_Array_Access;
 
-   overriding
-   function Constant_Text_Access
-     (Obj : Cursor_Internals_Single_Line)
-     return not null access constant Text_Interfa'Class;
-
-   overriding
-   function Line_Index
-     (Obj : Cursor_Internals_Single_Line) return Text_Line_Count;
-
-   overriding
-   procedure Set_Line_Index (Obj   : in out Cursor_Internals_Single_Line;
-                             Value :        Text_Line_Count);
-
-   overriding
-   procedure Shift_Line_Index (Obj : in out Cursor_Internals_Single_Line;
-                               By  :        Text_Line_Count'Base);
+   end record
+     with Type_Invariant => (
+                              (RO_Text_Multi_Line.A = null)
+                                =
+                              (RO_Text_Multi_Line.N = null)
+                            )
+                              and then
+                            (
+                              (RO_Text_Multi_Line.A = null)
+                                =
+                              RO_Text_Multi_Line.Is_Empty
+                            );
 
 end Apsepp.Text_Class.R;

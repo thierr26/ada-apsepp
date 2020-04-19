@@ -1,45 +1,62 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Unchecked_Deallocation,
+with System,
+     Ada.Unchecked_Deallocation,
      Ada.Strings.Fixed;
 
 package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
-   function Constant_Text_Access
-     (Position : Cursor) return not null access constant RO_Text_Interfa'Class
-     is (RO_Text_Interfa'Class (I (Position).Constant_Text_Access.all)'Access);
+   overriding
+   procedure Adjust (Obj : in out Controlled_Line_Copy_Key) is
 
-   ----------------------------------------------------------------------------
-
-   function Has_Line (Position : Cursor) return Boolean is
-
-      I_P : constant Cursor_Internals'Class := I (Position);
+      use type System.Address;
 
    begin
 
-      return I_P.Constant_Text_Access.Is_Line (I_P.Line_Index);
+      if Text_Address_From_Key (Obj.Key) /= System.Null_Address then
+         Add_Line_Copy_Reference (Obj.Key);
+      end if;
 
-   end Has_Line;
+   end Adjust;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Finalize (Obj : in out Controlled_Line_Copy_Key) is
+
+      use type System.Address;
+
+   begin
+
+      if Text_Address_From_Key (Obj.Key) /= System.Null_Address then
+         Remove_Line_Copy_Reference (Obj.Key);
+      end if;
+
+   end Finalize;
+
+   ----------------------------------------------------------------------------
+
+   function Constant_Text_Access
+     (Position : Cursor) return not null access constant RO_Text_Interfa'Class
+     is (Position.Text_Access);
+
+   ----------------------------------------------------------------------------
+
+   function Has_Line (Position : Cursor) return Boolean
+     is (Position.Text_Access.Is_Line (Position.Line_Idx));
 
    ----------------------------------------------------------------------------
 
    function Line_Index (Position : Cursor) return Text_Line_Index
-     is (I (Position).Line_Index);
+     is (Position.Line_Idx);
 
    ----------------------------------------------------------------------------
 
-   function Line (Position : Cursor) return Character_Array is
-
-      I_P : constant Cursor_Internals'Class := I (Position);
-
-   begin
-
-      return I_P.Constant_Text_Access.Line (I_P.Line_Index);
-
-   end Line;
+   function Line (Position : Cursor) return Character_Array
+     is (Position.Text_Access.Line (Position.Line_Idx));
 
    ----------------------------------------------------------------------------
 
@@ -48,41 +65,29 @@ package body Apsepp.Text_Class.R is
    function Parameterized_Cursor_Shift (Position : Cursor;
                                         Kind     : Shift_Kind) return Cursor is
 
-      Ret   :          Cursor                 := Position;
-      I_P   : constant Cursor_Internals'Class := I (Ret);
-      L_I   : constant Text_Line_Index        := I_P.Line_Index;
-      Shift :          Boolean                := False; -- True means that a
-                                                        -- line index shift is
-                                                        -- needed, false means
-                                                        -- that a line index
-                                                        -- zeroing is needed.
+      Ret : Cursor := Position;
 
-      -----------------------------------------------------
-
-      procedure Process (Element : in out Cursor_Internals'Class) is
-      begin
-         if Shift then
-            Shift_Line_Index (Element, (case Kind is
-                                           when Shift_Next     => +1,
-                                           when Shift_Previous => -1));
-         else
-            Set_Line_Index (Element, 0);
-         end if;
-      end Process;
-
-      -----------------------------------------------------
+      -- True means that a line index shift is needed, false means that a line
+      -- index zeroing is needed.
+      Shift : constant Boolean
+        := (case Kind is
+               when Shift_Next     =>
+                  Position.Line_Idx < Text_Line_Count'Last
+                    and then
+                  Position.Text_Access.Is_Line (Position.Line_Idx + 1),
+               when Shift_Previous =>
+                  Position.Line_Idx > 1);
 
    begin
 
-      Shift := (case Kind is
-                   when Shift_Next     =>
-                          L_I < Text_Line_Count'Last
-                            and then
-                          I_P.Constant_Text_Access.Is_Line (L_I + 1),
-                   when Shift_Previous =>
-                          L_I > 1);
-
-      Ret.Internals.Update_Element (Process'Access);
+      if Shift then
+         case Kind is
+            when Shift_Next     => Ret.Line_Idx := Ret.Line_Idx + 1;
+            when Shift_Previous => Ret.Line_Idx := Ret.Line_Idx - 1;
+         end case;
+      else
+         Ret.Line_Idx := 0;
+      end if;
 
       return Ret;
 
@@ -165,74 +170,12 @@ package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   function Constant_Reference
-     (Obj      : aliased RO_Text_Single_Line;
-      Position : Cursor) return Constant_Reference_Type
-     is (Obj.Constant_Reference (Line_Index (Position)));
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Constant_Reference
-     (Obj : aliased RO_Text_Single_Line;
-      K   : Text_Line_Index) return Constant_Reference_Type
-     is (Line  => Obj.A,
-         Dummy => False);
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Constant_Text_Access
-     (Obj : Cursor_Internals_Single_Line)
-     return not null access constant Text_Interfa'Class
-     is (Obj.Text_Access);
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Line_Index
-     (Obj : Cursor_Internals_Single_Line) return Text_Line_Count
-     is (Obj.Line_Idx);
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Set_Line_Index (Obj   : in out Cursor_Internals_Single_Line;
-                             Value :        Text_Line_Count) is
-
-   begin
-
-      Obj.Line_Idx := Value;
-
-   end Set_Line_Index;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure Shift_Line_Index (Obj : in out Cursor_Internals_Single_Line;
-                               By  :        Text_Line_Count'Base) is
-
-   begin
-
-      Obj.Line_Idx := Obj.Line_Idx + By;
-
-   end Shift_Line_Index;
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Character_Length (Obj : RO_Text_Single_Line) return Character_Count
-     is (if Obj.A = null then
-            0
-         else
-            Obj.A'Length);
-
-   ----------------------------------------------------------------------------
-
-   procedure Check_K_Is_1 (K : Text_Line_Index) is
+   procedure Check_K_Is_1 (Obj : RO_Text_Single_Line;
+                           K   : Text_Line_Index) is
 
       Expected_K : constant Text_Line_Index := 1;
+
+      pragma Unreferenced (Obj);
 
    begin
 
@@ -251,13 +194,47 @@ package body Apsepp.Text_Class.R is
    ----------------------------------------------------------------------------
 
    overriding
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Single_Line;
+      Position : Cursor) return Constant_Reference_Type
+     is (Obj.Constant_Reference (Line_Index (Position)));
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Constant_Reference
+     (Obj : aliased RO_Text_Single_Line;
+      K   : Text_Line_Index) return Constant_Reference_Type is
+
+   begin
+
+      Obj.Check_K_Is_1 (K);
+
+      return (Line           => Obj.A,
+              Controlled_Key => (Ada.Finalization.Controlled
+                                   with Key => Null_Line_Copy_Key));
+
+   end Constant_Reference;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Character_Length (Obj : RO_Text_Single_Line) return Character_Count
+     is (if Obj.A = null then
+            0
+         else
+            Obj.A'Length);
+
+   ----------------------------------------------------------------------------
+
+   overriding
    function Line_Character_Length
      (Obj : RO_Text_Single_Line;
       K   : Text_Line_Index) return Character_Count is
 
    begin
 
-      Check_K_Is_1 (K);
+      Obj.Check_K_Is_1 (K);
 
       return Obj.Character_Length;
 
@@ -266,17 +243,21 @@ package body Apsepp.Text_Class.R is
    ----------------------------------------------------------------------------
 
    overriding
-   function Line (Obj : RO_Text_Single_Line;
-                  K   : Text_Line_Index) return Character_Array is
+   function Line (Obj        : RO_Text_Single_Line;
+                  K          : Text_Line_Index;
+                  Max_Length : Character_Count     := Character_Count'Last)
+     return Character_Array is
 
    begin
 
-      Check_K_Is_1 (K);
+      Obj.Check_K_Is_1 (K);
 
       return (if Obj.A = null then
                  ""
+              elsif Obj.A'Length <= Max_Length then
+                 Obj.A.all
               else
-                 Obj.A.all);
+                 Obj.A(Obj.A'First .. Obj.A'First - 1 + Max_Length));
 
    end Line;
 
@@ -336,26 +317,44 @@ package body Apsepp.Text_Class.R is
    ----------------------------------------------------------------------------
 
    overriding
-   function To_Cursor
-     (Obj        : RO_Text_Single_Line;
-      Line_Index : Text_Line_Count     := 1) return Cursor is
-
-      T_A : constant not null access constant RO_Text_Single_Line'Class
-        := Obj'Unchecked_Access;
-
-      L_I : constant Text_Line_Count := (if Line_Index = 1 then
-                                            1
-                                         else
-                                            0);
-
-      I   : constant Cursor_Internals_Single_Line := (Text_Access => T_A,
-                                                      Line_Idx    => L_I);
+   procedure Get_Line_As_Access_And_Slice_Bounds
+     (Obj   :     RO_Text_Single_Line;
+      K     :     Text_Line_Index;
+      A     : out Constant_Character_Array_Access;
+      First : out Character_Index;
+      Last  : out Character_Count) is
 
    begin
 
-      return (Internals => Cursor_Internals_Holders.To_Holder (New_Item => I));
+      Obj.Check_K_Is_1 (K);
 
-   end To_Cursor;
+      A := Constant_Character_Array_Access (Obj.A);
+
+      if Obj.A = null then
+
+         First := 1; -- Could be any value.
+         Last  := 0; -- Could be any value.
+
+      else
+
+         First := Obj.A'First;
+         Last  := Obj.A'Last;
+
+      end if;
+
+   end Get_Line_As_Access_And_Slice_Bounds;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function To_Cursor
+     (Obj        : RO_Text_Single_Line;
+      Line_Index : Text_Line_Count     := 1) return Cursor
+     is ((Text_Access => Obj'Unchecked_Access,
+          Line_Idx    => (if Line_Index = 1 then
+                             1
+                          else
+                             0)));
 
    ----------------------------------------------------------------------------
 
@@ -381,6 +380,304 @@ package body Apsepp.Text_Class.R is
    begin
 
       Free (Obj.A);
+
+   end Finalize;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Constant_Reference
+     (Obj      : aliased RO_Text_Multi_Line;
+      Position : Cursor) return Constant_Reference_Type
+     is (Obj.Constant_Reference (Line_Index (Position)));
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Constant_Reference
+     (Obj : aliased RO_Text_Multi_Line;
+      K   : Text_Line_Index) return Constant_Reference_Type is
+
+      Line_Copy_Data : Line_Copy;
+
+   begin
+
+      Get_Line_Copy (Text => Obj,
+                     K    => K,
+                     Data => Line_Copy_Data);
+
+      return ((Line           => Line_Copy_Line_Access (Line_Copy_Data),
+               Controlled_Key => (Ada.Finalization.Controlled
+                                    with Key => Key (Line_Copy_Data))));
+
+   end Constant_Reference;
+
+   ----------------------------------------------------------------------------
+
+   not overriding
+   function Empty_Text return RO_Text_Multi_Line
+     is (Ada.Finalization.Controlled with others => <>);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Line_Count (Obj : RO_Text_Multi_Line) return Text_Line_Count
+     is (if Obj.N = null then
+            0
+         else
+            Obj.N'Length + 1);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Is_Line (Obj : RO_Text_Multi_Line;
+                     K   : Text_Line_Count) return Boolean
+     is (K in 1 .. Obj.Line_Count);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Is_Empty (Obj : RO_Text_Multi_Line) return Boolean
+     is (Obj.A = null);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Character_Length (Obj : RO_Text_Multi_Line) return Character_Count
+     is (if Obj.A = null then
+            0
+         else
+            Obj.A'Length);
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Line_Character_Length
+     (Obj : RO_Text_Multi_Line;
+      K   : Text_Line_Index) return Character_Count is
+
+      A : Constant_Character_Array_Access;
+
+      First : Character_Index;
+      Last  : Character_Count;
+
+   begin
+
+      Obj.Get_Line_As_Access_And_Slice_Bounds (K, A, First, Last);
+
+      -- 'A' is not supposed to be null here.
+
+      return Last - First + 1;
+
+   end Line_Character_Length;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function Line
+     (Obj        : RO_Text_Multi_Line;
+      K          : Text_Line_Index;
+      Max_Length : Character_Count    := Character_Count'Last)
+     return Character_Array is
+
+      A : Constant_Character_Array_Access;
+
+      First : Character_Index;
+      Last  : Character_Count;
+
+   begin
+
+      Obj.Get_Line_As_Access_And_Slice_Bounds (K, A, First, Last);
+
+      -- 'A' is not supposed to be null here.
+
+      if Last - First + 1 > Max_Length then
+         Last := First - 1 + Max_Length;
+      end if;
+
+      return A(First .. Last);
+
+   end Line;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function To_String
+     (Obj              : RO_Text_Multi_Line;
+      EOL              : EOL_Kind           := LF;
+      Include_Last_EOL : Boolean            := False) return String is
+
+      EOL_Str : constant String := EOL_String (EOL);
+
+      EOL_Str_Len : constant Natural := EOL_Str'Length;
+
+      Len : constant Natural := To_String_Length (Obj, EOL, Include_Last_EOL);
+
+      Last_Index : constant Text_Line_Count := Obj.Line_Count;
+
+      Ret : String (1 .. Len);
+
+      Level : Natural := 0; -- Filling level of 'Ret'.
+
+      Index : Text_Line_Index := 1; -- Current line index.
+
+   begin
+
+      while Level < Len loop
+
+         declare
+
+            Room_Left : constant Positive := Len - Level;
+
+            Cur_Line_Len : constant Character_Count
+              := Obj.Line_Character_Length (Index);
+
+            Truncation : constant Boolean
+              := (
+                   Character_Count'Pos (Cur_Line_Len)
+                     >
+                   Natural'Pos (Natural'Last)
+                 )
+                   or else
+                 Natural (Cur_Line_Len) > Room_Left;
+
+            New_Level : constant Natural
+              := (if Truncation then
+                     Len
+                  else
+                     Level + Natural (Cur_Line_Len));
+
+            EOL_Slice_Len : constant Natural
+              := (if Index = Last_Index and then not Include_Last_EOL then
+                     0
+                  else
+                     Natural'Min (Len - New_Level,
+                                  EOL_Str_Len));
+
+         begin
+
+            Ret(Level + 1 .. New_Level)
+              := String (if Truncation then
+                            Obj.Line
+                              (K          => Index,
+                               Max_Length => Character_Index (Len - Level))
+                         else
+                            Obj.Line (K => Index));
+
+            Level := New_Level;
+
+            if Index < Last_Index or else Include_Last_EOL then
+               Ret(Level + 1 .. Level + EOL_Slice_Len)
+                 := EOL_Str(1 .. EOL_Slice_Len);
+            end if;
+
+            Level := Level + EOL_Slice_Len;
+
+         end;
+
+         if Index < Last_Index then
+            Index := Index + 1;
+         end if;
+
+      end loop;
+
+      return Ret;
+
+   end To_String;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Get_Line_As_Access_And_Slice_Bounds
+     (Obj   :     RO_Text_Multi_Line;
+      K     :     Text_Line_Index;
+      A     : out Constant_Character_Array_Access;
+      First : out Character_Index;
+      Last  : out Character_Count) is
+
+   begin
+
+      A := Constant_Character_Array_Access (Obj.A);
+
+      -- 'A' cannot be null here. The contracts imply that 'Obj' has at least
+      -- one line, so it's not an empty text object, so 'Obj.A' is not null
+      -- (see the type and class invariants).
+
+      if Obj.N'Length = 0 then
+         -- The text has exactly one line. 'A.all' is this line.
+
+         First := A'First;
+         Last  := A'Last;
+
+      elsif K = 1 then
+         -- The text has at least two lines and we want the slice bounds for
+         -- the first line.
+
+         First := A'First;
+         Last  := Obj.N(Obj.N'First) - 1;
+
+      elsif K = Obj.N'Length + 1 then
+         -- The text has at least two lines and we want the slice bounds for
+         -- the last line.
+
+         First := Obj.N(Obj.N'Last);
+         Last  := A'Last;
+
+      else
+         -- The text has at least three lines and we want the slice bounds for
+         -- any line but the first or the last one.
+
+         First := Obj.N(K - 1);
+         Last  := Obj.N(K) - 1;
+
+      end if;
+
+   end Get_Line_As_Access_And_Slice_Bounds;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   function To_Cursor
+     (Obj        : RO_Text_Multi_Line;
+      Line_Index : Text_Line_Count    := 1) return Cursor
+     is ((Text_Access => Obj'Unchecked_Access,
+          Line_Idx    => (if Obj.Is_Line (Line_Index) then
+                             Line_Index
+                          else
+                             0)));
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Adjust (Obj : in out RO_Text_Multi_Line) is
+
+   begin
+
+      -- Allocate a copy of the character array.
+      Obj.A := new Character_Array'(Obj.A.all);
+
+      -- Allocate a copy of the new lines indices array.
+      Obj.N := new New_Line_Index_Array'(Obj.N.all);
+
+   end Adjust;
+
+   ----------------------------------------------------------------------------
+
+   overriding
+   procedure Finalize (Obj : in out RO_Text_Multi_Line) is
+
+      procedure Free_A is new Ada.Unchecked_Deallocation
+        (Object => Character_Array,
+         Name   => Character_Array_Access);
+
+      procedure Free_N is new Ada.Unchecked_Deallocation
+        (Object => New_Line_Index_Array,
+         Name   => New_Line_Index_Array_Access);
+
+   begin
+
+      Free_A (Obj.A);
+      Free_N (Obj.N);
 
    end Finalize;
 

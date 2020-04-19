@@ -1,7 +1,8 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Characters.Latin_1;
+with Ada.Characters.Latin_1,
+     Apsepp.Generic_Discrete_Operations.Is_Monotonic_Incr_Lim_Array;
 
 private with Apsepp.Generic_Safe_Integer_Operations.Conversions;
 
@@ -21,6 +22,32 @@ package Apsepp.Text_Class is
    subtype Character_Index is Character_Count range 1 .. Character_Count'Last;
 
    type Character_Array is array (Character_Index range <>) of Character;
+
+   type Text_Hash is mod 2 ** 32; -- Range 0 to 4_294_967_295.
+
+   function Hash (A             : Character_Array;
+                  Initial_Value : Text_Hash       := 0) return Text_Hash;
+
+   type New_Line_Index_Array
+     is array (Text_Line_Index range <>) of Character_Index;
+
+   Null_New_Line_Index_Array : constant New_Line_Index_Array (1 .. 0)
+     := (others => 1);
+
+   package Character_Index_Discrete_Operations
+     is new Generic_Discrete_Operations
+     (Discrete_Type => Text_Line_Index,
+      Diff_Type     => Text_Line_Index'Base);
+
+   function As_Is (X : Character_Index) return Character_Index
+     is (X);
+
+   function Is_Monotonic_Incr_Character_Index_Array
+     is new Character_Index_Discrete_Operations.Is_Monotonic_Incr_Lim_Array
+     (Element_Type          => Character_Index,
+      Array_Type            => New_Line_Index_Array,
+      Element_Func_Ret_Type => Character_Index,
+      Element_Func          => As_Is);
 
    type EOL_Kind is (LF, CR, CR_LF, None);
 
@@ -75,11 +102,16 @@ package Apsepp.Text_Class is
      with Pre'Class => Obj.Is_Line (K);
 
    not overriding
-   function Line (Obj : Text_Interfa;
-                  K   : Text_Line_Index) return Character_Array
+   function Line (Obj        : Text_Interfa;
+                  K          : Text_Line_Index;
+                  Max_Length : Character_Count := Character_Count'Last)
+     return Character_Array
      is abstract
      with Pre'Class  => Obj.Is_Line (K),
-          Post'Class => Line'Result'Length = Obj.Line_Character_Length (K);
+          Post'Class => Line'Result'Length
+                          =
+                        Character_Count'Min (Obj.Line_Character_Length (K),
+                                             Max_Length);
 
    not overriding
    function To_String
@@ -91,6 +123,41 @@ package Apsepp.Text_Class is
                         To_String'Result'Length = Obj.To_String_Length
                                                     (EOL,
                                                      Include_Last_EOL);
+
+   type Constant_Character_Array_Access is access constant Character_Array;
+
+   not overriding
+   procedure Get_Line_As_Access_And_Slice_Bounds
+     (Obj   :     Text_Interfa;
+      K     :     Text_Line_Index;
+      A     : out Constant_Character_Array_Access;
+      First : out Character_Index;
+      Last  : out Character_Count) is abstract
+     with Pre'Class  => Obj.Is_Line (K),
+          Post'Class =>
+            (
+              A'Length = 0
+                and then
+              First = A'First
+                and then
+              Last = A'Last
+            )
+              or else
+            (
+              A'Length /= 0
+                and then
+              (
+                First in A'Range
+                  or else
+                (
+                  A'Last < Character_Count'Last
+                    and then
+                  First = A'Last + 1
+                )
+              )
+                and then
+              Last <= A'Last
+            );
 
    function To_String_Truncates
      (Obj              : Text_Interfa'Class;

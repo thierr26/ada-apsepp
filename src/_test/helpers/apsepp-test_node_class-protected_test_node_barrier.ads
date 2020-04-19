@@ -7,6 +7,8 @@ with Ada.Calendar;            use Ada.Calendar;
 with Apsepp.Characters;       use Apsepp.Characters;
 with Apsepp.Test_Event_Class; use Apsepp.Test_Event_Class;
 
+-- TODO: Use 'Apsepp.Generic_Safe_Counter' instead of
+-- 'Apsepp.Generic_Safe_Integer_Operations'. <2020-04-03>
 with Apsepp.Generic_Safe_Integer_Operations;
 
 package Apsepp.Test_Node_Class.Protected_Test_Node_Barrier is
