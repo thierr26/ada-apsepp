@@ -201,7 +201,8 @@ package Apsepp.Text_Class.R is
 
    overriding
    function Is_Line (Obj : RO_Text_Multi_Line;
-                     K   : Text_Line_Count) return Boolean;
+                     K   : Text_Line_Count) return Boolean
+     is (K in 1 .. Obj.Line_Count);
 
    overriding
    function Is_Empty (Obj : RO_Text_Multi_Line) return Boolean;
@@ -323,11 +324,13 @@ private
 
    overriding
    function Next (Obj      : Iterator;
-                  Position : Cursor) return Cursor;
+                  Position : Cursor) return Cursor
+     is (Next (Position));
 
    overriding
    function Previous (Obj      : Iterator;
-                      Position : Cursor) return Cursor;
+                      Position : Cursor) return Cursor
+     is (Previous (Position));
 
    type RO_Text_Single_Line is new Ada.Finalization.Controlled
                                      and

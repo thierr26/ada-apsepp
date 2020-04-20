@@ -134,20 +134,6 @@ package body Apsepp.Text_Class.R is
 
    ----------------------------------------------------------------------------
 
-   overriding
-   function Next (Obj      : Iterator;
-                  Position : Cursor) return Cursor
-     is (Next (Position));
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Previous (Obj      : Iterator;
-                      Position : Cursor) return Cursor
-     is (Previous (Position));
-
-   ----------------------------------------------------------------------------
-
    function Parameterized_Iterate
      (Obj              : RO_Text_Interfa'Class;
       Start_Line_Index : Text_Line_Count)
@@ -422,13 +408,6 @@ package body Apsepp.Text_Class.R is
             0
          else
             Obj.N'Length + 1);
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   function Is_Line (Obj : RO_Text_Multi_Line;
-                     K   : Text_Line_Count) return Boolean
-     is (K in 1 .. Obj.Line_Count);
 
    ----------------------------------------------------------------------------
 
