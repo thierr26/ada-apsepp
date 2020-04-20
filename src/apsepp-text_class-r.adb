@@ -373,13 +373,9 @@ package body Apsepp.Text_Class.R is
    overriding
    procedure Finalize (Obj : in out RO_Text_Single_Line) is
 
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Object => Character_Array,
-         Name   => Character_Array_Access);
-
    begin
 
-      Free (Obj.A);
+      Free_Character_Array (Obj.A);
 
    end Finalize;
 
@@ -666,18 +662,14 @@ package body Apsepp.Text_Class.R is
    overriding
    procedure Finalize (Obj : in out RO_Text_Multi_Line) is
 
-      procedure Free_A is new Ada.Unchecked_Deallocation
-        (Object => Character_Array,
-         Name   => Character_Array_Access);
-
-      procedure Free_N is new Ada.Unchecked_Deallocation
+      procedure Free_New_Line_Index_Array is new Ada.Unchecked_Deallocation
         (Object => New_Line_Index_Array,
          Name   => New_Line_Index_Array_Access);
 
    begin
 
-      Free_A (Obj.A);
-      Free_N (Obj.N);
+      Free_Character_Array (Obj.A);
+      Free_New_Line_Index_Array (Obj.N);
 
    end Finalize;
 

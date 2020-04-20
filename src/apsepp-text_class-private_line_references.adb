@@ -1,8 +1,7 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Unchecked_Deallocation,
-     Apsepp.Barrier_Class.Finalized_Handler,
+with Apsepp.Barrier_Class.Finalized_Handler,
      Apsepp.Generic_Lexicographic_Comparisons.Discrete,
      Apsepp.Generic_Lexicographic_Comparisons.Lower_Than;
 
@@ -225,14 +224,11 @@ package body Apsepp.Text_Class.Private_Line_References is
       -----------------------------------------------------
 
       procedure Process (L_C : in out Line_Copy) is
-         procedure Free is new Ada.Unchecked_Deallocation
-           (Object => Character_Array,
-            Name   => Character_Array_Access);
       begin
          Dec (L_C.Ref_C); -- Decrement reference count.
          Deletion_Required := Val (L_C.Ref_C) = 0;
          if Deletion_Required then
-            Free (L_C.A);
+            Free_Character_Array (L_C.A);
          end if;
       end Process;
 

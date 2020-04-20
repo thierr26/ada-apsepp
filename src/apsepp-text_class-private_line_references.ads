@@ -1,7 +1,8 @@
 -- Copyright (C) 2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with System;
+with System,
+     Ada.Unchecked_Deallocation;
 
 private with Ada.Containers.Ordered_Sets,
              Apsepp.Generic_Safe_Counter,
@@ -13,6 +14,10 @@ private package Apsepp.Text_Class.Private_Line_References is
    pragma Assertion_Policy (Pre => Ignore);
 
    type Character_Array_Access is access Character_Array;
+
+   procedure Free_Character_Array is new Ada.Unchecked_Deallocation
+     (Object => Character_Array,
+      Name   => Character_Array_Access);
 
    -- TODOC: Wraps an access to a copy of a line of a text object. Needed
    -- because some text objects store lines as slices of a larger character
