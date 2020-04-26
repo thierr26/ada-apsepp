@@ -98,9 +98,9 @@ private
       S : Boolean      := False;
 
    end record
-     with Type_Invariant
-            => Some_True ((Val (Safe_Integer) = Integer_Type'First,
-                           Val (Safe_Integer) = Integer_Type'Last,
-                           not Sat (Safe_Integer)));
+     with Type_Invariant =>
+            Some_True ((Val (Safe_Integer) = Integer_Type'First,
+                        Val (Safe_Integer) = Integer_Type'Last,
+                        not Sat (Safe_Integer)));
 
 end Apsepp.Generic_Safe_Integer_Operations;
