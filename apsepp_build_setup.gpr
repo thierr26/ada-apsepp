@@ -8,7 +8,7 @@ abstract project Apsepp_Build_Setup is
                             "optimizations",
                             "style_check");
    Build_Mode : Build_Mode_Type
-      := external ("BUILD_MODE", "debug_info_and_assertions");
+     := external ("BUILD_MODE", "debug_info_and_assertions");
 
    for Source_Files use ();
 
