@@ -8,7 +8,7 @@ bin_dir = bin
 
 # Default values for options.
 default_proj = apsepp_test.gpr
-default_build_mode = debug_info_and_assertions
+default_apsepp_build_mode = debug_info_and_assertions
 default_prof =
 default_prg = $(bin_dir)/apsepp_test
 
@@ -57,7 +57,7 @@ html_cov_index = $(html_cov_dir)/index.html
 
 # HTML coverage report generation command.
 html_cov_command = $(genhtml_prg) $(genhtml_branchswi) $(html_cov_prefix) \
-  --legend --title "$(prg_name) ($(BUILD_MODE))" \
+  --legend --title "$(prg_name) ($(APSEPP_BUILD_MODE))" \
   --output-directory $(html_cov_dir) $(cov_filtered)
 
 # Path to Firefox application (or empty).
@@ -76,13 +76,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
-# Set BUILD_MODE variable if unset.
-ifndef BUILD_MODE
-  BUILD_MODE = $(default_build_mode)
+# Set APSEPP_BUILD_MODE variable if unset.
+ifndef APSEPP_BUILD_MODE
+  APSEPP_BUILD_MODE = $(default_apsepp_build_mode)
 endif
 
 # Build the -X switch for gprbuild and gprclean.
-xswi = -XBUILD_MODE=$(BUILD_MODE)
+xswi = -XAPSEPP_BUILD_MODE=$(APSEPP_BUILD_MODE)
 
 # -----------------------------------------------------------------------------
 
@@ -283,10 +283,11 @@ help:
 	@echo '  PROJ=apsepp      (does not include test or demo programs)'
 	@echo
 	@echo [B] can be nothing or one of:
-	@echo '  BUILD_MODE=debug_info_and_assertions (default)'
-	@echo '  BUILD_MODE=debug_info'
-	@echo '  BUILD_MODE=optimizations'
-	@echo '  BUILD_MODE=style_check (like default, but with style warnings)'
+	@echo '  APSEPP_BUILD_MODE=debug_info_and_assertions (default)'
+	@echo '  APSEPP_BUILD_MODE=debug_info'
+	@echo '  APSEPP_BUILD_MODE=optimizations'
+	@echo '  APSEPP_BUILD_MODE=style_check (like default, but with style'
+	@echo '                                 warnings)'
 	@echo
 	@echo [F] can be nothing or like:
 	@echo '  FILES=path/to/a/source/file'
