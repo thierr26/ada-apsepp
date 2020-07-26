@@ -96,7 +96,7 @@ abstract project Apsepp_Build_Setup is
       for Switches (others) use ("-j0");
    end Builder;
 
-   -- -E        Store tracebacks in exception occurrences.
+   -- -Es       Store (symbolic) tracebacks in exception occurrences.
    -- -g        Generate debugging information.
    package Binder is
 
@@ -106,7 +106,7 @@ abstract project Apsepp_Build_Setup is
             | "debug_info"
             | "style_check" =>
 
-            for Switches ("Ada") use ("-E",
+            for Switches ("Ada") use ("-Es",
                                       "-g");
 
          when "optimizations" =>
