@@ -1,6 +1,8 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+with Apsepp.Text_IO;
+
 private with Apsepp.Debug_Trace_Class.Quiet;
 
 package Apsepp.Debug_Trace_Class.Standard is
@@ -10,7 +12,7 @@ package Apsepp.Debug_Trace_Class.Standard is
    protected type Debug_Trace_Standard is new Debug_Trace_Interfa with
 
       not overriding
-      procedure Set_Up (Time_Fraction_Digits : Natural);
+      procedure Set_Up (Time_Fraction_Digits : Text_IO.Positive_Field);
 
       overriding
       function Item_W_Entity (Item        : String;
@@ -30,8 +32,8 @@ package Apsepp.Debug_Trace_Class.Standard is
                        Entity_Name : String := "");
 
       overriding
-      procedure Trace_E (Error : Exception_Occurrence;
-                         Entity_Name : String := "");
+      procedure Trace_E (Error       : Exception_Occurrence;
+                         Entity_Name : String               := "");
 
       -- TODOC: Calls primitive 'Set_Time_Zone' of 'Quiet.Debug_Trace_Quiet' so
       -- affects all 'Debug_Trace_Interfa'Class' objects with an implementation

@@ -11,7 +11,7 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
       -----------------------------------------------------
 
-      procedure Set_Up (Time_Fraction_Digits : Natural) is
+      procedure Set_Up (Time_Fraction_Digits : Text_IO.Positive_Field) is
 
       begin
 
