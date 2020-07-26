@@ -3,7 +3,7 @@
 
 with Apsepp.Text_IO;
 
-private with Apsepp.Debug_Trace_Class.Quiet;
+with Apsepp.Debug_Trace_Class.Quiet; use Apsepp.Debug_Trace_Class.Quiet;
 
 package Apsepp.Debug_Trace_Class.Standard is
 
@@ -52,14 +52,12 @@ package Apsepp.Debug_Trace_Class.Standard is
       procedure Trace_Time (Entity_Name   : String  := "";
                             Reset_Elapsed : Boolean := False);
 
+   private
+
+      Debug_Trace_Quiet_Instance : Debug_Trace_Quiet;
+
    end Debug_Trace_Standard;
 
    ----------------------------------------------------------------------------
-
-private
-
-   use Quiet;
-
-   Debug_Trace_Quiet_Instance : Debug_Trace_Quiet;
 
 end Apsepp.Debug_Trace_Class.Standard;
