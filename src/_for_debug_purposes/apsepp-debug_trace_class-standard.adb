@@ -11,6 +11,16 @@ package body Apsepp.Debug_Trace_Class.Standard is
 
       -----------------------------------------------------
 
+      procedure Set_Up (Time_Fraction_Digits : Natural) is
+
+      begin
+
+         Debug_Trace_Quiet_Instance.Set_Up (Time_Fraction_Digits);
+
+      end Set_Up;
+
+      -----------------------------------------------------
+
       function Item_W_Entity (Item        : String;
                               Entity_Name : String) return String
         is (Debug_Trace_Quiet_Instance.Item_W_Entity (Item,

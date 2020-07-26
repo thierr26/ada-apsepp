@@ -39,6 +39,10 @@ package body Apsepp_Demo_DT_Run is
 
    begin
 
+      -- Set the precision of the displayed time (number of digits in
+      -- fractional part of seconds).
+      Debug_Trace_Instance.Set_Up (Time_Fraction_Digits => 6);
+
       -- Call debug trace user subprograms.
 
       Apsepp_Demo_DT_Instance_Client.Instance_Client;

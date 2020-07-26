@@ -1,7 +1,8 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
-with Ada.Calendar.Formatting;
+with Ada.Calendar.Formatting,
+     Apsepp.Text_IO.Generic_Fixed_IO;
 
 package body Apsepp.Calendar is
 
@@ -37,9 +38,9 @@ package body Apsepp.Calendar is
    ----------------------------------------------------------------------------
 
    function To_ISO_8601
-     (Date                  : Time;
-      Time_Zone             : Time_Offset := Default_Time_Offset;
-      Include_Time_Fraction : Boolean     := False) return String is
+     (Date                 : Time;
+      Time_Zone            : Time_Offset := Default_Time_Offset;
+      Time_Fraction_Digits : Natural     := 0) return String is
 
       use Formatting;
 
@@ -70,11 +71,35 @@ package body Apsepp.Calendar is
 
       -----------------------------------------------------
 
-      Img : String := Image (Date, Include_Time_Fraction, Time_Zone)
-                      & (if Time_Zone = 0 then
-                            "Z"
-                         else
-                            Abs_Offset_Image);
+      No_Time_Fraction : constant Boolean := Time_Fraction_Digits = 0;
+
+      -- The time fraction that Image outputs when parameter
+      -- 'Include_Time_Fraction' is True is with 2 digits.
+      -- REF: ARM 9.6.1(82/2). <2020-07-25>
+      Standard_Time_Fraction : constant Boolean := Time_Fraction_Digits = 2;
+
+      package Day_Duration_IO
+        is new Text_IO.Generic_Fixed_IO (Fixed_Point_Type => Day_Duration);
+
+      Img : String := Image (Date                  => Date,
+                             Include_Time_Fraction => Standard_Time_Fraction,
+                             Time_Zone             => Time_Zone)
+                        &
+                      (
+                        if No_Time_Fraction or Standard_Time_Fraction then
+                           ""
+                        else
+                           Day_Duration_IO.Fractional_Image
+                             (Seconds (Date),
+                              Time_Fraction_Digits)
+                      )
+                        &
+                      (
+                        if Time_Zone = 0 then
+                           "Z"
+                        else
+                           Abs_Offset_Image
+                      );
 
    begin
 

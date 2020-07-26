@@ -1,9 +1,16 @@
 -- Copyright (C) 2019-2020 Thierry Rascle <thierr26@free.fr>
 -- MIT license. For more information, please refer to the LICENSE file.
 
+with Apsepp.Text_IO.Generic_Fixed_IO;
+
 package Apsepp.Debug_Trace_Class.Quiet is
 
    type Debug_Trace_Quiet is limited new Debug_Trace_Interfa with private;
+
+   not overriding
+   procedure Set_Up
+     (Obj                  : in out Debug_Trace_Quiet;
+      Time_Fraction_Digits :        Text_IO.Positive_Field);
 
    overriding
    function Item_W_Entity (Obj         : Debug_Trace_Quiet;
@@ -55,6 +62,14 @@ package Apsepp.Debug_Trace_Class.Quiet is
 
 private
 
-   type Debug_Trace_Quiet is limited new Debug_Trace_Interfa with null record;
+   package Duration_Image
+     is new Text_IO.Generic_Fixed_IO (Fixed_Point_Type => Duration);
+
+   type Debug_Trace_Quiet is limited new Debug_Trace_Interfa with record
+
+      Time_Fraction_Digits : Text_IO.Positive_Field
+        := Duration_Image.Default_Aft;
+
+   end record;
 
 end Apsepp.Debug_Trace_Class.Quiet;

@@ -2,11 +2,23 @@
 -- MIT license. For more information, please refer to the LICENSE file.
 
 with Ada.Strings.Fixed,
-     Ada.Calendar,
      Apsepp.Calendar,
      Apsepp.Debug_Trace_Class.Private_Protected_Clock;
 
 package body Apsepp.Debug_Trace_Class.Quiet is
+
+   ----------------------------------------------------------------------------
+
+   not overriding
+   procedure Set_Up
+     (Obj                  : in out Debug_Trace_Quiet;
+      Time_Fraction_Digits :        Text_IO.Positive_Field) is
+
+   begin
+
+      Obj.Time_Fraction_Digits := Time_Fraction_Digits;
+
+   end Set_Up;
 
    ----------------------------------------------------------------------------
 
@@ -24,18 +36,22 @@ package body Apsepp.Debug_Trace_Class.Quiet is
       Elapsed_Time : Duration;
       Par_Index    : Positive;
 
-      pragma Unreferenced (Obj);
-
    begin
 
       Clock_Handler.Get (Date, Time_Zone, Elapsed_Time, Reset_Elapsed);
 
-      return Ret : String := To_ISO_8601 (Date                  => Date,
-                                          Time_Zone             => Time_Zone,
-                                          Include_Time_Fraction => True)
-                             & " ("
-                             & Duration'Image (Elapsed_Time)
-                             & ")" do
+      return Ret : String
+        := To_ISO_8601 (Date                 => Date,
+                        Time_Zone            => Time_Zone,
+                        Time_Fraction_Digits => Obj.Time_Fraction_Digits)
+             &
+           " ("
+             &
+           Duration_Image.Image (X         => Elapsed_Time,
+                                 Aft       => Obj.Time_Fraction_Digits,
+                                 Plus_Kind => Duration_Image.Plus)
+             &
+           ")" do
 
          Par_Index := Index (Ret, "(");
          Ret(Par_Index + 1) := '+';
