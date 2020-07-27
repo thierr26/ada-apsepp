@@ -129,4 +129,25 @@ package body Apsepp.Debug_Trace_Class.File is
 
    ----------------------------------------------------------------------------
 
+   overriding
+   procedure On_Release (Obj : Debug_Trace_File_Holder) is
+
+      Instance_Access : constant not null access Debug_Trace_File
+        := Obj.Instance_Access;
+
+   begin
+
+      Instance_Access.Clean_Up;
+      -- PORT: Instance_Access intermediate variable used because direct
+      -- 'Clean_Up' calls are rejected by compiler (like
+      -- 'Obj.Instance_Access.Clean_Up' or 'Obj.Instance_Access.all.Clean_Up').
+      -- Don't know why. <2020-07-27>
+
+      Apsepp.Debug_Trace.Debug_Trace_Shared_Instance.Holder (Obj).On_Release;
+                                                   -- Inherited procedure call.
+
+   end On_Release;
+
+   ----------------------------------------------------------------------------
+
 end Apsepp.Debug_Trace_Class.File;

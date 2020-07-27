@@ -3,25 +3,13 @@
 
 with Ada.Directories,
      Ada.Assertions,
+     Apsepp.Debug_Trace,
      Apsepp.Output,
      Apsepp.Generic_Shared_Instance.Finalized_S_R,
      Apsepp_Demo_DT_Instance_Client,
      Apsepp_Demo_DT_Finalized_Tracer_User;
 
 package body Apsepp_Demo_DT_Run is
-
-   ----------------------------------------------------------------------------
-
-   overriding
-   procedure On_Release (Obj : Holder_W_Debug_Trace_File_Cleanup) is
-
-      pragma Unreferenced (Obj);
-
-   begin
-
-      Debug_Trace_Instance_F.Clean_Up;
-
-   end On_Release;
 
    ----------------------------------------------------------------------------
 
@@ -93,11 +81,12 @@ package body Apsepp_Demo_DT_Run is
       use Apsepp.Debug_Trace,
           Apsepp.Output;
 
-      Debug_Trace_Lock_Holder : Holder_W_Debug_Trace_File_Cleanup;
+      Debug_Trace_Lock_Holder : Debug_Trace_File_Holder
+        (Instance_Access => Debug_Trace_Instance_F'Access);
 
       package Debug_Trace_S_R is new Debug_Trace_Shared_Instance.Finalized_S_R
         (Instance_Access      => Debug_Trace_Instance_F'Access,
-         Lock_Holder_Type     => Holder_W_Debug_Trace_File_Cleanup,
+         Lock_Holder_Type     => Debug_Trace_File_Holder,
          Lock_Holder_Instance => Debug_Trace_Lock_Holder);
 
       Output_Lock_Holder : Output_Shared_Instance.Holder;
@@ -114,8 +103,14 @@ package body Apsepp_Demo_DT_Run is
       if Debug_Trace_Lock_Holder.Holds then
          -- We're holding the lock.
 
-         -- Set the precision of the displayed time (number of digits in
-         -- fractional part of seconds).
+         -- It's really important here to call 'Debug_Trace_Instance_F.Set_Up'
+         -- only if we're holding the lock. Or make sure to call
+         -- 'Debug_Trace_Instance_F.Clean_Up' "manually". If we're holding the
+         -- lock we know that 'Debug_Trace_Instance_F.Clean_Up' is called
+         -- automatically on lock release.
+
+         -- Set the output file name and the precision of the displayed time
+         -- (number of digits in fractional part of seconds).
          Debug_Trace_Instance_F.Set_Up (File_Name            => File_Name,
                                         Time_Fraction_Digits => 6);
       end if;

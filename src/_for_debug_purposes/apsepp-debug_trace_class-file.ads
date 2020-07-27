@@ -6,6 +6,8 @@ with Ada.Text_IO;
 with Apsepp.Text_IO; use Apsepp.Text_IO;
 with Apsepp.Debug_Trace_Class.Quiet; use Apsepp.Debug_Trace_Class.Quiet;
 
+with Apsepp.Debug_Trace;
+
 private with Apsepp.Text_IO.Generic_Fixed_IO;
 
 package Apsepp.Debug_Trace_Class.File is
@@ -75,6 +77,14 @@ package Apsepp.Debug_Trace_Class.File is
    end Debug_Trace_File;
 
    ----------------------------------------------------------------------------
+
+   type Debug_Trace_File_Holder
+     (Instance_Access : not null access Debug_Trace_File)
+     is new Apsepp.Debug_Trace.Debug_Trace_Shared_Instance.Holder
+     with null record;
+
+   overriding
+   procedure On_Release (Obj : Debug_Trace_File_Holder);
 
 private
 
