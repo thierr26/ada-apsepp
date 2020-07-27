@@ -13,7 +13,8 @@ package body Apsepp.Debug_Trace_Class.File is
 
       procedure Set_Up
         (File_Name            : String;
-         Time_Fraction_Digits : Positive_Field := Dflt_Time_Fraction_Digits) is
+         Time_Fraction_Digits : Positive_Field := Dflt_Time_Fraction_Digits;
+         Flush_On_New_Line    : Boolean        := False) is
 
       begin
 
@@ -21,6 +22,8 @@ package body Apsepp.Debug_Trace_Class.File is
          File_Name_Access := new String'(File_Name);
 
          Debug_Trace_Quiet_Instance.Set_Up (Time_Fraction_Digits);
+
+         Flush_On_New_Line_Flag := Flush_On_New_Line;
 
       end Set_Up;
 
@@ -76,6 +79,10 @@ package body Apsepp.Debug_Trace_Class.File is
                                                   Entity_Name)
                                 else
                                    Item));
+
+         if Flush_On_New_Line_Flag then
+            Ada.Text_IO.Flush (Output_File);
+         end if;
 
       end Trace;
 

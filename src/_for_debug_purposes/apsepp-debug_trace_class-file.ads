@@ -23,7 +23,8 @@ package Apsepp.Debug_Trace_Class.File is
       not overriding
       procedure Set_Up
         (File_Name            : String;
-         Time_Fraction_Digits : Positive_Field := Dflt_Time_Fraction_Digits);
+         Time_Fraction_Digits : Positive_Field := Dflt_Time_Fraction_Digits;
+         Flush_On_New_Line    : Boolean        := False);
 
       not overriding
       procedure Clean_Up;
@@ -73,6 +74,8 @@ package Apsepp.Debug_Trace_Class.File is
       File_Name_Access : String_Access;
 
       Output_File : Ada.Text_IO.File_Type;
+
+      Flush_On_New_Line_Flag : Boolean := False;
 
    end Debug_Trace_File;
 

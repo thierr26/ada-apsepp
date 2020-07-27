@@ -112,7 +112,11 @@ package body Apsepp_Demo_DT_Run is
          -- Set the output file name and the precision of the displayed time
          -- (number of digits in fractional part of seconds).
          Debug_Trace_Instance_F.Set_Up (File_Name            => File_Name,
-                                        Time_Fraction_Digits => 6);
+                                        Time_Fraction_Digits => 6,
+                                        Flush_On_New_Line    => False);
+         -- PORT: The compiler rejects the line above if parameter
+         -- 'Flush_On_New_Line' is omitted, although this parameter has a
+         -- default value. <2020-07-28>
       end if;
 
       Work;
