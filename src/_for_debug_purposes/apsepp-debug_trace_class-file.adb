@@ -5,9 +5,6 @@ with Ada.Unchecked_Deallocation;
 
 package body Apsepp.Debug_Trace_Class.File is
 
-   procedure Free is new Ada.Unchecked_Deallocation (Object => String,
-                                                     Name   => String_Access);
-
    ----------------------------------------------------------------------------
 
    protected body Debug_Trace_File is
@@ -30,6 +27,10 @@ package body Apsepp.Debug_Trace_Class.File is
       -----------------------------------------------------
 
       procedure Clean_Up is
+
+         procedure Free is new Ada.Unchecked_Deallocation
+           (Object => String,
+            Name   => String_Access);
 
       begin
 
