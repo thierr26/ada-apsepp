@@ -10,7 +10,7 @@ project Apsepp_Demo is
    for Exec_Dir use "bin";
 
    for Main use ("apsepp_demo_output_sink_as_shared_instance.adb",
-                 "apsepp_demo_debug_trace");
+                 "apsepp_demo_debug_trace.adb");
 
    package Compiler renames Apsepp_Build_Setup.Compiler;
 
