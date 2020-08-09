@@ -1,14 +1,15 @@
 abstract project Apsepp_Build_Setup is
 
    -- Define compilation mode (or compilation scenario), defaulting to
-   -- "debug_info" if BUILD_MODE is not set. BUILD_MODE can be set
-   -- via an environment variable or via the -X switch in the gprbuild command.
-   type Build_Mode_Type is ("debug_info_and_assertions",
-                            "debug_info",
-                            "optimizations",
-                            "style_check");
-   Build_Mode : Build_Mode_Type
-      := external ("BUILD_MODE", "debug_info_and_assertions");
+   -- "debug_info" if APSEPP_BUILD_MODE is not set. APSEPP_BUILD_MODE can be
+   -- set via an environment variable or via the -X switch in the gprbuild
+   -- command.
+   type Apsepp_Build_Mode_Type is ("debug_info_and_assertions",
+                                   "debug_info",
+                                   "optimizations",
+                                   "style_check");
+   Apsepp_Build_Mode : Apsepp_Build_Mode_Type
+     := external ("APSEPP_BUILD_MODE", "debug_info_and_assertions");
 
    for Source_Files use ();
 
@@ -66,7 +67,7 @@ abstract project Apsepp_Build_Setup is
                                               "-gnata" -- Enable assertions.
                                             );
 
-      case Build_Mode is
+      case Apsepp_Build_Mode is
 
          when "debug_info_and_assertions" =>
             for Switches ("Ada") use Debug_Info_And_Assertions_Switches;
@@ -99,7 +100,7 @@ abstract project Apsepp_Build_Setup is
    -- -g        Generate debugging information.
    package Binder is
 
-      case Build_Mode is
+      case Apsepp_Build_Mode is
 
          when "debug_info_and_assertions"
             | "debug_info"
@@ -120,7 +121,7 @@ abstract project Apsepp_Build_Setup is
    --           information when fed with addresses from exception traces).
    package Linker is
 
-      case Build_Mode is
+      case Apsepp_Build_Mode is
 
          when "debug_info_and_assertions"
             | "debug_info"

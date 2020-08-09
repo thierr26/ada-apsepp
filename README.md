@@ -40,17 +40,17 @@ You can add a `-X` switch in the `gprbuild` command to require a specific build
 mode:
 - Debugging information, and assertions enabled (default build mode):
 ```
-gprbuild -p -XBUILD_MODE=debug_info_and_assertions apsepp_test.gpr
+gprbuild -p -XAPSEPP_BUILD_MODE=debug_info_and_assertions apsepp_test.gpr
 ```
 
 - Build with debugging information:
 ```
-gprbuild -p -XBUILD_MODE=debug_info apsepp_test.gpr
+gprbuild -p -XAPSEPP_BUILD_MODE=debug_info apsepp_test.gpr
 ```
 
 - Build with optimizations:
 ```
-gprbuild -p -XBUILD_MODE=optimizations apsepp_test.gpr
+gprbuild -p -XAPSEPP_BUILD_MODE=optimizations apsepp_test.gpr
 ```
 
 You can remove the files created by the compilation process in the bin and obj

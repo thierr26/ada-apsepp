@@ -8,7 +8,7 @@ bin_dir = bin
 
 # Default values for options.
 default_proj = apsepp_test.gpr
-default_build_mode = debug_info_and_assertions
+default_apsepp_build_mode = debug_info_and_assertions
 default_prof =
 default_prg = $(bin_dir)/apsepp_test
 
@@ -57,7 +57,7 @@ html_cov_index = $(html_cov_dir)/index.html
 
 # HTML coverage report generation command.
 html_cov_command = $(genhtml_prg) $(genhtml_branchswi) $(html_cov_prefix) \
-  --legend --title "$(prg_name) ($(BUILD_MODE))" \
+  --legend --title "$(prg_name) ($(APSEPP_BUILD_MODE))" \
   --output-directory $(html_cov_dir) $(cov_filtered)
 
 # Path to Firefox application (or empty).
@@ -76,13 +76,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
-# Set BUILD_MODE variable if unset.
-ifndef BUILD_MODE
-  BUILD_MODE = $(default_build_mode)
+# Set APSEPP_BUILD_MODE variable if unset.
+ifndef APSEPP_BUILD_MODE
+  APSEPP_BUILD_MODE = $(default_apsepp_build_mode)
 endif
 
 # Build the -X switch for gprbuild and gprclean.
-xswi = -XBUILD_MODE=$(BUILD_MODE)
+xswi = -XAPSEPP_BUILD_MODE=$(APSEPP_BUILD_MODE)
 
 # -----------------------------------------------------------------------------
 
@@ -232,7 +232,9 @@ clean_all: clean
 	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprclean -q -c -r -P{} \;
 
 compile_all: clean_all
-	@find . -maxdepth 1 -type f -name "*.gpr" -exec gprbuild -p -U -P{} \;
+	@find . -maxdepth 1 -type f -name "*.gpr" \
+	  -not -path "./apsepp_build_setup.gpr" \
+	  -exec gprbuild $(xswi) -p -U -P{} \; | grep -v "^Compile"
 
 test: build .run_test_program
 
@@ -246,19 +248,21 @@ help:
 	@echo Targets:
 	@echo
 	@echo
-	@echo '  clean [P]                 - Cleanup project (keeps executables'
+	@echo '  clean [P]                 - Clean up project (keep executables'
 	@echo '                              and HTML coverage report).'
 	@echo
-	@echo '  clean_all                 - Same as clean, but for all projects.'
+	@echo '  compile [P] [B] [F]       - Recompile specific file(s) or all'
+	@echo '                              sources in the project if [F] is not'
+	@echo '                              provided. No binding or linking.'
 	@echo
-	@echo '  compile_all               - Compile all sources of all projects.'
+	@echo '  clean_all                 - Same as "clean", but for all'
+	@echo '                              projects.'
+	@echo
+	@echo '  compile_all [B]           - Do "clean_all" and compile all'
+	@echo '                              sources of all projects.'
 	@echo
 	@echo '  build [P] [B]             - Build project (creates executables'
 	@echo '                              in "$(bin_dir)" subdirectory).'
-	@echo
-	@echo '  compile [P] [B] [F]       - Compile specific file(s) or all'
-	@echo '                              sources if [F] is not provided. No'
-	@echo '                              binding or linking.'
 	@echo
 	@echo '  test [B] [PROFILER] [PRG] - Build $(default_proj) and run test'
 	@echo '                              program.'
@@ -279,10 +283,11 @@ help:
 	@echo '  PROJ=apsepp      (does not include test or demo programs)'
 	@echo
 	@echo [B] can be nothing or one of:
-	@echo '  BUILD_MODE=debug_info_and_assertions (default)'
-	@echo '  BUILD_MODE=debug_info'
-	@echo '  BUILD_MODE=optimizations'
-	@echo '  BUILD_MODE=style_check (like default, but with style warnings)'
+	@echo '  APSEPP_BUILD_MODE=debug_info_and_assertions (default)'
+	@echo '  APSEPP_BUILD_MODE=debug_info'
+	@echo '  APSEPP_BUILD_MODE=optimizations'
+	@echo '  APSEPP_BUILD_MODE=style_check (like default, but with style'
+	@echo '                                 warnings)'
 	@echo
 	@echo [F] can be nothing or like:
 	@echo '  FILES=path/to/a/source/file'
