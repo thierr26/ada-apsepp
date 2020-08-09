@@ -24,9 +24,11 @@ abstract project Apsepp_Build_Setup is
 
       Debug_Switches
         := (
-             "-g"     , -- Generate debugging information.
-             "-gnatwa", -- Turn on all normal warnings.
-             "-gnateE"  -- Generate extra information in exception messages.
+             "-g"     ,  -- Generate debugging information.
+             "-gnatwa",  -- Turn on all normal warnings.
+             "-gnatw.w", -- Warn when a pragma Warnings (Off, ...) has no
+                         -- matching pragma Warnings (On, ...).
+             "-gnateE"   -- Generate extra information in exception messages.
            );
 
       -- GNAT style checking switches are documented here:
